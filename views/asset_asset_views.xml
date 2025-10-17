@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Asset Tree View -->
+    <record id="view_asset_asset_tree" model="ir.ui.view">
+        <field name="name">asset.asset.tree</field>
+        <field name="model">asset.asset</field>
+        <field name="arch" type="xml">
+            <list string="Assets" decoration-muted="status == 'retired'"
+                  decoration-info="status == 'available'"
+                  decoration-warning="status in ('maintenance', 'repair')"
+                  decoration-danger="status == 'lost'">
+                <field name="asset_code"/>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="brand"/>
+                <field name="model"/>
+                <field name="serial_number"/>
+                <field name="location_id"/>
+                <field name="custodian_id"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'available'"
+                       decoration-info="status in ('assigned_teacher', 'assigned_student')"
+                       decoration-warning="status in ('maintenance', 'repair')"
+                       decoration-danger="status == 'lost'"/>
+                <field name="condition_rating"/>
+                <field name="warranty_status"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Asset Form View -->
+    <record id="view_asset_asset_form" model="ir.ui.view">
+        <field name="name">asset.asset.form</field>
+        <field name="model">asset.asset</field>
+        <field name="arch" type="xml">
+            <form string="Asset">
+                <header>
+                    <field name="status" invisible="1"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="available,assigned_teacher,assigned_student"/>
+                    <button name="action_set_available" string="Set Available"
+                            type="object" invisible="status == 'available'"/>
+                    <button name="action_set_maintenance" string="Maintenance"
+                            type="object" invisible="status == 'maintenance'"/>
+                    <button name="action_set_repair" string="Repair"
+                            type="object" invisible="status == 'repair'"/>
+                    <button name="action_set_retired" string="Retire"
+                            type="object" invisible="status == 'retired'"/>
+                </header>
+                <sheet>
+                    <field name="image_1920" widget="image" class="oe_avatar"/>
+                    <div class="oe_title">
+                        <label for="asset_code" class="oe_edit_only"/>
+                        <h1><field name="asset_code" placeholder="Asset Code"/></h1>
+                        <label for="name" class="oe_edit_only"/>
+                        <h3><field name="name" placeholder="Asset Name (Optional)"/></h3>
+                    </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_assignments" type="object"
+                                class="oe_stat_button" icon="fa-exchange">
+                            <field name="assignment_count" widget="statinfo" string="Assignments"/>
+                        </button>
+                        <button name="action_view_inspections" type="object"
+                                class="oe_stat_button" icon="fa-search">
+                            <field name="inspection_count" widget="statinfo" string="Inspections"/>
+                        </button>
+                        <button name="action_view_movements" type="object"
+                                class="oe_stat_button" icon="fa-arrows">
+                            <field name="movement_count" widget="statinfo" string="Movements"/>
+                        </button>
+                        <button name="action_view_damages" type="object"
+                                class="oe_stat_button" icon="fa-wrench"
+                                invisible="damage_count == 0">
+                            <field name="damage_count" widget="statinfo" string="Damages"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group string="Basic Information">
+                            <field name="category_id"/>
+                            <field name="location_id"/>
+                            <field name="department_id"/>
+                            <field name="custodian_id"/>
+                        </group>
+                        <group string="Status">
+                            <field name="condition_rating"/>
+                            <field name="age_months" readonly="1"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Specifications">
+                            <group>
+                                <group>
+                                    <field name="brand"/>
+                                    <field name="model"/>
+                                </group>
+                                <group>
+                                    <field name="serial_number"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Purchase Information">
+                            <group>
+                                <group>
+                                    <field name="purchase_date"/>
+                                    <field name="purchase_cost"/>
+                                </group>
+                                <group>
+                                    <field name="supplier_id"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Warranty">
+                            <group>
+                                <group>
+                                    <field name="warranty_start_date"/>
+                                    <field name="warranty_end_date"/>
+                                    <field name="warranty_months" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="warranty_status" readonly="1"/>
+                                    <field name="is_warranty_expiring_soon" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Asset Kanban View -->
+    <record id="view_asset_asset_kanban" model="ir.ui.view">
+        <field name="name">asset.asset.kanban</field>
+        <field name="model">asset.asset</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <field name="id"/>
+                <field name="asset_code"/>
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="status"/>
+                <field name="condition_rating"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex flex-column">
+                            <div class="fw-bold"><field name="asset_code"/></div>
+                            <div class="text-muted"><field name="name"/></div>
+                            <div><field name="category_id"/></div>
+                            <field name="status" widget="badge"
+                                   decoration-success="status == 'available'"
+                                   decoration-info="status in ('assigned_teacher', 'assigned_student')"
+                                   decoration-warning="status in ('maintenance', 'repair')"
+                                   decoration-danger="status == 'lost'"
+                                   decoration-muted="status == 'retired'"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Asset Search View -->
+    <record id="view_asset_asset_search" model="ir.ui.view">
+        <field name="name">asset.asset.search</field>
+        <field name="model">asset.asset</field>
+        <field name="arch" type="xml">
+            <search string="Assets">
+                <field name="name"/>
+                <field name="asset_code"/>
+                <field name="serial_number"/>
+                <field name="category_id"/>
+                <field name="brand"/>
+                <field name="location_id"/>
+                <filter string="Available" name="available" domain="[('status', '=', 'available')]"/>
+                <filter string="Assigned to Teachers" name="assigned_teacher" domain="[('status', '=', 'assigned_teacher')]"/>
+                <filter string="Assigned to Students" name="assigned_student" domain="[('status', '=', 'assigned_student')]"/>
+                <filter string="Under Maintenance" name="maintenance" domain="[('status', '=', 'maintenance')]"/>
+                <filter string="Under Repair" name="repair" domain="[('status', '=', 'repair')]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                <filter string="Category" name="group_category" context="{'group_by': 'category_id'}"/>
+                <filter string="Location" name="group_location" context="{'group_by': 'location_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Asset Action -->
+    <record id="action_asset_asset" model="ir.actions.act_window">
+        <field name="name">Assets</field>
+        <field name="res_model">asset.asset</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_available': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first asset
+            </p>
+            <p>
+                Track all your school's assets including computers, tablets, projectors, and more.
+            </p>
+        </field>
+    </record>
+
+</odoo>

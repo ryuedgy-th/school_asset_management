@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Teacher Assignment Report Template -->
+    <template id="report_teacher_assignment_document">
+        <t t-call="web.external_layout">
+            <t t-foreach="docs" t-as="o">
+                <div class="page">
+                    <main>
+                    <!-- Header -->
+                    <div class="text-center" style="margin-bottom: 30px;">
+                        <h2 style="margin-bottom: 5px;">MYIS International School</h2>
+                        <h3>Teacher Asset Assignment Form</h3>
+                    </div>
+
+                    <!-- Teacher Information -->
+                    <div style="margin-bottom: 20px;">
+                        <table class="table table-sm">
+                            <tr>
+                                <td width="25%"><strong>Teacher Name:</strong></td>
+                                <td width="25%"><t t-esc="o.teacher_id.name"/></td>
+                                <td width="25%"><strong>Department:</strong></td>
+                                <td width="25%"><t t-esc="o.teacher_id.department_id.name or '-'"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Checkout Date:</strong></td>
+                                <td><t t-esc="o.checkout_date"/></td>
+                                <td><strong>Return Type:</strong></td>
+                                <td><t t-esc="dict(o._fields['return_type'].selection).get(o.return_type)"/></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Expected Return:</strong></td>
+                                <td><t t-esc="o.expected_return_date or '-'"/></td>
+                                <td><strong>Actual Return:</strong></td>
+                                <td><t t-esc="o.actual_return_date or '-'"/></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Asset List -->
+                    <h4 style="margin-top: 20px; margin-bottom: 10px;">Asset Details</h4>
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr style="background-color: #f0f0f0;">
+                                <th>Asset Code</th>
+                                <th>Asset Name</th>
+                                <th>Category</th>
+                                <th>Checkout Condition</th>
+                                <th>Check-in Condition</th>
+                                <th>Damage</th>
+                                <th>Repair Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.asset_line_ids" t-as="line">
+                                <td><t t-esc="line.asset_code"/></td>
+                                <td><t t-esc="line.asset_name"/></td>
+                                <td><t t-esc="line.asset_category"/></td>
+                                <td>
+                                    <t t-if="line.checkout_condition">
+                                        <t t-esc="dict(line._fields['checkout_condition'].selection).get(line.checkout_condition)"/>
+                                    </t>
+                                    <t t-else="">-</t>
+                                </td>
+                                <td>
+                                    <t t-if="line.checkin_condition">
+                                        <t t-esc="dict(line._fields['checkin_condition'].selection).get(line.checkin_condition)"/>
+                                    </t>
+                                    <t t-else="">-</t>
+                                </td>
+                                <td>
+                                    <t t-if="line.damage_found">
+                                        <span style="color: red;">Yes</span>
+                                        <br/>
+                                        <small><t t-esc="line.damage_description or ''"/></small>
+                                    </t>
+                                    <t t-else="">No</t>
+                                </td>
+                                <td class="text-end">
+                                    <t t-if="line.repair_cost">
+                                        <t t-esc="'%.2f' % line.repair_cost"/>
+                                    </t>
+                                    <t t-else="">-</t>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6" class="text-end"><strong>Total Repair Cost:</strong></td>
+                                <td class="text-end">
+                                    <strong>
+                                        <t t-esc="'%.2f' % sum(o.asset_line_ids.mapped('repair_cost'))"/>
+                                    </strong>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <!-- Notes -->
+                    <t t-if="o.notes">
+                        <div style="margin-top: 20px;">
+                            <strong>Notes:</strong><br/>
+                            <p style="white-space: pre-wrap;"><t t-esc="o.notes"/></p>
+                        </div>
+                    </t>
+
+                    <!-- Signatures -->
+                    <div style="margin-top: 40px;">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td width="50%" class="text-center" style="vertical-align: top;">
+                                    <div>
+                                        <strong>Teacher Signature (Checkout)</strong><br/>
+                                        <t t-if="o.checkout_teacher_signature">
+                                            <img t-att-src="'data:image/png;base64,%s' % o.checkout_teacher_signature.decode('utf-8')"
+                                                 style="max-width: 300px; max-height: 80px; border-bottom: 1px solid #000; margin: 10px 0;"/>
+                                        </t>
+                                        <t t-else="">
+                                            <div style="border-bottom: 1px solid #000; width: 300px; margin: 10px auto; height: 80px;"></div>
+                                        </t>
+                                        <br/>
+                                        <t t-esc="o.teacher_id.name"/><br/>
+                                        <t t-if="o.checkout_sign_date">
+                                            <small>Signed on: <t t-esc="o.checkout_sign_date.strftime('%Y-%m-%d %H:%M')"/></small>
+                                        </t>
+                                    </div>
+                                </td>
+                                <td width="50%" class="text-center" style="vertical-align: top;">
+                                    <div>
+                                        <strong>IT Staff Signature (Check-in)</strong><br/>
+                                        <t t-if="o.checkin_it_signature">
+                                            <img t-att-src="'data:image/png;base64,%s' % o.checkin_it_signature.decode('utf-8')"
+                                                 style="max-width: 300px; max-height: 80px; border-bottom: 1px solid #000; margin: 10px 0;"/>
+                                        </t>
+                                        <t t-else="">
+                                            <div style="border-bottom: 1px solid #000; width: 300px; margin: 10px auto; height: 80px;"></div>
+                                        </t>
+                                        <br/>
+                                        <t t-if="o.checkin_it_user_id">
+                                            <t t-esc="o.checkin_it_user_id.name"/><br/>
+                                        </t>
+                                        <t t-if="o.checkin_sign_date">
+                                            <small>Signed on: <t t-esc="o.checkin_sign_date.strftime('%Y-%m-%d %H:%M')"/></small>
+                                        </t>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    </main>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- Teacher Assignment Report Action -->
+    <record id="action_report_teacher_assignment" model="ir.actions.report">
+        <field name="name">Teacher Assignment Form</field>
+        <field name="model">asset.teacher.assignment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_asset_management.report_teacher_assignment_document</field>
+        <field name="report_file">school_asset_management.report_teacher_assignment_document</field>
+        <field name="binding_model_id" ref="model_asset_teacher_assignment"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_assignment"/>
+    </record>
+
+</odoo>

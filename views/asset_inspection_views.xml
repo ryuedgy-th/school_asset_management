@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Asset Inspection Tree View -->
+    <record id="view_asset_inspection_tree" model="ir.ui.view">
+        <field name="name">asset.inspection.tree</field>
+        <field name="model">asset.inspection</field>
+        <field name="arch" type="xml">
+            <list string="Asset Inspections" decoration-danger="damage_found == True">
+                <field name="name"/>
+                <field name="inspection_date"/>
+                <field name="inspection_type"/>
+                <field name="asset_id"/>
+                <field name="inspector_id"/>
+                <field name="condition_after"/>
+                <field name="damage_found"/>
+                <field name="repair_cost" optional="hide"/>
+                <field name="custodian_type" optional="hide"/>
+                <field name="damage_acknowledgment_status" widget="badge" optional="show"
+                       decoration-muted="damage_acknowledgment_status == 'not_required'"
+                       decoration-warning="damage_acknowledgment_status == 'pending'"
+                       decoration-success="damage_acknowledgment_status == 'acknowledged'"
+                       decoration-danger="damage_acknowledgment_status == 'expired'"/>
+                <field name="action_required" widget="badge"
+                       decoration-success="action_required == 'none'"
+                       decoration-warning="action_required in ('monitor', 'repair')"
+                       decoration-danger="action_required == 'replace'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Asset Inspection Form View -->
+    <record id="view_asset_inspection_form" model="ir.ui.view">
+        <field name="name">asset.inspection.form</field>
+        <field name="model">asset.inspection</field>
+        <field name="arch" type="xml">
+            <form string="Asset Inspection">
+                <header>
+                    <field name="damage_found" invisible="1"/>
+                    <field name="custodian_type" invisible="1"/>
+                    <field name="teacher_damage_acknowledged" invisible="1"/>
+                    <field name="parent_damage_acknowledged" invisible="1"/>
+                    <field name="damage_case_id" invisible="1"/>
+                    <button name="action_update_asset_condition" string="Update Asset Condition"
+                            type="object" class="btn-primary"/>
+                    <button name="action_send_teacher_damage_notification" string="Notify Teacher"
+                            type="object" class="btn-warning"
+                            invisible="damage_found == False or custodian_type != 'teacher' or teacher_damage_acknowledged == True"/>
+                    <button name="action_teacher_acknowledge_damage" string="Teacher Acknowledges"
+                            type="object" class="btn-success"
+                            invisible="damage_found == False or custodian_type != 'teacher' or teacher_damage_acknowledged == True"/>
+                    <button name="action_send_parent_damage_acknowledgment" string="Send to Parent"
+                            type="object" class="btn-warning"
+                            invisible="damage_found == False or custodian_type != 'student' or parent_damage_acknowledged == True"/>
+                    <button name="action_copy_inspection_damage_link" string="Copy Link"
+                            type="object" class="btn-info"
+                            invisible="damage_found == False or custodian_type != 'student' or parent_damage_acknowledged == True or not damage_token"/>
+                    <button name="action_resend_parent_damage_acknowledgment" string="Resend to Parent"
+                            type="object" class="btn-secondary"
+                            invisible="damage_found == False or custodian_type != 'student' or parent_damage_acknowledged == True"/>
+                    <button name="action_view_damage_pdf" string="View Signed PDF"
+                            type="object" class="btn-info"
+                            invisible="parent_damage_acknowledged == False"/>
+                    <button name="action_create_damage_case" string="Create Damage Case"
+                            type="object" class="btn-danger"
+                            invisible="damage_found == False or damage_case_id != False"/>
+                    <field name="damage_acknowledgment_status" widget="statusbar"
+                           statusbar_visible="not_required,pending,acknowledged"/>
+                </header>
+                <sheet>
+                    <field name="related_assignment_type" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_damage_case" type="object"
+                                class="oe_stat_button" icon="fa-exclamation-triangle"
+                                invisible="damage_case_id == False">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Damage Case</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Inspection Details">
+                            <field name="inspection_date"/>
+                            <field name="inspection_type"/>
+                            <field name="inspector_id"/>
+                            <field name="asset_id"/>
+                        </group>
+                        <group string="Condition">
+                            <field name="condition_before"/>
+                            <field name="condition_after"/>
+                            <field name="action_required"/>
+                        </group>
+                    </group>
+                    <group string="Related Assignment" invisible="related_assignment_type == False">
+                        <field name="related_assignment_type"/>
+                        <field name="related_teacher_assignment_id" invisible="related_assignment_type != 'teacher'"/>
+                        <field name="related_student_assignment_id" invisible="related_assignment_type != 'student'"/>
+                    </group>
+                    <notebook>
+                        <page string="Checklist">
+                            <field name="checklist_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="checked"/>
+                                    <field name="result"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Issues &amp; Photos">
+                            <group>
+                                <field name="issues_found"/>
+                                <field name="photo_ids" widget="many2many_binary"/>
+                            </group>
+                        </page>
+                        <page string="Damage Report">
+                            <group>
+                                <group string="Damage Details">
+                                    <field name="damage_found"/>
+                                    <field name="damage_description"/>
+                                    <field name="repair_cost"/>
+                                </group>
+                                <group string="Current Custodian">
+                                    <field name="custodian_type"/>
+                                    <field name="custodian_id" invisible="custodian_type != 'teacher'"/>
+                                    <field name="student_name" invisible="custodian_type != 'student'"/>
+                                </group>
+                            </group>
+                            <group string="Teacher Acknowledgment" invisible="custodian_type != 'teacher'">
+                                <group>
+                                    <field name="teacher_damage_acknowledged"/>
+                                    <field name="teacher_response"/>
+                                </group>
+                                <group>
+                                    <field name="teacher_signature" widget="signature" options="{'size': [400, 100]}"/>
+                                    <field name="teacher_signature_date" readonly="1"/>
+                                </group>
+                            </group>
+                            <group string="Parent Acknowledgment" invisible="custodian_type != 'student'">
+                                <group>
+                                    <field name="parent_name"/>
+                                    <field name="parent_email"/>
+                                    <field name="parent_damage_acknowledged" readonly="1"/>
+                                    <field name="parent_signature_date" readonly="1"/>
+                                    <field name="parent_signature_ip" readonly="1"/>
+                                </group>
+                                <group>
+                                    <field name="parent_signature" widget="image" readonly="1"/>
+                                    <field name="damage_signed_pdf_id" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Asset Inspection Action -->
+    <record id="action_asset_inspection" model="ir.actions.act_window">
+        <field name="name">Asset Inspections</field>
+        <field name="res_model">asset.inspection</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first inspection
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,1003 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- ============================================================ -->
+        <!-- STUDENT ASSIGNMENT: PARENT ONLINE SIGNATURE EMAIL TEMPLATES -->
+        <!-- ============================================================ -->
+
+        <!-- 1. Checkout Signature Request Email -->
+        <record id="email_template_student_checkout_signature_request" model="mail.template">
+            <field name="name">Student Assignment - Checkout Signature Request</field>
+            <field name="model_id" ref="model_asset_student_assignment"/>
+            <field name="subject">MYIS - Please Sign Asset Assignment Form for {{ object.student_name }}</field>
+            <field name="email_from">noreply@magicyears.ac.th</field>
+            <field name="email_to">{{ object.parent_email }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
+                    <!-- Header -->
+                    <div style="background-color: #574193; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                        <h2 style="margin: 0;">MYIS International School</h2>
+                        <p style="margin: 5px 0 0 0; font-size: 14px;">Student Asset Management</p>
+                    </div>
+
+                    <!-- Body -->
+                    <div style="background-color: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <p style="font-size: 16px; color: #333;">Dear Parent/Guardian,</p>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            Your child, <strong><t t-esc="object.student_name"/></strong> (Grade <t t-esc="object.grade_level"/>),
+                            has been assigned school assets. Please review and sign the asset assignment form online.
+                        </p>
+
+                        <!-- Asset Summary -->
+                        <div style="background-color: #e8e4f3; padding: 15px; border-left: 4px solid #574193; margin: 20px 0;">
+                            <h4 style="margin: 0 0 10px 0; color: #574193;">Assets Assigned:</h4>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <t t-foreach="object.asset_line_ids" t-as="line">
+                                    <li style="margin: 5px 0;"><strong><t t-esc="line.asset_name"/></strong> (<t t-esc="line.asset_code"/>)</li>
+                                </t>
+                            </ul>
+                            <p style="margin: 10px 0 0 0;"><strong>Checkout Date:</strong> <t t-esc="object.checkout_date.strftime('%B %d, %Y') if object.checkout_date else 'N/A'"/></p>
+                        </div>
+
+                        <!-- Call to Action -->
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a t-attf-href="{{ object.get_base_url() }}/sign/student/checkout/{{ object.checkout_token }}"
+                               style="display: inline-block; background-color: #6AB42D; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                                📝 Sign Asset Assignment Form
+                            </a>
+                            <p style="margin-top: 15px; font-size: 12px; color: #666;">
+                                This link will expire in 7 days: <t t-esc="object.checkout_token_expiry.strftime('%B %d, %Y') if object.checkout_token_expiry else 'N/A'"/>
+                            </p>
+                        </div>
+
+                        <!-- Important Note -->
+                        <div style="background-color: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin: 20px 0;">
+                            <p style="margin: 0; color: #856404; font-size: 14px;">
+                                <strong>⚠️ Important:</strong> Your signature is required before the asset can be issued to your child.
+                                By signing, you agree to the terms and conditions of asset use and accept financial responsibility for any damage or loss.
+                            </p>
+                        </div>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            If you have any questions, please contact the IT department.
+                        </p>
+
+                        <p style="margin-top: 20px; color: #555;">
+                            Best regards,<br/>
+                            <strong>MYIS IT Department</strong>
+                        </p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="text-align: center; padding: 15px; color: #666; font-size: 12px;">
+                        <p>This is an automated email from MYIS Asset Management System</p>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+        <!-- 2. Checkout Confirmation Email (After Signature) -->
+        <record id="email_template_student_checkout_confirmation" model="mail.template">
+            <field name="name">Student Assignment - Checkout Confirmation</field>
+            <field name="model_id" ref="model_asset_student_assignment"/>
+            <field name="subject">MYIS - Asset Assignment Confirmation for {{ object.student_name }}</field>
+            <field name="email_from">noreply@magicyears.ac.th</field>
+            <field name="email_to">{{ object.parent_email }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
+                    <!-- Header -->
+                    <div style="background-color: #6AB42D; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                        <h2 style="margin: 0;">✅ Signature Received</h2>
+                        <p style="margin: 5px 0 0 0; font-size: 14px;">MYIS International School</p>
+                    </div>
+
+                    <!-- Body -->
+                    <div style="background-color: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <p style="font-size: 16px; color: #333;">Dear <t t-esc="object.parent_name"/>,</p>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            Thank you for signing the asset assignment form for <strong><t t-esc="object.student_name"/></strong> (Grade <t t-esc="object.grade_level"/>).
+                            Your signature was received on <t t-esc="object.checkout_sign_date.strftime('%B %d, %Y at %I:%M %p') if object.checkout_sign_date else 'N/A'"/>.
+                        </p>
+
+                        <!-- Success Message -->
+                        <div style="background-color: #e8f5e0; padding: 15px; border-left: 4px solid #6AB42D; margin: 20px 0; text-align: center;">
+                            <h4 style="margin: 0; color: #155724;">Asset Assignment Confirmed</h4>
+                        </div>
+
+                        <!-- Asset Summary -->
+                        <h4 style="color: #574193; border-bottom: 2px solid #574193; padding-bottom: 10px;">Assets Assigned:</h4>
+                        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                            <thead>
+                                <tr style="background-color: #f2f2f2;">
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Asset Code</th>
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Asset Name</th>
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Condition</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="object.asset_line_ids" t-as="line">
+                                    <tr>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="line.asset_code"/></td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="line.asset_name"/></td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="dict(line._fields['checkout_condition'].selection).get(line.checkout_condition, 'N/A')"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Signed PDF Attached -->
+                        <div style="background-color: #e8e4f3; padding: 15px; border-left: 4px solid #574193; margin: 20px 0;">
+                            <p style="margin: 0; color: #574193;">
+                                📄 <strong>Signed Document:</strong> A copy of the signed asset assignment form is attached to this email for your records.
+                            </p>
+                        </div>
+
+                        <!-- Reminder -->
+                        <div style="background-color: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin: 20px 0;">
+                            <h5 style="margin: 0 0 10px 0; color: #856404;">Important Reminders:</h5>
+                            <ul style="margin: 0; padding-left: 20px; color: #856404;">
+                                <li>Please ensure your child takes good care of the assigned assets</li>
+                                <li>Report any damage or issues to the IT department immediately</li>
+                                <li>All assets must be returned in the same condition as received</li>
+                                <li>You are financially responsible for any damage, loss, or theft</li>
+                            </ul>
+                        </div>
+
+                        <p style="margin-top: 20px; color: #555;">
+                            Best regards,<br/>
+                            <strong>MYIS IT Department</strong>
+                        </p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="text-align: center; padding: 15px; color: #666; font-size: 12px;">
+                        <p>This is an automated email from MYIS Asset Management System</p>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+        <!-- 3. Damage Report Email -->
+        <record id="email_template_student_damage_report" model="mail.template">
+            <field name="name">Student Assignment - Damage Report</field>
+            <field name="model_id" ref="model_asset_student_assignment"/>
+            <field name="subject">MYIS - Damage Report for Assets Returned by {{ object.student_name }}</field>
+            <field name="email_from">noreply@magicyears.ac.th</field>
+            <field name="email_to">{{ object.parent_email }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
+                    <!-- Header -->
+                    <div style="background-color: #dc3545; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                        <h2 style="margin: 0;">⚠️ Damage Report</h2>
+                        <p style="margin: 5px 0 0 0; font-size: 14px;">MYIS International School</p>
+                    </div>
+
+                    <!-- Body -->
+                    <div style="background-color: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <p style="font-size: 16px; color: #333;">Dear <t t-esc="object.parent_name"/>,</p>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            During the check-in process for assets returned by <strong><t t-esc="object.student_name"/></strong> (Grade <t t-esc="object.grade_level"/>),
+                            our IT department has identified damage to the following asset(s):
+                        </p>
+
+                        <!-- Damage Alert -->
+                        <div style="background-color: #f8d7da; padding: 15px; border-left: 4px solid #dc3545; margin: 20px 0;">
+                            <h4 style="margin: 0 0 10px 0; color: #721c24;">Damage Found</h4>
+                            <p style="margin: 0; color: #721c24; font-size: 14px;">
+                                Check-in Date: <t t-esc="object.actual_return_date.strftime('%B %d, %Y') if object.actual_return_date else 'N/A'"/>
+                            </p>
+                        </div>
+
+                        <!-- Damaged Assets -->
+                        <h4 style="color: #dc3545; border-bottom: 2px solid #dc3545; padding-bottom: 10px;">Damaged Assets:</h4>
+                        <t t-foreach="object.asset_line_ids.filtered(lambda l: l.damage_found)" t-as="line">
+                            <div style="background-color: #fff3cd; padding: 15px; margin: 10px 0; border-radius: 5px; border: 1px solid #ffc107;">
+                                <h5 style="margin: 0 0 5px 0; color: #856404;"><t t-esc="line.asset_name"/> (<t t-esc="line.asset_code"/>)</h5>
+                                <p style="margin: 5px 0; color: #856404;"><strong>Damage:</strong> <t t-esc="line.damage_description or 'See attached photos'"/></p>
+                                <p style="margin: 5px 0; color: #856404;"><strong>Repair Cost:</strong> $<t t-esc="'%.2f' % line.repair_cost"/></p>
+                            </div>
+                        </t>
+
+                        <!-- Total Cost -->
+                        <div style="text-align: right; margin: 20px 0;">
+                            <h4 style="color: #dc3545;">Total Repair Cost: $<t t-esc="object.total_repair_cost"/></h4>
+                        </div>
+
+                        <!-- Call to Action -->
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a t-attf-href="{{ object.get_base_url() }}/sign/student/damage/{{ object.damage_report_token }}"
+                               style="display: inline-block; background-color: #dc3545; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                                📋 View &amp; Acknowledge Damage Report
+                            </a>
+                            <p style="margin-top: 15px; font-size: 12px; color: #666;">
+                                This link will expire in 7 days: <t t-esc="object.damage_report_token_expiry.strftime('%B %d, %Y') if object.damage_report_token_expiry else 'N/A'"/>
+                            </p>
+                        </div>
+
+                        <!-- Financial Responsibility -->
+                        <div style="background-color: #e8e4f3; padding: 15px; border-left: 4px solid #574193; margin: 20px 0;">
+                            <h5 style="margin: 0 0 10px 0; color: #574193;">Financial Responsibility</h5>
+                            <p style="margin: 0; color: #574193; font-size: 14px;">
+                                As per the signed Asset Use Agreement, parents/guardians are financially responsible for
+                                damage caused by negligence or misuse. The IT department will contact you regarding payment arrangements.
+                            </p>
+                        </div>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            Please review the detailed damage assessment by clicking the link above.
+                            If you have any questions or concerns, please contact the IT department.
+                        </p>
+
+                        <p style="margin-top: 20px; color: #555;">
+                            Best regards,<br/>
+                            <strong>MYIS IT Department</strong>
+                        </p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="text-align: center; padding: 15px; color: #666; font-size: 12px;">
+                        <p>This is an automated email from MYIS Asset Management System</p>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+        <!-- 4. Damage Acknowledgment Confirmation Email -->
+        <record id="email_template_student_damage_acknowledgment" model="mail.template">
+            <field name="name">Student Assignment - Damage Acknowledgment Confirmation</field>
+            <field name="model_id" ref="model_asset_student_assignment"/>
+            <field name="subject">MYIS - Damage Report Acknowledgment for {{ object.student_name }}</field>
+            <field name="email_from">noreply@magicyears.ac.th</field>
+            <field name="email_to">{{ object.parent_email }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
+                    <!-- Header -->
+                    <div style="background-color: #574193; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                        <h2 style="margin: 0;">✅ Acknowledgment Received</h2>
+                        <p style="margin: 5px 0 0 0; font-size: 14px;">MYIS International School - Damage Report</p>
+                    </div>
+
+                    <!-- Body -->
+                    <div style="background-color: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <p style="font-size: 16px; color: #333;">Dear <t t-esc="object.parent_name"/>,</p>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            Thank you for acknowledging the damage report for assets returned by <strong><t t-esc="object.student_name"/></strong> (Grade <t t-esc="object.grade_level"/>).
+                            Your acknowledgment was received on <t t-esc="object.damage_acknowledge_date.strftime('%B %d, %Y at %I:%M %p') if object.damage_acknowledge_date else 'N/A'"/>.
+                        </p>
+
+                        <!-- Confirmation -->
+                        <div style="background-color: #e8e4f3; padding: 15px; border-left: 4px solid #574193; margin: 20px 0; text-align: center;">
+                            <h4 style="margin: 0; color: #0c5460;">Damage Report Acknowledged</h4>
+                        </div>
+
+                        <!-- Damage Summary -->
+                        <h4 style="color: #dc3545; border-bottom: 2px solid #dc3545; padding-bottom: 10px;">Damaged Assets:</h4>
+                        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                            <thead>
+                                <tr style="background-color: #f2f2f2;">
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Asset</th>
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Damage</th>
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: right;">Repair Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="object.asset_line_ids.filtered(lambda l: l.damage_found)" t-as="line">
+                                    <tr>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="line.asset_name"/> (<t t-esc="line.asset_code"/>)</td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="line.damage_description or 'See photos'"/></td>
+                                        <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">$<t t-esc="'%.2f' % line.repair_cost"/></td>
+                                    </tr>
+                                </t>
+                                <tr style="background-color: #f8d7da; font-weight: bold;">
+                                    <td colspan="2" style="border: 1px solid #ddd; padding: 8px; text-align: right;">Total:</td>
+                                    <td style="border: 1px solid #ddd; padding: 8px; text-align: right; color: #dc3545;">$<t t-esc="object.total_repair_cost"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Signed PDF Attached -->
+                        <div style="background-color: #e8e4f3; padding: 15px; border-left: 4px solid #574193; margin: 20px 0;">
+                            <p style="margin: 0; color: #574193;">
+                                📄 <strong>Signed Document:</strong> A copy of the signed damage report is attached to this email for your records.
+                            </p>
+                        </div>
+
+                        <!-- Next Steps -->
+                        <div style="background-color: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin: 20px 0;">
+                            <h5 style="margin: 0 0 10px 0; color: #856404;">Next Steps:</h5>
+                            <p style="margin: 0; color: #856404; font-size: 14px;">
+                                The IT department will contact you within 3-5 business days regarding payment arrangements
+                                for the repair costs. Thank you for your cooperation.
+                            </p>
+                        </div>
+
+                        <p style="margin-top: 20px; color: #555;">
+                            Best regards,<br/>
+                            <strong>MYIS IT Department</strong>
+                        </p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="text-align: center; padding: 15px; color: #666; font-size: 12px;">
+                        <p>This is an automated email from MYIS Asset Management System</p>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- INSPECTION DAMAGE EMAIL TEMPLATE                            -->
+        <!-- ============================================================ -->
+
+        <!-- Inspection Damage Report Email (Parent) -->
+        <record id="email_template_inspection_damage_notification" model="mail.template">
+            <field name="name">Inspection Damage Notification (Parent)</field>
+            <field name="model_id" ref="model_asset_inspection"/>
+            <field name="subject">MYIS - Damage Found During Asset Inspection for ${object.student_name}</field>
+            <field name="email_to">${object.parent_email}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
+                    <!-- Header -->
+                    <div style="background-color: #dc3545; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                        <h2 style="margin: 0;">⚠️ Inspection Damage Report</h2>
+                        <p style="margin: 5px 0 0 0; font-size: 14px;">MYIS International School</p>
+                    </div>
+
+                    <!-- Body -->
+                    <div style="background-color: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <p style="font-size: 16px; color: #333;">Dear ${object.parent_name},</p>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            During a routine inspection conducted on ${object.inspection_date.strftime('%B %d, %Y') if object.inspection_date else 'N/A'},
+                            our IT department has identified damage to the asset currently assigned to <strong>${object.student_name}</strong>:
+                        </p>
+
+                        <!-- Inspection Details -->
+                        <div style="background-color: #e8e4f3; padding: 15px; border-left: 4px solid #574193; margin: 20px 0;">
+                            <h4 style="margin: 0 0 10px 0; color: #574193;">Inspection Details</h4>
+                            <p style="margin: 5px 0; color: #574193;"><strong>Asset:</strong> ${object.asset_id.asset_code} - ${object.asset_id.name or 'N/A'}</p>
+                            <p style="margin: 5px 0; color: #574193;"><strong>Inspection Type:</strong> ${dict(object._fields['inspection_type'].selection).get(object.inspection_type, 'N/A')}</p>
+                            <p style="margin: 5px 0; color: #574193;"><strong>Inspector:</strong> ${object.inspector_id.name}</p>
+                        </div>
+
+                        <!-- Damage Alert -->
+                        <div style="background-color: #f8d7da; padding: 15px; border-left: 4px solid #dc3545; margin: 20px 0;">
+                            <h4 style="margin: 0 0 10px 0; color: #721c24;">Damage Identified</h4>
+                            <p style="margin: 5px 0; color: #721c24;"><strong>Description:</strong> ${object.damage_description or 'See detailed report'}</p>
+                            % if object.repair_cost and object.repair_cost > 0:
+                            <p style="margin: 10px 0 0 0; color: #721c24; font-size: 16px;">
+                                <strong>Estimated Repair Cost: $${object.repair_cost}</strong>
+                            </p>
+                            % endif
+                        </div>
+
+                        <!-- Condition Change -->
+                        <div style="background-color: #fff3cd; padding: 15px; border-radius: 5px; margin: 20px 0;">
+                            <table style="width: 100%; font-size: 14px;">
+                                <tr>
+                                    <td style="padding: 5px; width: 50%;"><strong>Previous Condition:</strong></td>
+                                    <td style="padding: 5px;">${dict(object._fields['condition_before'].selection).get(object.condition_before, 'N/A') if object.condition_before else 'N/A'}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 5px;"><strong>Current Condition:</strong></td>
+                                    <td style="padding: 5px; color: #dc3545;">${dict(object._fields['condition_after'].selection).get(object.condition_after, 'N/A')}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Call to Action -->
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a href="${object.env['ir.config_parameter'].sudo().get_param('web.base.url')}/sign/inspection/damage/${object.damage_token}"
+                               style="display: inline-block; background-color: #dc3545; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                                📋 View &amp; Acknowledge Damage Report
+                            </a>
+                            <p style="margin-top: 15px; font-size: 12px; color: #666;">
+                                This link will expire in 7 days: ${object.damage_token_expiry.strftime('%B %d, %Y') if object.damage_token_expiry else 'N/A'}
+                            </p>
+                        </div>
+
+                        <!-- Financial Responsibility -->
+                        <div style="background-color: #e8e4f3; padding: 15px; border-left: 4px solid #574193; margin: 20px 0;">
+                            <h5 style="margin: 0 0 10px 0; color: #574193;">Financial Responsibility</h5>
+                            <p style="margin: 0; color: #574193; font-size: 14px;">
+                                As per the signed Asset Use Agreement, parents/guardians are financially responsible for
+                                damage to school assets caused by negligence or misuse. The IT department will contact you
+                                within 3-5 business days regarding payment arrangements for the repair costs.
+                            </p>
+                        </div>
+
+                        <!-- Important Note -->
+                        <div style="background-color: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin: 20px 0;">
+                            <p style="margin: 0; color: #856404; font-size: 14px;">
+                                <strong>⚠️ Action Required:</strong> Please review the detailed damage assessment by clicking the link above
+                                and provide your electronic signature to acknowledge receipt of this report.
+                            </p>
+                        </div>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            If you have any questions or concerns about this damage report, please contact the IT department.
+                        </p>
+
+                        <p style="margin-top: 20px; color: #555;">
+                            Best regards,<br/>
+                            <strong>MYIS IT Department</strong>
+                        </p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="text-align: center; padding: 15px; color: #666; font-size: 12px;">
+                        <p>This is an automated email from MYIS Asset Management System</p>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- TEACHER ASSIGNMENT: ONLINE SIGNATURE EMAIL TEMPLATES        -->
+        <!-- ============================================================ -->
+
+        <!-- 1. Teacher Checkout Signature Request Email -->
+        <record id="email_template_teacher_checkout_signature_request" model="mail.template">
+            <field name="name">Teacher Assignment - Checkout Signature Request</field>
+            <field name="model_id" ref="model_asset_teacher_assignment"/>
+            <field name="subject">MYIS - Please Sign Asset Assignment Form</field>
+            <field name="email_from">noreply@magicyears.ac.th</field>
+            <field name="email_to">{{ object.teacher_email }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
+                    <!-- Header -->
+                    <div style="background-color: #574193; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                        <h2 style="margin: 0;">MYIS International School</h2>
+                        <p style="margin: 5px 0 0 0; font-size: 14px;">Teacher Asset Assignment</p>
+                    </div>
+
+                    <!-- Body -->
+                    <div style="background-color: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <p style="font-size: 16px; color: #333;">Dear <t t-esc="object.teacher_id.name"/>,</p>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            You have been assigned school assets. Please review and sign the asset assignment form online.
+                        </p>
+
+                        <!-- Asset Summary -->
+                        <div style="background-color: #e8e4f3; padding: 15px; border-left: 4px solid #574193; margin: 20px 0;">
+                            <h4 style="margin: 0 0 10px 0; color: #574193;">Assets Assigned:</h4>
+                            <ul style="margin: 0; padding-left: 20px;">
+                                <t t-foreach="object.asset_line_ids" t-as="line">
+                                    <li style="margin: 5px 0;"><strong><t t-esc="line.asset_name"/></strong> (<t t-esc="line.asset_code"/>)</li>
+                                </t>
+                            </ul>
+                            <p style="margin: 10px 0 0 0;"><strong>Checkout Date:</strong> <t t-esc="object.checkout_date.strftime('%B %d, %Y') if object.checkout_date else 'N/A'"/></p>
+                        </div>
+
+                        <!-- Call to Action -->
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a t-attf-href="{{ object.get_base_url() }}/sign/teacher/checkout/{{ object.checkout_token }}"
+                               style="display: inline-block; background-color: #6AB42D; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                                📝 Sign Asset Assignment Form
+                            </a>
+                            <p style="margin-top: 15px; font-size: 12px; color: #666;">
+                                This link will expire in 7 days: <t t-esc="object.checkout_token_expiry.strftime('%B %d, %Y') if object.checkout_token_expiry else 'N/A'"/>
+                            </p>
+                        </div>
+
+                        <!-- Important Note -->
+                        <div style="background-color: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin: 20px 0;">
+                            <p style="margin: 0; color: #856404; font-size: 14px;">
+                                <strong>⚠️ Important:</strong> Your signature is required before the asset can be issued.
+                                By signing, you agree to the MYIS iDevice Essential Agreement and accept responsibility for the assigned assets.
+                            </p>
+                        </div>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            If you have any questions, please contact the IT department.
+                        </p>
+
+                        <p style="margin-top: 20px; color: #555;">
+                            Best regards,<br/>
+                            <strong>MYIS IT Department</strong>
+                        </p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="text-align: center; padding: 15px; color: #666; font-size: 12px;">
+                        <p>This is an automated email from MYIS Asset Management System</p>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+        <!-- 2. Teacher Checkout Confirmation Email (After Signature) -->
+        <record id="email_template_teacher_checkout_confirmation" model="mail.template">
+            <field name="name">Teacher Assignment - Checkout Confirmation</field>
+            <field name="model_id" ref="model_asset_teacher_assignment"/>
+            <field name="subject">MYIS - Asset Assignment Confirmation</field>
+            <field name="email_from">noreply@magicyears.ac.th</field>
+            <field name="email_to">{{ object.teacher_email }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
+                    <!-- Header -->
+                    <div style="background-color: #6AB42D; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                        <h2 style="margin: 0;">✅ Signature Received</h2>
+                        <p style="margin: 5px 0 0 0; font-size: 14px;">MYIS International School</p>
+                    </div>
+
+                    <!-- Body -->
+                    <div style="background-color: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <p style="font-size: 16px; color: #333;">Dear <t t-esc="object.teacher_id.name"/>,</p>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            Thank you for signing the asset assignment form.
+                            Your signature was received on <t t-esc="object.checkout_sign_date.strftime('%B %d, %Y at %I:%M %p') if object.checkout_sign_date else 'N/A'"/>.
+                        </p>
+
+                        <!-- Success Message -->
+                        <div style="background-color: #e8f5e0; padding: 15px; border-left: 4px solid #6AB42D; margin: 20px 0; text-align: center;">
+                            <h4 style="margin: 0; color: #155724;">Asset Assignment Confirmed</h4>
+                        </div>
+
+                        <!-- Asset Summary -->
+                        <h4 style="color: #574193; border-bottom: 2px solid #574193; padding-bottom: 10px;">Assets Assigned:</h4>
+                        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                            <thead>
+                                <tr style="background-color: #f2f2f2;">
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Asset Code</th>
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Asset Name</th>
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Condition</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="object.asset_line_ids" t-as="line">
+                                    <tr>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="line.asset_code"/></td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="line.asset_name"/></td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="dict(line._fields['checkout_condition'].selection).get(line.checkout_condition, 'N/A') if line.checkout_condition else 'N/A'"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Signed PDF Attached -->
+                        <div style="background-color: #e8e4f3; padding: 15px; border-left: 4px solid #574193; margin: 20px 0;">
+                            <p style="margin: 0; color: #574193;">
+                                📄 <strong>Signed Document:</strong> A copy of the signed asset assignment form is attached to this email for your records.
+                            </p>
+                        </div>
+
+                        <!-- Reminder -->
+                        <div style="background-color: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin: 20px 0;">
+                            <h5 style="margin: 0 0 10px 0; color: #856404;">Important Reminders:</h5>
+                            <ul style="margin: 0; padding-left: 20px; color: #856404;">
+                                <li>Please take good care of the assigned assets</li>
+                                <li>Keep the device secure at all times</li>
+                                <li>Report any problems to the IT department immediately</li>
+                                <li>Return all assets in the same condition as received</li>
+                            </ul>
+                        </div>
+
+                        <p style="margin-top: 20px; color: #555;">
+                            Best regards,<br/>
+                            <strong>MYIS IT Department</strong>
+                        </p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="text-align: center; padding: 15px; color: #666; font-size: 12px;">
+                        <p>This is an automated email from MYIS Asset Management System</p>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+        <!-- 3. Teacher Damage Report Email -->
+        <record id="email_template_teacher_damage_report" model="mail.template">
+            <field name="name">Teacher Assignment - Damage Report</field>
+            <field name="model_id" ref="model_asset_teacher_assignment"/>
+            <field name="subject">MYIS - Damage Report for Assets Returned</field>
+            <field name="email_from">noreply@magicyears.ac.th</field>
+            <field name="email_to">{{ object.teacher_email }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
+                    <!-- Header -->
+                    <div style="background-color: #dc3545; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                        <h2 style="margin: 0;">⚠️ Damage Report</h2>
+                        <p style="margin: 5px 0 0 0; font-size: 14px;">MYIS International School</p>
+                    </div>
+
+                    <!-- Body -->
+                    <div style="background-color: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <p style="font-size: 16px; color: #333;">Dear <t t-esc="object.teacher_id.name"/>,</p>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            During the check-in process, the IT department has identified damage to the following asset(s):
+                        </p>
+
+                        <!-- Damage Alert -->
+                        <div style="background-color: #f8d7da; padding: 15px; border-left: 4px solid #dc3545; margin: 20px 0;">
+                            <h4 style="margin: 0 0 10px 0; color: #721c24;">Damage Found</h4>
+                            <p style="margin: 0; color: #721c24; font-size: 14px;">
+                                Check-in Date: <t t-esc="object.actual_return_date.strftime('%B %d, %Y') if object.actual_return_date else 'N/A'"/>
+                            </p>
+                        </div>
+
+                        <!-- Damaged Assets -->
+                        <h4 style="color: #dc3545; border-bottom: 2px solid #dc3545; padding-bottom: 10px;">Damaged Assets:</h4>
+                        <t t-foreach="object.asset_line_ids.filtered(lambda l: l.damage_found)" t-as="line">
+                            <div style="background-color: #fff3cd; padding: 15px; margin: 10px 0; border-radius: 5px; border: 1px solid #ffc107;">
+                                <h5 style="margin: 0 0 5px 0; color: #856404;"><t t-esc="line.asset_name"/> (<t t-esc="line.asset_code"/>)</h5>
+                                <p style="margin: 5px 0; color: #856404;"><strong>Damage:</strong> <t t-esc="line.damage_description or 'See attached photos'"/></p>
+                                <p style="margin: 5px 0; color: #856404;"><strong>Repair Cost:</strong> <t t-esc="'%.2f' % (line.repair_cost or 0.0)"/> THB</p>
+                            </div>
+                        </t>
+
+                        <!-- Call to Action -->
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a t-attf-href="{{ object.get_base_url() }}/sign/teacher/damage/{{ object.damage_report_token }}"
+                               style="display: inline-block; background-color: #dc3545; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                                📋 View &amp; Acknowledge Damage Report
+                            </a>
+                            <p style="margin-top: 15px; font-size: 12px; color: #666;">
+                                This link will expire in 7 days: <t t-esc="object.damage_report_token_expiry.strftime('%B %d, %Y') if object.damage_report_token_expiry else 'N/A'"/>
+                            </p>
+                        </div>
+
+                        <!-- Responsibility Notice -->
+                        <div style="background-color: #e8e4f3; padding: 15px; border-left: 4px solid #574193; margin: 20px 0;">
+                            <h5 style="margin: 0 0 10px 0; color: #574193;">Damage Responsibility</h5>
+                            <p style="margin: 0; color: #574193; font-size: 14px;">
+                                As per the MYIS iDevice Essential Agreement, staff members are responsible for damage caused by negligence or misuse.
+                                The IT department will follow up regarding the repair or replacement process.
+                            </p>
+                        </div>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            Please review the detailed damage assessment by clicking the link above.
+                            If you have any questions, please contact the IT department.
+                        </p>
+
+                        <p style="margin-top: 20px; color: #555;">
+                            Best regards,<br/>
+                            <strong>MYIS IT Department</strong>
+                        </p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="text-align: center; padding: 15px; color: #666; font-size: 12px;">
+                        <p>This is an automated email from MYIS Asset Management System</p>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+        <!-- 4. Teacher Damage Acknowledgment Confirmation Email -->
+        <record id="email_template_teacher_damage_acknowledgment" model="mail.template">
+            <field name="name">Teacher Assignment - Damage Acknowledgment Confirmation</field>
+            <field name="model_id" ref="model_asset_teacher_assignment"/>
+            <field name="subject">MYIS - Damage Report Acknowledgment Received</field>
+            <field name="email_from">noreply@magicyears.ac.th</field>
+            <field name="email_to">{{ object.teacher_email }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
+                    <!-- Header -->
+                    <div style="background-color: #574193; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                        <h2 style="margin: 0;">✅ Acknowledgment Received</h2>
+                        <p style="margin: 5px 0 0 0; font-size: 14px;">MYIS International School - Damage Report</p>
+                    </div>
+
+                    <!-- Body -->
+                    <div style="background-color: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <p style="font-size: 16px; color: #333;">Dear <t t-esc="object.teacher_id.name"/>,</p>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            Thank you for acknowledging the damage report.
+                            Your acknowledgment was received on <t t-esc="object.damage_acknowledge_date.strftime('%B %d, %Y at %I:%M %p') if object.damage_acknowledge_date else 'N/A'"/>.
+                        </p>
+
+                        <!-- Confirmation -->
+                        <div style="background-color: #e8e4f3; padding: 15px; border-left: 4px solid #574193; margin: 20px 0; text-align: center;">
+                            <h4 style="margin: 0; color: #0c5460;">Damage Report Acknowledged</h4>
+                        </div>
+
+                        <!-- Damage Summary -->
+                        <h4 style="color: #dc3545; border-bottom: 2px solid #dc3545; padding-bottom: 10px;">Damaged Assets:</h4>
+                        <table style="width: 100%; border-collapse: collapse; margin: 15px 0;">
+                            <thead>
+                                <tr style="background-color: #f2f2f2;">
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Asset</th>
+                                    <th style="border: 1px solid #ddd; padding: 10px; text-align: left;">Damage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="object.asset_line_ids.filtered(lambda l: l.damage_found)" t-as="line">
+                                    <tr>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="line.asset_name"/> (<t t-esc="line.asset_code"/>)</td>
+                                        <td style="border: 1px solid #ddd; padding: 8px;"><t t-esc="line.damage_description or 'See photos'"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+
+                        <!-- Signed PDF Attached -->
+                        <div style="background-color: #e8e4f3; padding: 15px; border-left: 4px solid #574193; margin: 20px 0;">
+                            <p style="margin: 0; color: #574193;">
+                                📄 <strong>Signed Document:</strong> A copy of the signed damage report is attached to this email for your records.
+                            </p>
+                        </div>
+
+                        <!-- Next Steps -->
+                        <div style="background-color: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin: 20px 0;">
+                            <h5 style="margin: 0 0 10px 0; color: #856404;">Next Steps:</h5>
+                            <p style="margin: 0; color: #856404; font-size: 14px;">
+                                The IT department will follow up regarding the repair or replacement of the damaged asset(s).
+                                Thank you for your cooperation.
+                            </p>
+                        </div>
+
+                        <p style="margin-top: 20px; color: #555;">
+                            Best regards,<br/>
+                            <strong>MYIS IT Department</strong>
+                        </p>
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="text-align: center; padding: 15px; color: #666; font-size: 12px;">
+                        <p>This is an automated email from MYIS Asset Management System</p>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- TEACHER ASSIGNMENT EMAIL TEMPLATES (LEGACY/OLD)            -->
+        <!-- ============================================================ -->
+
+        <!-- Teacher Checkout Email Template (Old) -->
+        <record id="email_template_teacher_checkout" model="mail.template">
+            <field name="name">Teacher Asset Checkout (Legacy)</field>
+            <field name="model_id" ref="model_asset_teacher_assignment"/>
+            <field name="subject">Asset Checkout Confirmation - ${object.name}</field>
+            <field name="email_from">${(object.it_staff_id.email or '')|safe}</field>
+            <field name="email_to">${(object.teacher_id.work_email or '')|safe}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; padding: 20px;">
+                    <h2>Asset Checkout Confirmation</h2>
+                    <p>Dear ${object.teacher_id.name},</p>
+                    <p>This is to confirm that you have checked out the following assets:</p>
+                    <table style="border-collapse: collapse; width: 100%; margin: 20px 0;">
+                        <tr style="background-color: #f2f2f2;">
+                            <th style="border: 1px solid #ddd; padding: 8px;">Asset Code</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Asset Name</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Condition</th>
+                        </tr>
+                        % for line in object.asset_line_ids:
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${line.asset_code}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${line.asset_name}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${line.checkout_condition}</td>
+                        </tr>
+                        % endfor
+                    </table>
+                    <p><strong>Academic Year:</strong> ${object.academic_year}</p>
+                    <p><strong>Term:</strong> ${object.term}</p>
+                    <p><strong>Checkout Date:</strong> ${object.checkout_date}</p>
+                    <p><strong>Expected Return Date:</strong> ${object.expected_return_date}</p>
+                    <p>Please take good care of these assets and return them by the expected date.</p>
+                    <p>Best regards,<br/>IT Department</p>
+                </div>
+            </field>
+        </record>
+
+        <!-- Teacher Checkin Email Template -->
+        <record id="email_template_teacher_checkin" model="mail.template">
+            <field name="name">Teacher Asset Check-in</field>
+            <field name="model_id" ref="model_asset_teacher_assignment"/>
+            <field name="subject">Asset Check-in Confirmation - ${object.name}</field>
+            <field name="email_from">${(object.it_staff_id.email or '')|safe}</field>
+            <field name="email_to">${(object.teacher_id.work_email or '')|safe}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; padding: 20px;">
+                    <h2>Asset Check-in Confirmation</h2>
+                    <p>Dear ${object.teacher_id.name},</p>
+                    <p>Thank you for returning the assets. This confirms the check-in of the following:</p>
+                    <table style="border-collapse: collapse; width: 100%; margin: 20px 0;">
+                        <tr style="background-color: #f2f2f2;">
+                            <th style="border: 1px solid #ddd; padding: 8px;">Asset Code</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Asset Name</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Return Condition</th>
+                        </tr>
+                        % for line in object.asset_line_ids:
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${line.asset_code}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${line.asset_name}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${line.checkin_condition or 'N/A'}</td>
+                        </tr>
+                        % endfor
+                    </table>
+                    <p><strong>Return Date:</strong> ${object.actual_return_date}</p>
+                    <p>Best regards,<br/>IT Department</p>
+                </div>
+            </field>
+        </record>
+
+        <!-- Student Checkout Email Template -->
+        <record id="email_template_student_checkout" model="mail.template">
+            <field name="name">Student Asset Checkout</field>
+            <field name="model_id" ref="model_asset_student_assignment"/>
+            <field name="subject">Student Asset Checkout - ${object.student_id.name}</field>
+            <field name="email_from">${(object.it_staff_id.email or '')|safe}</field>
+            <field name="email_to">${(object.parent_id.email or '')|safe}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; padding: 20px;">
+                    <h2>Student Asset Checkout Notification</h2>
+                    <p>Dear Parent/Guardian,</p>
+                    <p>This is to inform you that ${object.student_id.name} has checked out the following school assets:</p>
+                    <table style="border-collapse: collapse; width: 100%; margin: 20px 0;">
+                        <tr style="background-color: #f2f2f2;">
+                            <th style="border: 1px solid #ddd; padding: 8px;">Asset Code</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Asset Name</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Condition</th>
+                        </tr>
+                        % for line in object.asset_line_ids:
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${line.asset_code}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${line.asset_name}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${line.checkout_condition}</td>
+                        </tr>
+                        % endfor
+                    </table>
+                    <p><strong>Grade/Section:</strong> ${object.grade_level} ${object.section or ''}</p>
+                    <p><strong>Checkout Date:</strong> ${object.checkout_date}</p>
+                    <p><strong>Expected Return Date:</strong> ${object.expected_return_date}</p>
+                    <p><strong>Important:</strong> Please ensure your child takes proper care of these assets. Any damage or loss will be your responsibility.</p>
+                    <p>Best regards,<br/>IT Department</p>
+                </div>
+            </field>
+        </record>
+
+        <!-- Student Checkin Email Template -->
+        <record id="email_template_student_checkin" model="mail.template">
+            <field name="name">Student Asset Check-in</field>
+            <field name="model_id" ref="model_asset_student_assignment"/>
+            <field name="subject">Student Asset Check-in - ${object.student_id.name}</field>
+            <field name="email_from">${(object.it_staff_id.email or '')|safe}</field>
+            <field name="email_to">${(object.parent_id.email or '')|safe}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; padding: 20px;">
+                    <h2>Student Asset Check-in Notification</h2>
+                    <p>Dear Parent/Guardian,</p>
+                    <p>${object.student_id.name} has returned the school assets. Check-in details:</p>
+                    <table style="border-collapse: collapse; width: 100%; margin: 20px 0;">
+                        <tr style="background-color: #f2f2f2;">
+                            <th style="border: 1px solid #ddd; padding: 8px;">Asset Code</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Asset Name</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Condition</th>
+                            <th style="border: 1px solid #ddd; padding: 8px;">Damage</th>
+                        </tr>
+                        % for line in object.asset_line_ids:
+                        <tr>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${line.asset_code}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${line.asset_name}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${line.checkin_condition or 'N/A'}</td>
+                            <td style="border: 1px solid #ddd; padding: 8px;">${'Yes' if line.damage_found else 'No'}</td>
+                        </tr>
+                        % endfor
+                    </table>
+                    <p><strong>Return Date:</strong> ${object.actual_return_date}</p>
+                    % if object.total_damage_cost > 0:
+                    <p style="color: red;"><strong>Total Damage Cost:</strong> ${object.total_damage_cost}</p>
+                    <p>An invoice for the damage cost will be sent separately.</p>
+                    % endif
+                    <p>Best regards,<br/>IT Department</p>
+                </div>
+            </field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!-- DAMAGE CASE: MANAGER APPROVAL EMAIL TEMPLATE -->
+        <!-- ============================================================ -->
+
+        <!-- Damage Case Approval Request Email -->
+        <record id="email_template_damage_case_approval" model="mail.template">
+            <field name="name">Damage Case - Manager Approval Request</field>
+            <field name="model_id" ref="model_asset_damage_case"/>
+            <field name="subject">MYIS - Damage Case Approval Required: {{ object.name }}</field>
+            <field name="email_from">noreply@magicyears.ac.th</field>
+            <field name="email_to">{{ object.approver_email }}</field>
+            <field name="body_html" type="html">
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f8f9fa;">
+                    <!-- Header -->
+                    <div style="background-color: #dc3545; color: white; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                        <h2 style="margin: 0;">⚠️ Damage Case Approval Required</h2>
+                        <p style="margin: 5px 0 0 0; font-size: 14px;">MYIS International School - Asset Management</p>
+                    </div>
+
+                    <!-- Body -->
+                    <div style="background-color: white; padding: 30px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <p style="font-size: 16px; color: #333;">Dear Manager,</p>
+
+                        <p style="color: #555; line-height: 1.6;">
+                            A damage case has been submitted and requires your approval for repair authorization.
+                        </p>
+
+                        <!-- Case Information -->
+                        <div style="background-color: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin: 20px 0;">
+                            <h4 style="margin: 0 0 10px 0; color: #856404;">Case Information:</h4>
+                            <p style="margin: 5px 0;"><strong>Case Number:</strong> <t t-esc="object.name"/></p>
+                            <p style="margin: 5px 0;"><strong>Asset Code:</strong> <t t-esc="object.asset_code"/></p>
+                            <p style="margin: 5px 0;"><strong>Asset Name:</strong> <t t-esc="object.asset_id.name or 'N/A'"/></p>
+                            <p style="margin: 5px 0;"><strong>Damage Date:</strong> <t t-esc="object.damage_date.strftime('%B %d, %Y') if object.damage_date else 'N/A'"/></p>
+                            <p style="margin: 5px 0;"><strong>Reported By:</strong> <t t-esc="object.reported_by.name if object.reported_by else 'N/A'"/></p>
+                        </div>
+
+                        <!-- Damage Description -->
+                        <div style="background-color: #f8d7da; padding: 15px; border-left: 4px solid #dc3545; margin: 20px 0;">
+                            <h4 style="margin: 0 0 10px 0; color: #721c24;">Damage Description:</h4>
+                            <p style="margin: 0; color: #721c24; white-space: pre-wrap;"><t t-esc="object.damage_description or 'No description provided'"/></p>
+                        </div>
+
+                        <!-- Responsible Party -->
+                        <t t-if="object.responsible_type != 'none'">
+                        <div style="background-color: #e8e4f3; padding: 15px; border-left: 4px solid #574193; margin: 20px 0;">
+                            <h4 style="margin: 0 0 10px 0; color: #574193;">Responsible Party:</h4>
+                            <p style="margin: 5px 0;"><strong>Type:</strong> <t t-esc="dict(object._fields['responsible_type'].selection).get(object.responsible_type, 'N/A') if object.responsible_type else 'N/A'"/></p>
+                            <p style="margin: 5px 0;"><strong>Name:</strong>
+                                <t t-if="object.responsible_teacher_id">
+                                <t t-esc="object.responsible_teacher_id.name"/>
+                                </t>
+                                <t t-elif="object.responsible_student_name">
+                                <t t-esc="object.responsible_student_name"/>
+                                </t>
+                                <t t-else="">
+                                N/A
+                                </t>
+                            </p>
+                        </div>
+                        </t>
+
+                        <!-- Estimated Cost -->
+                        <div style="background-color: #dc3545; color: white; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0;">
+                            <h3 style="margin: 0 0 10px 0; font-size: 16px;">Estimated Repair Cost</h3>
+                            <p style="margin: 0; font-size: 32px; font-weight: bold;">$<t t-esc="'{:.2f}'.format(object.estimated_cost or 0.0)"/></p>
+                        </div>
+
+                        <!-- Call to Action -->
+                        <div style="text-align: center; margin: 30px 0;">
+                            <a t-attf-href="{{ object.get_base_url() }}/damage/approve/{{ object.approval_token }}"
+                               style="display: inline-block; background-color: #6AB42D; color: white; padding: 15px 40px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 16px;">
+                                📝 Review &amp; Approve/Reject
+                            </a>
+                            <p style="margin-top: 15px; font-size: 12px; color: #666;">
+                                This link will expire in 7 days: <t t-esc="object.approval_token_expiry.strftime('%B %d, %Y') if object.approval_token_expiry else 'N/A'"/>
+                            </p>
+                        </div>
+
+                        <!-- Important Notice -->
+                        <div style="background-color: #e8e4f3; padding: 15px; border-left: 4px solid #574193; margin: 20px 0;">
+                            <p style="margin: 0; color: #0c5460; font-size: 14px;">
+                                <strong>ℹ️ Important:</strong> Your approval is required before the IT department can proceed with repair arrangements.
+                                Please review the damage assessment and provide your decision online.
+                            </p>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #dee2e6;">
+                            <p style="margin: 0; color: #666; font-size: 14px;">
+                                Best regards,<br/>
+                                <strong>MYIS IT Department</strong>
+                            </p>
+                            <p style="margin: 10px 0 0 0; color: #999; font-size: 12px;">
+                                This is an automated notification from the MYIS Asset Management System.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

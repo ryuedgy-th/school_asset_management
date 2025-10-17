@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Consent Log List View -->
+    <record id="view_asset_consent_log_tree" model="ir.ui.view">
+        <field name="name">asset.consent.log.view.list</field>
+        <field name="model">asset.consent.log</field>
+        <field name="arch" type="xml">
+            <list string="Consent Records" decoration-warning="is_expired" decoration-danger="consent_withdrawn">
+                <field name="consent_reference"/>
+                <field name="consent_type"/>
+                <field name="user_type"/>
+                <field name="data_subject_name"/>
+                <field name="data_subject_email"/>
+                <field name="consent_date"/>
+                <field name="consent_given" widget="boolean_toggle"/>
+                <field name="consent_withdrawn" widget="boolean_toggle"/>
+                <field name="is_expired" invisible="1"/>
+                <field name="is_valid" string="Valid"/>
+                <field name="privacy_policy_version"/>
+                <field name="consent_method"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Consent Log Form View -->
+    <record id="view_asset_consent_log_form" model="ir.ui.view">
+        <field name="name">asset.consent.log.view.form</field>
+        <field name="model">asset.consent.log</field>
+        <field name="arch" type="xml">
+            <form string="Consent Record" create="false" delete="false">
+                <header>
+                    <button name="action_withdraw_consent" string="Withdraw Consent"
+                            type="object" class="btn-danger"
+                            invisible="consent_withdrawn or not consent_given"
+                            confirm="Are you sure you want to withdraw this consent? This action cannot be undone."/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                            <field name="active" widget="boolean" options="{'terminology': 'archive'}"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="consent_reference" readonly="1"/>
+                        </h1>
+                    </div>
+                    <!-- Withdrawal Alert -->
+                    <div class="alert alert-danger" role="alert" invisible="not consent_withdrawn">
+                        <strong><i class="fa fa-exclamation-triangle"></i> Consent Withdrawn</strong>
+                        <span invisible="not withdrawal_date"> on <field name="withdrawal_date" readonly="1" nolabel="1"/></span>
+                    </div>
+                    <group>
+                        <group string="Consent Information">
+                            <field name="consent_type" readonly="1"/>
+                            <field name="user_type" readonly="1"/>
+                            <field name="consent_method" readonly="1"/>
+                            <field name="consent_given" readonly="1"/>
+                            <field name="consent_date" readonly="1"/>
+                        </group>
+                        <group string="Data Subject">
+                            <field name="data_subject_name" readonly="1"/>
+                            <field name="data_subject_email" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Legal Basis">
+                            <field name="legal_basis" readonly="1"/>
+                            <field name="purpose_of_collection" readonly="1"/>
+                            <field name="privacy_policy_version" readonly="1"/>
+                            <field name="retention_period_years" readonly="1"/>
+                        </group>
+                        <group string="Validity">
+                            <field name="consent_expiry_date" readonly="1"/>
+                            <field name="is_expired" readonly="1"/>
+                            <field name="is_valid" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Withdrawal Information" invisible="not consent_withdrawn">
+                        <field name="withdrawal_date" readonly="1"/>
+                        <field name="withdrawal_reason" readonly="1" widget="text"/>
+                    </group>
+                    <group string="Related Records">
+                        <group>
+                            <field name="student_assignment_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="teacher_assignment_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Technical Details">
+                        <group>
+                            <field name="ip_address" readonly="1"/>
+                            <field name="user_agent" readonly="1" widget="text"/>
+                        </group>
+                        <group>
+                            <field name="consent_evidence" readonly="1" widget="text"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Consent Log Search View -->
+    <record id="view_asset_consent_log_search" model="ir.ui.view">
+        <field name="name">asset.consent.log.view.search</field>
+        <field name="model">asset.consent.log</field>
+        <field name="arch" type="xml">
+            <search string="Search Consent Records">
+                <field name="consent_reference"/>
+                <field name="data_subject_name"/>
+                <field name="data_subject_email"/>
+                <field name="consent_type"/>
+                <field name="user_type"/>
+                <separator/>
+                <filter name="filter_active_consents" string="Active Consents"
+                        domain="[('consent_given', '=', True), ('consent_withdrawn', '=', False), ('is_expired', '=', False)]"/>
+                <filter name="filter_withdrawn" string="Withdrawn"
+                        domain="[('consent_withdrawn', '=', True)]"/>
+                <filter name="filter_expired" string="Expired"
+                        domain="[('is_expired', '=', True)]"/>
+                <filter name="filter_invalid" string="Invalid"
+                        domain="[('is_valid', '=', False)]"/>
+                <separator/>
+                <filter name="filter_data_collection" string="Data Collection"
+                        domain="[('consent_type', '=', 'data_collection')]"/>
+                <filter name="filter_digital_signature" string="Digital Signature"
+                        domain="[('consent_type', '=', 'digital_signature')]"/>
+                <filter name="filter_email" string="Email Communication"
+                        domain="[('consent_type', '=', 'email_communication')]"/>
+                <filter name="filter_damage" string="Damage Liability"
+                        domain="[('consent_type', '=', 'damage_liability')]"/>
+                <separator/>
+                <filter name="filter_parent" string="Parent"
+                        domain="[('user_type', '=', 'parent')]"/>
+                <filter name="filter_teacher" string="Teacher"
+                        domain="[('user_type', '=', 'teacher')]"/>
+                <separator/>
+                <group name="group_by">
+                    <filter name="group_consent_type" string="Consent Type" context="{'group_by': 'consent_type'}"/>
+                    <filter name="group_user_type" string="User Type" context="{'group_by': 'user_type'}"/>
+                    <filter name="group_consent_date" string="Consent Date" context="{'group_by': 'consent_date:month'}"/>
+                    <filter name="group_valid" string="Validity" context="{'group_by': 'is_valid'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Consent Log Action -->
+    <record id="action_asset_consent_log" model="ir.actions.act_window">
+        <field name="name">Consent Records</field>
+        <field name="res_model">asset.consent.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_active_consents': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No consent records found
+            </p>
+            <p>
+                This page shows all PDPA consent records collected from parents and teachers.
+                Each record documents when and how consent was given, and tracks its validity status.
+            </p>
+        </field>
+    </record>
+
+</odoo>

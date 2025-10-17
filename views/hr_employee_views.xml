@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit HR Employee Form View to Add Asset Information -->
+    <record id="view_employee_form_asset_info" model="ir.ui.view">
+        <field name="name">hr.employee.form.asset.info</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <!-- Add Smart Buttons -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <!-- Asset Assignments Button -->
+                <button name="action_view_asset_assignments"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-clipboard"
+                        groups="school_asset_management.group_asset_user"
+                        invisible="asset_assignment_count == 0">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="asset_assignment_count"/>
+                        </span>
+                        <span class="o_stat_text">Asset</span>
+                        <span class="o_stat_text">Assignments</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Add Asset Tab to Employee Form (Optional) -->
+    <record id="view_employee_form_asset_tab" model="ir.ui.view">
+        <field name="name">hr.employee.form.asset.tab</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Asset History" name="asset_history" groups="school_asset_management.group_asset_user">
+                    <group>
+                        <group string="Summary">
+                            <field name="asset_assignment_count" string="Active Assignments"/>
+                            <field name="current_asset_count" string="Current Assets"/>
+                        </group>
+                    </group>
+
+                    <separator string="Currently Assigned Assets"/>
+                    <field name="current_asset_ids" nolabel="1"
+                           context="{'tree_view_ref': 'school_asset_management.view_asset_asset_tree'}"
+                           options="{'no_create': True, 'no_open': True}"/>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

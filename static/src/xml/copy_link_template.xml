@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="school_asset_management.CopySignatureLinkActionTemplate">
+        <div class="o_copy_link_action">
+            <!-- This component auto-executes and closes -->
+        </div>
+    </t>
+</templates>

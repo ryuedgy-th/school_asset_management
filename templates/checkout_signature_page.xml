@@ -1,0 +1,505 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Checkout Signature Page Template -->
+    <template id="checkout_signature_page" name="Parent Checkout Signature">
+        <t t-call="school_asset_management.signature_minimal_layout">
+            <t t-set="head">
+                <link rel="stylesheet" type="text/css" href="/school_asset_management/static/src/css/signature_page_minimal.css"/>
+            </t>
+            <div class="container signature-page mt-4 mb-5">
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <h2 class="text-primary fw-bold">MYIS International School</h2>
+                    <h4 class="text-secondary">Student Asset Assignment Form</h4>
+                    <p class="text-muted">Please review and sign to acknowledge receipt of school assets</p>
+                </div>
+
+                <!-- Student Information Card -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0">Student Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <strong>Student Name:</strong>
+                                <p class="mb-0"><t t-esc="student_name"/></p>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Grade Level:</strong>
+                                <p class="mb-0"><t t-esc="grade_level"/></p>
+                            </div>
+                            <div class="col-md-4">
+                                <strong>Checkout Date:</strong>
+                                <p class="mb-0"><t t-esc="checkout_date.strftime('%B %d, %Y') if checkout_date else 'N/A'"/></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Asset List Card -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0">Assets Assigned</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Asset Code</th>
+                                        <th>Asset Name</th>
+                                        <th>Condition</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="asset_lines" t-as="line">
+                                        <tr>
+                                            <td><t t-esc="line_index + 1"/></td>
+                                            <td><t t-esc="line.asset_code"/></td>
+                                            <td><t t-esc="line.asset_name"/></td>
+                                            <td>
+                                                <span t-attf-class="badge bg-{{ 'success' if line.checkout_condition == 'excellent' else 'primary' if line.checkout_condition == 'good' else 'warning' if line.checkout_condition == 'fair' else 'danger' }}">
+                                                    <t t-esc="dict(line._fields['checkout_condition'].selection).get(line.checkout_condition, 'N/A')"/>
+                                                </span>
+                                            </td>
+                                            <td><t t-esc="line.checkout_notes or '-'"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Checkout Photos Section -->
+                <t t-set="has_photos" t-value="any(line.checkout_photo_ids for line in asset_lines)"/>
+                <t t-if="has_photos">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header">
+                            <h5 class="mb-0">Asset Condition Photos (at Checkout)</h5>
+                        </div>
+                        <div class="card-body">
+                            <t t-foreach="asset_lines" t-as="line">
+                                <t t-if="line.checkout_photo_ids">
+                                    <div class="mb-4">
+                                        <p class="mb-2 fw-bold">
+                                            <i class="fa fa-cube"></i>
+                                            <t t-esc="line.asset_code"/> - <t t-esc="line.asset_name"/>
+                                        </p>
+                                        <div class="row g-2">
+                                            <t t-foreach="line.checkout_photo_ids" t-as="photo">
+                                                <div class="col-md-4 col-sm-6">
+                                                    <img t-attf-src="data:image/png;base64,#{photo.datas}"
+                                                         class="img-fluid rounded border checkout-photo-thumbnail"
+                                                         alt="Checkout photo"
+                                                         style="max-height: 300px; object-fit: cover; width: 100%; cursor: pointer;"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+
+                <!-- Terms and Conditions Card -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0">Terms &amp; Conditions</h5>
+                    </div>
+                    <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                        <t t-call="#{terms_template}"/>
+                    </div>
+                </div>
+
+                <!-- PDPA Consent Agreement Card (Simplified & Professional) -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fa fa-shield"></i> Privacy &amp; Consent Agreement
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Privacy Policy Summary -->
+                        <div class="alert mb-4" style="background-color: #E5E7EB; border: 1px solid #D1D5DB;">
+                            <p class="mb-2">
+                                <i class="fa fa-info-circle"></i>
+                                <strong>Data Protection Notice:</strong> MYIS International School collects and processes personal data in accordance with Thailand's Personal Data Protection Act (PDPA).
+                            </p>
+                            <p class="mb-0">
+                                <button type="button" class="btn btn-sm privacy-policy-btn" id="view-privacy-policy" style="background-color: #a31d1d; color: white; border: none; padding: 6px 16px; border-radius: 6px; font-weight: 500;">
+                                    <i class="fa fa-file-text"></i> Read Full Privacy Policy
+                                </button>
+                            </p>
+                        </div>
+
+                        <!-- Simplified Consent Checkboxes (English Only) -->
+                        <div class="form-check mb-3">
+                            <input class="form-check-input consent-checkbox" type="checkbox"
+                                   id="consent_privacy_policy" name="consent_privacy_policy" required="required"/>
+                            <label class="form-check-label" for="consent_privacy_policy">
+                                <strong class="text-danger">*</strong>
+                                I have read and agree to the <a href="#" class="privacy-policy-link" style="color: #a31d1d; text-decoration: underline;">Privacy Policy</a> and consent to the collection, use, and disclosure of my personal data and my child's data for asset management purposes.
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input consent-checkbox" type="checkbox"
+                                   id="consent_digital_signature" name="consent_digital_signature" required="required"/>
+                            <label class="form-check-label" for="consent_digital_signature">
+                                <strong class="text-danger">*</strong>
+                                I consent to the use of digital signature with the same legal effect as a handwritten signature.
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input consent-checkbox" type="checkbox"
+                                   id="consent_email" name="consent_email" required="required"/>
+                            <label class="form-check-label" for="consent_email">
+                                <strong class="text-danger">*</strong>
+                                I consent to receive email notifications regarding asset borrowing, return reminders, and related communications.
+                            </label>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input consent-checkbox" type="checkbox"
+                                   id="consent_liability" name="consent_liability" required="required"/>
+                            <label class="form-check-label" for="consent_liability">
+                                <strong class="text-danger">*</strong>
+                                I acknowledge and accept financial responsibility for any damage or loss of school assets assigned to my child.
+                            </label>
+                        </div>
+
+                        <!-- Rights Summary -->
+                        <div class="mt-4 p-3" style="background-color: #F9FAFB; border-left: 3px solid var(--myis-purple); border-radius: 4px;">
+                            <p class="mb-1 small"><strong>Your Rights:</strong> You have the right to access, rectify, erase, restrict, port, and object to the processing of your personal data, and to withdraw consent at any time.</p>
+                            <p class="mb-0 small"><strong>Data Protection Officer:</strong> <a href="mailto:dpo@myis.ac.th">dpo@myis.ac.th</a></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Signature Section Card -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header">
+                        <h5 class="mb-0">Parent/Guardian Signature</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Parent Name Input -->
+                        <div class="mb-3">
+                            <label for="parent_name_input" class="form-label fw-bold">
+                                Parent/Guardian Full Name <span class="text-danger">*</span>
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="parent_name_input"
+                                   placeholder="Enter your full name"
+                                   required="required"/>
+                            <small class="form-text text-muted">Please enter your full legal name</small>
+                        </div>
+
+                        <!-- Signature Canvas -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                Your Signature <span class="text-danger">*</span>
+                            </label>
+                            <div class="signature-pad-container border rounded p-2 bg-white">
+                                <canvas id="signature-pad" class="signature-canvas"></canvas>
+                            </div>
+                            <div class="mt-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="clear-signature">
+                                    <i class="fa fa-eraser"></i> Clear Signature
+                                </button>
+                            </div>
+                            <small class="form-text text-muted">
+                                Sign above using your mouse or finger (on touch devices)
+                            </small>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="button" class="btn btn-success btn-lg" id="submit-signature">
+                                <i class="fa fa-check-circle"></i> Submit Signature
+                            </button>
+                        </div>
+
+                        <!-- Status Messages -->
+                        <div id="status-message" class="mt-3" style="display: none;">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hidden Token Field -->
+                <input type="hidden" id="signature_token" t-att-value="token"/>
+            </div>
+
+            <!-- Privacy Policy Modal -->
+            <div class="modal fade" id="privacyPolicyModal" tabindex="-1" aria-labelledby="privacyPolicyModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="privacyPolicyModalLabel">
+                                <i class="fa fa-shield"></i> Privacy Policy &amp; Data Protection Notice
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <t t-call="school_asset_management.privacy_consent_notice_en"/>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="accept-privacy-policy">
+                                <i class="fa fa-check"></i> I Understand and Accept
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JavaScript for Signature Pad -->
+            <script type="text/javascript" src="/school_asset_management/static/src/js/signature_pad.js"></script>
+
+            <!-- JavaScript for Privacy Policy Modal -->
+            <script type="text/javascript">
+            <![CDATA[
+                document.addEventListener('DOMContentLoaded', function() {
+                    console.log('Privacy Policy Modal Script Loaded');
+
+                    var modalElement = document.getElementById('privacyPolicyModal');
+                    console.log('Modal Element:', modalElement);
+
+                    // Try to use Bootstrap 5 Modal if available
+                    var privacyModal;
+                    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                        privacyModal = new bootstrap.Modal(modalElement);
+                        console.log('Bootstrap Modal initialized');
+                    }
+
+                    // Open modal on button click
+                    var viewButton = document.getElementById('view-privacy-policy');
+                    if (viewButton) {
+                        viewButton.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            console.log('View Privacy Policy button clicked');
+                            if (privacyModal) {
+                                privacyModal.show();
+                            } else {
+                                // Fallback: use jQuery if Bootstrap is not available
+                                if (typeof $ !== 'undefined') {
+                                    $('#privacyPolicyModal').modal('show');
+                                } else {
+                                    modalElement.style.display = 'block';
+                                    modalElement.classList.add('show');
+                                }
+                            }
+                        });
+                    }
+
+                    // Open modal on link click
+                    document.querySelectorAll('.privacy-policy-link').forEach(function(link) {
+                        link.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            console.log('Privacy Policy link clicked');
+                            if (privacyModal) {
+                                privacyModal.show();
+                            } else {
+                                if (typeof $ !== 'undefined') {
+                                    $('#privacyPolicyModal').modal('show');
+                                } else {
+                                    modalElement.style.display = 'block';
+                                    modalElement.classList.add('show');
+                                }
+                            }
+                        });
+                    });
+
+                    // Auto-check consent when user accepts from modal
+                    var acceptButton = document.getElementById('accept-privacy-policy');
+                    if (acceptButton) {
+                        acceptButton.addEventListener('click', function() {
+                            console.log('Accept button clicked');
+                            document.getElementById('consent_privacy_policy').checked = true;
+                            if (privacyModal) {
+                                privacyModal.hide();
+                            } else {
+                                if (typeof $ !== 'undefined') {
+                                    $('#privacyPolicyModal').modal('hide');
+                                } else {
+                                    modalElement.style.display = 'none';
+                                    modalElement.classList.remove('show');
+                                }
+                            }
+                        });
+                    }
+
+                    // Close button handler
+                    var closeButtons = modalElement.querySelectorAll('[data-bs-dismiss="modal"]');
+                    closeButtons.forEach(function(btn) {
+                        btn.addEventListener('click', function() {
+                            if (privacyModal) {
+                                privacyModal.hide();
+                            } else {
+                                if (typeof $ !== 'undefined') {
+                                    $('#privacyPolicyModal').modal('hide');
+                                } else {
+                                    modalElement.style.display = 'none';
+                                    modalElement.classList.remove('show');
+                                }
+                            }
+                        });
+                    });
+                });
+
+                // Photo Click to Enlarge Handler
+                document.querySelectorAll('.checkout-photo-thumbnail').forEach(function(img) {
+                    img.addEventListener('click', function(e) {
+                        e.preventDefault();
+
+                        // Create modal overlay
+                        var modal = document.createElement('div');
+                        modal.style.cssText = `
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            background: rgba(0, 0, 0, 0.95);
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            z-index: 9999;
+                            cursor: pointer;
+                        `;
+
+                        // Close button
+                        var closeBtn = document.createElement('button');
+                        closeBtn.innerHTML = '✕';
+                        closeBtn.style.cssText = `
+                            position: absolute;
+                            top: 20px;
+                            right: 30px;
+                            background: rgba(255, 255, 255, 0.2);
+                            border: 2px solid white;
+                            color: white;
+                            font-size: 36px;
+                            width: 50px;
+                            height: 50px;
+                            border-radius: 50%;
+                            cursor: pointer;
+                            transition: all 0.3s;
+                            padding: 0;
+                            line-height: 1;
+                        `;
+                        closeBtn.addEventListener('mouseover', function() {
+                            this.style.background = 'rgba(255, 255, 255, 0.3)';
+                            this.style.transform = 'scale(1.1)';
+                        });
+                        closeBtn.addEventListener('mouseout', function() {
+                            this.style.background = 'rgba(255, 255, 255, 0.2)';
+                            this.style.transform = 'scale(1)';
+                        });
+
+                        // Large image
+                        var largeImg = document.createElement('img');
+                        largeImg.src = this.src;
+                        largeImg.style.cssText = 'max-width: 90%; max-height: 85%; border-radius: 8px;';
+
+                        // Help text
+                        var helpText = document.createElement('div');
+                        helpText.innerHTML = 'Click X button or press ESC to close';
+                        helpText.style.cssText = `
+                            color: white;
+                            margin-top: 20px;
+                            font-size: 14px;
+                            opacity: 0.8;
+                        `;
+
+                        modal.appendChild(closeBtn);
+                        modal.appendChild(largeImg);
+                        modal.appendChild(helpText);
+                        document.body.appendChild(modal);
+
+                        // Close on click
+                        var closeModal = function() {
+                            if (document.body.contains(modal)) {
+                                document.body.removeChild(modal);
+                            }
+                        };
+
+                        closeBtn.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                            closeModal();
+                        });
+
+                        modal.addEventListener('click', closeModal);
+
+                        // Close on ESC key
+                        var escHandler = function(e) {
+                            if (e.key === 'Escape') {
+                                closeModal();
+                                document.removeEventListener('keydown', escHandler);
+                            }
+                        };
+                        document.addEventListener('keydown', escHandler);
+                    });
+                });
+            ]]>
+            </script>
+        </t>
+    </template>
+
+    <!-- Error Page Template -->
+    <template id="signature_error_page" name="Signature Error Page">
+        <t t-call="school_asset_management.signature_minimal_layout">
+            <div class="container mt-5 mb-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card shadow-lg border-danger">
+                            <div class="card-header bg-danger text-white text-center">
+                                <h4><i class="fa fa-exclamation-triangle"></i> <t t-esc="error_title"/></h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <p class="lead"><t t-esc="error_message"/></p>
+                                <hr/>
+                                <p class="text-muted">
+                                    If you believe this is an error, please contact:<br/>
+                                    <strong>MYIS IT Department</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Already Signed Page Template -->
+    <template id="signature_already_signed_page" name="Already Signed Page">
+        <t t-call="school_asset_management.signature_minimal_layout">
+            <div class="container mt-5 mb-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card shadow-lg border-success">
+                            <div class="card-header bg-success text-white text-center">
+                                <h4><i class="fa fa-check-circle"></i> Already Signed</h4>
+                            </div>
+                            <div class="card-body text-center">
+                                <p class="lead"><t t-esc="message"/></p>
+                                <hr/>
+                                <p class="text-muted">
+                                    No further action is required.<br/>
+                                    If you have any questions, please contact the MYIS IT Department.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Asset Student Line Tree View -->
+    <record id="view_asset_student_line_tree" model="ir.ui.view">
+        <field name="name">asset.student.line.tree</field>
+        <field name="model">asset.student.line</field>
+        <field name="arch" type="xml">
+            <list string="Student Assignment Lines">
+                <field name="assignment_id"/>
+                <field name="asset_id"/>
+                <field name="asset_code"/>
+                <field name="asset_name"/>
+                <field name="asset_category"/>
+                <field name="checkout_condition"/>
+                <field name="checkin_condition"/>
+                <field name="damage_found"/>
+                <field name="repair_cost" sum="Total Repair Cost"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Asset Student Line Form View -->
+    <record id="view_asset_student_line_form" model="ir.ui.view">
+        <field name="name">asset.student.line.form</field>
+        <field name="model">asset.student.line</field>
+        <field name="arch" type="xml">
+            <form string="Student Assignment Line">
+                <sheet>
+                    <group>
+                        <group string="Asset Information">
+                            <field name="assignment_id"/>
+                            <field name="asset_id"/>
+                            <field name="asset_code"/>
+                            <field name="asset_name"/>
+                            <field name="asset_category"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Checkout">
+                            <group>
+                                <field name="checkout_condition"/>
+                                <field name="checkout_notes"/>
+                            </group>
+                            <separator string="Checkout Photos"/>
+                            <field name="checkout_photo_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Check-in">
+                            <group>
+                                <field name="checkin_condition"/>
+                                <field name="checkin_notes"/>
+                            </group>
+                            <separator string="Check-in Photos"/>
+                            <field name="checkin_photo_ids" widget="many2many_binary"/>
+                        </page>
+                        <page string="Damage Information">
+                            <group>
+                                <field name="damage_found"/>
+                                <field name="damage_description"/>
+                                <field name="repair_cost"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

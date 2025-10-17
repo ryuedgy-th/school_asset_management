@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Main Menu -->
+    <menuitem id="menu_asset_root"
+              name="Assets"
+              web_icon="school_asset_management,static/description/icon.png"
+              sequence="150"/>
+
+    <!-- Dashboard Menu -->
+    <menuitem id="menu_asset_dashboard"
+              name="Dashboard"
+              parent="menu_asset_root"
+              action="action_asset_dashboard"
+              sequence="1"/>
+
+    <!-- Assets Menu Group -->
+    <menuitem id="menu_asset_assets"
+              name="Assets"
+              parent="menu_asset_root"
+              sequence="10"/>
+
+    <menuitem id="menu_asset_asset_all"
+              name="All Assets"
+              parent="menu_asset_assets"
+              action="action_asset_asset"
+              sequence="1"/>
+
+    <menuitem id="menu_asset_category"
+              name="Categories"
+              parent="menu_asset_assets"
+              action="action_asset_category"
+              sequence="2"/>
+
+    <menuitem id="menu_asset_location"
+              name="Locations"
+              parent="menu_asset_assets"
+              action="action_asset_location"
+              sequence="3"/>
+
+    <!-- Assignments Menu Group -->
+    <menuitem id="menu_asset_assignments"
+              name="Assignments"
+              parent="menu_asset_root"
+              sequence="20"/>
+
+    <menuitem id="menu_asset_teacher_assignment"
+              name="Teacher Assignments"
+              parent="menu_asset_assignments"
+              action="action_asset_teacher_assignment"
+              sequence="1"/>
+
+    <menuitem id="menu_asset_student_assignment"
+              name="Student Assignments"
+              parent="menu_asset_assignments"
+              action="action_asset_student_assignment"
+              sequence="2"/>
+
+    <!-- Inspections Menu -->
+    <menuitem id="menu_asset_inspection"
+              name="Inspections"
+              parent="menu_asset_root"
+              action="action_asset_inspection"
+              sequence="30"/>
+
+    <!-- Damage Cases Menu -->
+    <menuitem id="menu_asset_damage_case"
+              name="Damage Cases"
+              parent="menu_asset_root"
+              action="action_asset_damage_case"
+              sequence="60"/>
+
+    <!-- PDPA Compliance Menu Group -->
+    <menuitem id="menu_asset_pdpa"
+              name="PDPA / ป.ค.ส."
+              parent="menu_asset_root"
+              sequence="70"
+              groups="school_asset_management.group_asset_manager"/>
+
+    <menuitem id="menu_asset_data_request"
+              name="Data Subject Requests"
+              parent="menu_asset_pdpa"
+              action="action_asset_data_request"
+              sequence="1"/>
+
+    <menuitem id="menu_asset_consent_log"
+              name="Consent Records"
+              parent="menu_asset_pdpa"
+              action="action_asset_consent_log"
+              sequence="2"/>
+
+    <menuitem id="menu_asset_security_audit_log"
+              name="Security Audit Log"
+              parent="menu_asset_pdpa"
+              action="action_asset_security_audit_log"
+              sequence="3"/>
+
+    <!-- Configuration Menu Group -->
+    <menuitem id="menu_asset_configuration"
+              name="Configuration"
+              parent="menu_asset_root"
+              sequence="90"
+              groups="school_asset_management.group_asset_manager"/>
+
+    <menuitem id="menu_asset_config_category"
+              name="Asset Categories"
+              parent="menu_asset_configuration"
+              action="action_asset_category"
+              sequence="1"/>
+
+    <menuitem id="menu_asset_config_location"
+              name="Asset Locations"
+              parent="menu_asset_configuration"
+              action="action_asset_location"
+              sequence="2"/>
+
+</odoo>

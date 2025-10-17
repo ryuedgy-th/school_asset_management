@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Minimal Layout for Signature Pages (No Website Context Required) -->
+    <template id="signature_minimal_layout" name="Minimal Signature Layout">
+        <t t-call="web.layout">
+            <t t-set="head">
+                <t t-call-assets="web.assets_frontend" t-js="false"/>
+                <t t-out="head or ''"/>
+            </t>
+            <t t-set="body_classname" t-value="'o_public_signature_page'"/>
+            <div id="wrapwrap">
+                <main>
+                    <t t-out="0"/>
+                </main>
+            </div>
+            <t t-call-assets="web.assets_frontend" t-css="false"/>
+        </t>
+    </template>
+
+    <!-- Manager Approval Signature Page for Damage Cases -->
+    <template id="damage_case_approval_page" name="Damage Case Manager Approval">
+        <t t-call="school_asset_management.signature_minimal_layout">
+            <t t-set="head">
+                <link rel="stylesheet" type="text/css" href="/school_asset_management/static/src/css/signature_page.css"/>
+            </t>
+            <div class="container signature-page mt-4 mb-5">
+                <!-- Header -->
+                <div class="text-center mb-4">
+                    <h2 class="text-primary fw-bold">MYIS International School</h2>
+                    <h4 class="text-secondary">Damage Case Approval Required</h4>
+                    <p class="text-muted">Please review and approve/reject the repair request</p>
+                </div>
+
+                <!-- Content -->
+                <!-- Asset Information Card -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Asset Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Asset Code:</strong>
+                                <p class="mb-0"><span class="badge bg-secondary"><t t-esc="asset_code"/></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Asset Name:</strong>
+                                <p class="mb-0"><t t-esc="asset_name"/></p>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <strong>Damage Date:</strong>
+                                <p class="mb-0"><t t-esc="damage_date.strftime('%B %d, %Y') if damage_date else 'N/A'"/></p>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Reported By:</strong>
+                                <p class="mb-0"><t t-esc="reported_by"/></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Responsible Party Card -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">Responsible Party</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Type:</strong>
+                                <p class="mb-0"><t t-esc="responsible_type"/></p>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Name:</strong>
+                                <p class="mb-0"><strong><t t-esc="responsible_name"/></strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Damage Description Card -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">Damage Description</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0" style="white-space: pre-wrap;"><t t-esc="damage_description or 'No description provided'"/></p>
+                    </div>
+                </div>
+
+                <!-- Estimated Cost Card -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">Estimated Repair Cost</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <h2 class="text-danger mb-0">$<t t-esc="'%.2f' % estimated_cost"/></h2>
+                    </div>
+                </div>
+
+                <!-- Decision Section Card -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">Your Decision</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <button class="btn btn-success w-100" id="btn-approve">
+                                    <i class="fa fa-check-circle"></i> Approve Repair
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-danger w-100" id="btn-reject">
+                                    <i class="fa fa-times-circle"></i> Reject Request
+                                </button>
+                            </div>
+                        </div>
+                        <input type="hidden" id="selected-decision" value=""/>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Notes (Optional)</label>
+                            <textarea class="form-control" id="approval-notes" rows="3" placeholder="Add notes or comments about your decision..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Signature Section Card -->
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">Manager Signature</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                Your Signature <span class="text-danger">*</span>
+                            </label>
+                            <div class="signature-pad-container border rounded p-2 bg-white">
+                                <canvas id="signature-pad" class="signature-canvas"></canvas>
+                            </div>
+                            <div class="mt-2">
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="clear-signature">
+                                    <i class="fa fa-eraser"></i> Clear Signature
+                                </button>
+                            </div>
+                            <small class="form-text text-muted">
+                                Sign above using your mouse or finger (on touch devices)
+                            </small>
+                        </div>
+
+                        <!-- Alert Messages -->
+                        <div id="alert-message" style="display: none;"></div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="button" class="btn btn-success btn-lg" id="submit-approval" disabled="disabled">
+                                <i class="fa fa-check-circle"></i> Submit Decision
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hidden token -->
+                <input type="hidden" id="approval_token" t-att-value="token"/>
+            </div>
+
+            <!-- JavaScript for Signature Pad -->
+            <script type="text/javascript" src="/school_asset_management/static/src/js/damage_case_approval_signature.js"></script>
+        </t>
+    </template>
+</odoo>

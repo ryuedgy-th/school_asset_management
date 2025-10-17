@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Security Audit Log List View -->
+    <record id="view_asset_security_audit_log_tree" model="ir.ui.view">
+        <field name="name">asset.security.audit.log.view.list</field>
+        <field name="model">asset.security.audit.log</field>
+        <field name="arch" type="xml">
+            <list string="Security Audit Log" create="false" delete="false"
+                  decoration-danger="event_type in ('signature_failed', 'rate_limit_exceeded', 'invalid_token')"
+                  decoration-success="event_type in ('signature_success', 'approval_success')">
+                <field name="name"/>
+                <field name="event_type"/>
+                <field name="signature_type"/>
+                <field name="ip_address"/>
+                <field name="user_agent"/>
+                <field name="student_name"/>
+                <field name="parent_email"/>
+                <field name="teacher_name"/>
+                <field name="teacher_email"/>
+                <field name="related_model"/>
+                <field name="related_id"/>
+                <field name="create_date" string="Timestamp"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Security Audit Log Form View -->
+    <record id="view_asset_security_audit_log_form" model="ir.ui.view">
+        <field name="name">asset.security.audit.log.view.form</field>
+        <field name="model">asset.security.audit.log</field>
+        <field name="arch" type="xml">
+            <form string="Security Audit Log Entry" create="false" delete="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Event Information">
+                            <field name="event_type" readonly="1"/>
+                            <field name="signature_type" readonly="1"/>
+                            <field name="create_date" string="Timestamp" readonly="1"/>
+                        </group>
+                        <group string="Network Information">
+                            <field name="ip_address" readonly="1"/>
+                            <field name="user_agent" readonly="1" widget="text"/>
+                        </group>
+                    </group>
+                    <group string="Student Assignment Details" invisible="not student_name">
+                        <group>
+                            <field name="student_name" readonly="1"/>
+                            <field name="parent_email" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Teacher Assignment Details" invisible="not teacher_name">
+                        <group>
+                            <field name="teacher_name" readonly="1"/>
+                            <field name="teacher_email" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Related Record">
+                        <group>
+                            <field name="related_model" readonly="1"/>
+                            <field name="related_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Additional Details" invisible="not additional_info">
+                        <field name="additional_info" readonly="1" widget="text"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Security Audit Log Search View -->
+    <record id="view_asset_security_audit_log_search" model="ir.ui.view">
+        <field name="name">asset.security.audit.log.view.search</field>
+        <field name="model">asset.security.audit.log</field>
+        <field name="arch" type="xml">
+            <search string="Search Security Logs">
+                <field name="event_type"/>
+                <field name="ip_address"/>
+                <field name="student_name"/>
+                <field name="parent_email"/>
+                <field name="teacher_name"/>
+                <field name="teacher_email"/>
+                <separator/>
+                <filter name="filter_signature_success" string="Signature Success"
+                        domain="[('event_type', '=', 'signature_success')]"/>
+                <filter name="filter_signature_failed" string="Signature Failed"
+                        domain="[('event_type', '=', 'signature_failed')]"/>
+                <filter name="filter_approval_success" string="Approval Success"
+                        domain="[('event_type', '=', 'approval_success')]"/>
+                <filter name="filter_approval_failed" string="Approval Failed"
+                        domain="[('event_type', '=', 'approval_failed')]"/>
+                <separator/>
+                <filter name="filter_rate_limit" string="Rate Limited"
+                        domain="[('event_type', '=', 'rate_limit_exceeded')]"/>
+                <filter name="filter_invalid_token" string="Invalid Token"
+                        domain="[('event_type', '=', 'invalid_token')]"/>
+                <filter name="filter_expired_token" string="Expired Token"
+                        domain="[('event_type', '=', 'expired_token')]"/>
+                <separator/>
+                <filter name="filter_checkout" string="Checkout Events"
+                        domain="[('signature_type', '=', 'checkout')]"/>
+                <filter name="filter_damage_report" string="Damage Report Events"
+                        domain="[('signature_type', '=', 'damage_report')]"/>
+                <filter name="filter_approval" string="Approval Events"
+                        domain="[('signature_type', '=', 'approval')]"/>
+                <separator/>
+                <filter name="filter_today" string="Today"
+                        domain="[('create_date', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00'))]"/>
+                <filter name="filter_last_7_days" string="Last 7 Days"
+                        domain="[('create_date', '&gt;=', (context_today() - datetime.timedelta(days=7)).strftime('%Y-%m-%d 00:00:00'))]"/>
+                <filter name="filter_last_30_days" string="Last 30 Days"
+                        domain="[('create_date', '&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d 00:00:00'))]"/>
+                <separator/>
+                <group name="group_by">
+                    <filter name="group_event_type" string="Event Type" context="{'group_by': 'event_type'}"/>
+                    <filter name="group_signature_type" string="Signature Type" context="{'group_by': 'signature_type'}"/>
+                    <filter name="group_ip" string="IP Address" context="{'group_by': 'ip_address'}"/>
+                    <filter name="group_date" string="Date" context="{'group_by': 'create_date:day'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Security Audit Log Action -->
+    <record id="action_asset_security_audit_log" model="ir.actions.act_window">
+        <field name="name">Security Audit Log</field>
+        <field name="res_model">asset.security.audit.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_last_30_days': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No security audit logs found
+            </p>
+            <p>
+                This page shows all security-related events including:
+                <ul>
+                    <li>Signature attempts (success and failures)</li>
+                    <li>Manager approvals</li>
+                    <li>Rate limiting events</li>
+                    <li>Invalid or expired tokens</li>
+                </ul>
+            </p>
+            <p>
+                These logs are important for:
+                <ul>
+                    <li>Security monitoring and incident response</li>
+                    <li>PDPA compliance (maintaining audit trail)</li>
+                    <li>Detecting suspicious activities</li>
+                    <li>Troubleshooting authentication issues</li>
+                </ul>
+            </p>
+        </field>
+    </record>
+
+</odoo>

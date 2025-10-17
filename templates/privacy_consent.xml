@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Privacy & Data Protection Notice Template (PDPA Compliant - v1.0) -->
+    <template id="privacy_consent_notice" name="Privacy Consent Notice">
+        <div class="card mb-4 border-info shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="fa fa-shield"></i> นโยบายความเป็นส่วนตัวและการให้ความยินยอม
+                </h5>
+                <small>Privacy Policy &amp; Consent Notice (Version 1.0)</small>
+            </div>
+            <div class="card-body" style="font-size: 14px; line-height: 1.6;">
+
+                <!-- Section 1: Data Controller -->
+                <div class="mb-4">
+                    <h6 class="text-primary"><i class="fa fa-building"></i> ผู้ควบคุมข้อมูลส่วนบุคคล (Data Controller)</h6>
+                    <p class="mb-2">
+                        <strong>MYIS International School</strong><br/>
+                        ที่อยู่: [ระบุที่อยู่โรงเรียน]<br/>
+                        เบอร์โทร: +66-XXX-XXX-XXXX<br/>
+                        อีเมล: <strong>dpo@myis.ac.th</strong> (Data Protection Officer)
+                    </p>
+                </div>
+
+                <!-- Section 2: Purpose of Data Collection (PDPA Section 24) -->
+                <div class="mb-4 bg-light p-3 rounded">
+                    <h6 class="text-primary"><i class="fa fa-list-alt"></i> วัตถุประสงค์ในการเก็บรวบรวมข้อมูล (Purpose)</h6>
+                    <p class="mb-2">เราเก็บรวบรวมข้อมูลส่วนบุคคลของท่านเพื่อวัตถุประสงค์ดังต่อไปนี้:</p>
+                    <ol class="mb-0">
+                        <li><strong>การจัดการครุภัณฑ์:</strong> เพื่อบันทึกการยืม-คืนครุภัณฑ์ของโรงเรียน</li>
+                        <li><strong>การยืนยันตัวตน:</strong> เพื่อระบุตัวบุคคลในระบบและป้องกันการปลอมแปลง</li>
+                        <li><strong>การติดต่อสื่อสาร:</strong> เพื่อส่งแจ้งเตือน เอกสาร และข้อมูลที่เกี่ยวข้อง</li>
+                        <li><strong>การรักษาความปลอดภัย:</strong> เพื่อป้องกันการใช้งานที่ไม่เหมาะสมและตรวจสอบความถูกต้อง</li>
+                        <li><strong>การปฏิบัติตามกฎหมาย:</strong> เพื่อปฏิบัติตามกฎหมายและข้อบังคับที่เกี่ยวข้อง</li>
+                    </ol>
+                </div>
+
+                <!-- Section 3: Personal Data Categories -->
+                <div class="mb-4">
+                    <h6 class="text-primary"><i class="fa fa-database"></i> ประเภทข้อมูลส่วนบุคคลที่เก็บรวบรวม</h6>
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ประเภทข้อมูล</th>
+                                <th>รายละเอียด</th>
+                                <th>วัตถุประสงค์</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>ข้อมูลส่วนตัว</strong></td>
+                                <td>ชื่อ-นามสกุล, ระดับชั้น, รหัสนักเรียน</td>
+                                <td>ระบุตัวบุคคลในระบบ</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ข้อมูลติดต่อ</strong></td>
+                                <td>อีเมล, เบอร์โทรศัพท์</td>
+                                <td>การติดต่อสื่อสารและแจ้งเตือน</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ลายเซ็นดิจิทัล</strong></td>
+                                <td>ลายเซ็นอิเล็กทรอนิกส์</td>
+                                <td>ยืนยันตัวตนและความยินยอม</td>
+                            </tr>
+                            <tr>
+                                <td><strong>ข้อมูลทางเทคนิค</strong></td>
+                                <td>IP Address, User Agent</td>
+                                <td>ความปลอดภัยและป้องกันการฉ้อโกง</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Section 4: Data Retention -->
+                <div class="mb-4">
+                    <h6 class="text-primary"><i class="fa fa-clock-o"></i> ระยะเวลาการเก็บรักษาข้อมูล (Retention Period)</h6>
+                    <ul class="mb-2">
+                        <li><strong>บันทึกการยืม-คืน:</strong> 7 ปี (ตามกฎหมายเกี่ยวกับการศึกษา)</li>
+                        <li><strong>ลายเซ็นและเอกสารสำคัญ:</strong> ตลอดระยะเวลาการศึกษา + 7 ปี</li>
+                        <li><strong>Security Audit Logs:</strong> 2 ปี (เพื่อการตรวจสอบ)</li>
+                        <li><strong>บันทึกความยินยอม (Consent):</strong> ตลอดระยะเวลาที่มีความสัมพันธ์ + 1 ปี</li>
+                    </ul>
+                    <p class="text-muted small">
+                        <i class="fa fa-info-circle"></i> เมื่อพ้นระยะเวลาเก็บรักษา ข้อมูลจะถูกลบหรือทำให้ไม่สามารถระบุตัวตนได้ (Anonymization)
+                    </p>
+                </div>
+
+                <!-- Section 5: Data Recipient -->
+                <div class="mb-4">
+                    <h6 class="text-primary"><i class="fa fa-users"></i> ผู้ที่อาจได้รับข้อมูล (Data Recipients)</h6>
+                    <ul class="mb-0">
+                        <li>เจ้าหน้าที่ IT ของโรงเรียน (เพื่อบริหารจัดการระบบ)</li>
+                        <li>ครูและผู้บริหาร (เพื่อการดูแลนักเรียนและครุภัณฑ์)</li>
+                        <li>ผู้ให้บริการระบบคลาวด์ (หากมี - ภายใต้สัญญาความลับ)</li>
+                    </ul>
+                </div>
+
+                <!-- Section 6: Data Subject Rights (PDPA Section 30-39) -->
+                <div class="mb-4 bg-warning bg-opacity-10 p-3 rounded border border-warning">
+                    <h6 class="text-warning"><i class="fa fa-hand-paper-o"></i> สิทธิของเจ้าของข้อมูล (Your Rights)</h6>
+                    <p class="mb-2">ท่านมีสิทธิตามกฎหมาย PDPA ดังต่อไปนี้:</p>
+                    <ol>
+                        <li><strong>สิทธิในการเข้าถึงข้อมูล</strong> (Right to Access) - ขอดูข้อมูลส่วนบุคคลของท่าน</li>
+                        <li><strong>สิทธิในการแก้ไข</strong> (Right to Rectification) - แก้ไขข้อมูลที่ไม่ถูกต้องหรือไม่สมบูรณ์</li>
+                        <li><strong>สิทธิในการลบข้อมูล</strong> (Right to Erasure) - ขอลบข้อมูลในกรณีที่กฎหมายอนุญาต</li>
+                        <li><strong>สิทธิในการระงับการใช้</strong> (Right to Restriction) - ระงับการประมวลผลชั่วคราว</li>
+                        <li><strong>สิทธิในการโอนย้าย</strong> (Right to Data Portability) - ขอรับสำเนาข้อมูลในรูปแบบอิเล็กทรอนิกส์</li>
+                        <li><strong>สิทธิในการคัดค้าน</strong> (Right to Object) - คัดค้านการประมวลผลในบางกรณี</li>
+                        <li><strong>สิทธิในการเพิกถอนความยินยอม</strong> (Right to Withdraw Consent) - เพิกถอนความยินยอมได้ตลอดเวลา</li>
+                    </ol>
+                    <p class="mb-0 mt-3">
+                        <strong>วิธีการใช้สิทธิ:</strong> ติดต่อ DPO ที่ <strong>dpo@myis.ac.th</strong> หรือ <strong>+66-XXX-XXX-XXXX</strong>
+                    </p>
+                </div>
+
+                <!-- Section 7: Data Security -->
+                <div class="mb-4">
+                    <h6 class="text-primary"><i class="fa fa-lock"></i> มาตรการรักษาความปลอดภัย</h6>
+                    <p class="mb-2">เราได้นำมาตรการด้านเทคนิคและการบริหารจัดการมาใช้เพื่อปกป้องข้อมูลของท่าน:</p>
+                    <ul class="mb-0">
+                        <li>การเข้ารหัสข้อมูล (Encryption) ทั้งระหว่างส่งและจัดเก็บ</li>
+                        <li>การควบคุมการเข้าถึง (Access Control) ตามหลักความจำเป็นต้องรู้</li>
+                        <li>การบันทึกกิจกรรม (Audit Logging) ทุกการเข้าถึงข้อมูล</li>
+                        <li>การป้องกัน Brute Force Attack ด้วย Rate Limiting</li>
+                        <li>การสำรองข้อมูล (Backup) อย่างสม่ำเสมอ</li>
+                    </ul>
+                </div>
+
+                <!-- Section 8: Consent Forms -->
+                <div class="mb-4 border border-primary rounded p-3">
+                    <h6 class="text-primary"><i class="fa fa-check-square-o"></i> การให้ความยินยอม (Consent)</h6>
+                    <p class="mb-3">กรุณาให้ความยินยอมแยกตามวัตถุประสงค์แต่ละประการ:</p>
+
+                    <!-- Consent 1: Data Collection -->
+                    <div class="form-check mb-3 p-3 bg-light rounded">
+                        <input class="form-check-input" type="checkbox" id="consent_data_collection"
+                               name="consent_data_collection" required="required"/>
+                        <label class="form-check-label" for="consent_data_collection">
+                            <strong class="text-danger">* บังคับ:</strong>
+                            <strong>ข้าพเจ้ายินยอมให้โรงเรียนเก็บรวบรวม ใช้ และเปิดเผยข้อมูลส่วนบุคคล</strong>
+                            ของข้าพเจ้าและบุตรหลานตามวัตถุประสงค์ที่ระบุข้างต้น
+                            เพื่อการจัดการครุภัณฑ์และการยืม-คืนอุปกรณ์
+                        </label>
+                    </div>
+
+                    <!-- Consent 2: Digital Signature -->
+                    <div class="form-check mb-3 p-3 bg-light rounded">
+                        <input class="form-check-input" type="checkbox" id="consent_digital_signature"
+                               name="consent_digital_signature" required="required"/>
+                        <label class="form-check-label" for="consent_digital_signature">
+                            <strong class="text-danger">* บังคับ:</strong>
+                            <strong>ข้าพเจ้ายินยอมให้ใช้ลายเซ็นดิจิทัล</strong>
+                            เป็นหลักฐานในการยืนยันตัวตนและความยินยอม โดยมีผลผูกพันทางกฎหมายเช่นเดียวกับลายเซ็นกระดาษ
+                        </label>
+                    </div>
+
+                    <!-- Consent 3: Email Communication -->
+                    <div class="form-check mb-3 p-3 bg-light rounded">
+                        <input class="form-check-input" type="checkbox" id="consent_email"
+                               name="consent_email" required="required"/>
+                        <label class="form-check-label" for="consent_email">
+                            <strong class="text-danger">* บังคับ:</strong>
+                            <strong>ข้าพเจ้ายินยอมให้ส่งอีเมล</strong>
+                            เพื่อแจ้งเตือน ส่งเอกสาร และติดต่อสื่อสารเกี่ยวกับการยืม-คืนครุภัณฑ์
+                        </label>
+                    </div>
+
+                    <!-- Consent 4: Liability Agreement -->
+                    <div class="form-check mb-3 p-3 bg-light rounded">
+                        <input class="form-check-input" type="checkbox" id="consent_liability"
+                               name="consent_liability" required="required"/>
+                        <label class="form-check-label" for="consent_liability">
+                            <strong class="text-danger">* บังคับ:</strong>
+                            <strong>ข้าพเจ้ายอมรับความรับผิดชอบ</strong>
+                            ในกรณีที่ครุภัณฑ์เกิดความเสียหาย สูญหาย หรือชำรุด
+                            และยินยอมชดใช้ค่าเสียหายตามที่โรงเรียนกำหนด
+                        </label>
+                    </div>
+
+                    <!-- Final Acknowledgment -->
+                    <div class="form-check mt-4 p-3 border border-success rounded bg-success bg-opacity-10">
+                        <input class="form-check-input" type="checkbox" id="final_acknowledgment"
+                               name="final_acknowledgment" required="required"/>
+                        <label class="form-check-label" for="final_acknowledgment">
+                            <strong class="text-success">✓ ยืนยันการอ่านและทำความเข้าใจ:</strong><br/>
+                            ข้าพเจ้าได้อ่านและเข้าใจนโยบายความเป็นส่วนตัวฉบับนี้แล้ว
+                            และยืนยันว่าข้อมูลที่ให้ไว้ถูกต้องและเป็นปัจจุบัน
+                            <span class="text-danger">*</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Section 9: Contact Information -->
+                <div class="alert alert-info mb-0" role="alert">
+                    <h6 class="alert-heading">
+                        <i class="fa fa-phone"></i> ติดต่อสอบถาม
+                    </h6>
+                    <p class="mb-0">
+                        <strong>Data Protection Officer (DPO)</strong><br/>
+                        อีเมล: <strong>dpo@myis.ac.th</strong><br/>
+                        โทร: <strong>+66-XXX-XXX-XXXX</strong><br/>
+                        <small class="text-muted">เวลาทำการ: จันทร์-ศุกร์ 08:00-16:00 น.</small>
+                    </p>
+                </div>
+
+                <!-- Version Info -->
+                <div class="mt-3 text-center">
+                    <small class="text-muted">
+                        <i class="fa fa-calendar"></i> Privacy Policy Version 1.0 |
+                        Last Updated: October 2025 |
+                        <a href="#" class="text-primary">ดาวน์โหลด PDF</a>
+                    </small>
+                </div>
+
+            </div>
+        </div>
+    </template>
+
+    <!-- Privacy Consent Notice (English - Parents/Students) -->
+    <template id="privacy_consent_notice_en" name="Privacy Consent Notice (English)">
+        <div class="privacy-policy-content">
+            <h6><i class="fa fa-shield"></i> Privacy Policy &amp; Data Protection Notice</h6>
+            <p>MYIS International School ("we", "our", or "the School") collects and processes personal data in accordance with Thailand's Personal Data Protection Act (PDPA B.E. 2562).</p>
+
+            <h6><i class="fa fa-building"></i> Data Controller</h6>
+            <p>
+                <strong>MYIS International School</strong><br/>
+                Data Protection Officer: <strong>dpo@myis.ac.th</strong><br/>
+                Phone: +66-XXX-XXX-XXXX
+            </p>
+
+            <h6><i class="fa fa-list-alt"></i> Purpose of Data Collection</h6>
+            <p>We collect and process personal data for the following purposes:</p>
+            <ol>
+                <li><strong>Asset Management:</strong> To record borrowing and return of school assets</li>
+                <li><strong>Identity Verification:</strong> To identify individuals and prevent fraud</li>
+                <li><strong>Communication:</strong> To send notifications, documents, and related information</li>
+                <li><strong>Security:</strong> To prevent misuse and ensure proper usage</li>
+                <li><strong>Legal Compliance:</strong> To comply with applicable laws and regulations</li>
+            </ol>
+
+            <h6><i class="fa fa-database"></i> Types of Personal Data Collected</h6>
+            <table class="table table-sm table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Data Type</th>
+                        <th>Details</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Personal Information</strong></td>
+                        <td>Name, grade level, student ID</td>
+                        <td>User identification</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Contact Information</strong></td>
+                        <td>Email, phone number</td>
+                        <td>Communication and notifications</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Digital Signature</strong></td>
+                        <td>Electronic signature</td>
+                        <td>Identity verification and consent</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Technical Data</strong></td>
+                        <td>IP address, user agent</td>
+                        <td>Security and fraud prevention</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h6><i class="fa fa-clock-o"></i> Data Retention Period</h6>
+            <ul>
+                <li><strong>Borrowing/Return Records:</strong> 7 years (as required by education law)</li>
+                <li><strong>Signatures and Important Documents:</strong> Duration of enrollment + 7 years</li>
+                <li><strong>Security Audit Logs:</strong> 2 years (for auditing purposes)</li>
+                <li><strong>Consent Records:</strong> Duration of relationship + 1 year</li>
+            </ul>
+            <p class="text-muted small">
+                <i class="fa fa-info-circle"></i> After the retention period, data will be deleted or anonymized.
+            </p>
+
+            <h6><i class="fa fa-users"></i> Data Recipients</h6>
+            <ul>
+                <li>School IT staff (for system administration)</li>
+                <li>Teachers and administrators (for student care and asset management)</li>
+                <li>Cloud service providers (if applicable - under confidentiality agreements)</li>
+            </ul>
+
+            <h6 style="color: #F59E0B !important;"><i class="fa fa-hand-paper-o"></i> Your Data Protection Rights</h6>
+            <p>You have the following rights under PDPA:</p>
+            <ol>
+                <li><strong>Right to Access</strong> - Request to view your personal data</li>
+                <li><strong>Right to Rectification</strong> - Correct inaccurate or incomplete data</li>
+                <li><strong>Right to Erasure</strong> - Request deletion where legally permitted</li>
+                <li><strong>Right to Restriction</strong> - Temporarily suspend processing</li>
+                <li><strong>Right to Data Portability</strong> - Receive data in electronic format</li>
+                <li><strong>Right to Object</strong> - Object to processing in certain cases</li>
+                <li><strong>Right to Withdraw Consent</strong> - Withdraw consent at any time</li>
+            </ol>
+            <p>
+                <strong>How to Exercise Your Rights:</strong> Contact our DPO at <strong>dpo@myis.ac.th</strong> or <strong>+66-XXX-XXX-XXXX</strong>. We will respond within 30 days as required by PDPA.
+            </p>
+
+            <h6><i class="fa fa-lock"></i> Data Security Measures</h6>
+            <p>We implement technical and administrative measures to protect your data:</p>
+            <ul>
+                <li>Data encryption (both in transit and at rest)</li>
+                <li>Access control based on need-to-know principle</li>
+                <li>Audit logging of all data access</li>
+                <li>Brute force attack prevention with rate limiting</li>
+                <li>Regular data backups</li>
+            </ul>
+
+            <h6><i class="fa fa-phone"></i> Contact Information</h6>
+            <p>
+                <strong>Data Protection Officer (DPO)</strong><br/>
+                Email: <strong>dpo@myis.ac.th</strong><br/>
+                Phone: <strong>+66-XXX-XXX-XXXX</strong><br/>
+                <small class="text-muted">Office Hours: Monday-Friday 08:00-16:00</small>
+            </p>
+
+            <div class="mt-3 text-center">
+                <small class="text-muted">
+                    <i class="fa fa-calendar"></i> Privacy Policy Version 1.0 | Last Updated: October 2025
+                </small>
+            </div>
+        </div>
+    </template>
+
+    <!-- Privacy Consent Notice (English - Teachers/Employees) -->
+    <template id="privacy_consent_teacher_content" name="Privacy Consent Notice (Teachers)">
+        <div class="privacy-policy-content">
+            <h6><i class="fa fa-shield"></i> Privacy Policy &amp; Data Protection Notice (Employees)</h6>
+            <p>MYIS International School ("we", "our", or "the School") collects and processes employee personal data in accordance with Thailand's Personal Data Protection Act (PDPA B.E. 2562).</p>
+
+            <h6><i class="fa fa-building"></i> Data Controller</h6>
+            <p>
+                <strong>MYIS International School</strong><br/>
+                Data Protection Officer: <strong>dpo@myis.ac.th</strong><br/>
+                Phone: +66-XXX-XXX-XXXX
+            </p>
+
+            <h6><i class="fa fa-list-alt"></i> Purpose of Data Collection</h6>
+            <p>We collect and process employee personal data for the following purposes:</p>
+            <ol>
+                <li><strong>Asset Management:</strong> To record borrowing and return of school assets assigned to teachers</li>
+                <li><strong>Identity Verification:</strong> To identify employees and prevent unauthorized use</li>
+                <li><strong>Communication:</strong> To send notifications regarding asset status and return reminders</li>
+                <li><strong>Security:</strong> To prevent misuse and ensure proper care of school property</li>
+                <li><strong>Legal Compliance:</strong> To comply with labor laws and asset management regulations</li>
+            </ol>
+
+            <h6><i class="fa fa-database"></i> Types of Personal Data Collected</h6>
+            <table class="table table-sm table-bordered">
+                <thead class="table-light">
+                    <tr>
+                        <th>Data Type</th>
+                        <th>Details</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Personal Information</strong></td>
+                        <td>Name, employee ID, department</td>
+                        <td>Employee identification</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Contact Information</strong></td>
+                        <td>Email, phone number</td>
+                        <td>Communication and notifications</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Digital Signature</strong></td>
+                        <td>Electronic signature</td>
+                        <td>Asset assignment acknowledgment</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Technical Data</strong></td>
+                        <td>IP address, user agent</td>
+                        <td>Security and fraud prevention</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h6><i class="fa fa-clock-o"></i> Data Retention Period</h6>
+            <ul>
+                <li><strong>Asset Assignment Records:</strong> 7 years (as required by accounting law)</li>
+                <li><strong>Signatures and Acknowledgments:</strong> Duration of employment + 7 years</li>
+                <li><strong>Security Audit Logs:</strong> 2 years (for auditing purposes)</li>
+                <li><strong>Consent Records:</strong> Duration of employment + 1 year</li>
+            </ul>
+            <p class="text-muted small">
+                <i class="fa fa-info-circle"></i> After the retention period, data will be deleted or anonymized.
+            </p>
+
+            <h6><i class="fa fa-users"></i> Data Recipients</h6>
+            <ul>
+                <li>School IT staff (for system administration)</li>
+                <li>HR and administrative staff (for personnel management)</li>
+                <li>Cloud service providers (if applicable - under confidentiality agreements)</li>
+            </ul>
+
+            <h6 style="color: #F59E0B !important;"><i class="fa fa-hand-paper-o"></i> Your Data Protection Rights</h6>
+            <p>You have the following rights under PDPA:</p>
+            <ol>
+                <li><strong>Right to Access</strong> - Request to view your personal data</li>
+                <li><strong>Right to Rectification</strong> - Correct inaccurate or incomplete data</li>
+                <li><strong>Right to Erasure</strong> - Request deletion where legally permitted</li>
+                <li><strong>Right to Restriction</strong> - Temporarily suspend processing</li>
+                <li><strong>Right to Data Portability</strong> - Receive data in electronic format</li>
+                <li><strong>Right to Object</strong> - Object to processing in certain cases</li>
+                <li><strong>Right to Withdraw Consent</strong> - Withdraw consent at any time</li>
+            </ol>
+            <p>
+                <strong>How to Exercise Your Rights:</strong> Contact our DPO at <strong>dpo@myis.ac.th</strong> or <strong>+66-XXX-XXX-XXXX</strong>. We will respond within 30 days as required by PDPA.
+            </p>
+
+            <h6><i class="fa fa-lock"></i> Data Security Measures</h6>
+            <p>We implement technical and administrative measures to protect your data:</p>
+            <ul>
+                <li>Data encryption (both in transit and at rest)</li>
+                <li>Access control based on need-to-know principle</li>
+                <li>Audit logging of all data access</li>
+                <li>Brute force attack prevention with rate limiting</li>
+                <li>Regular data backups</li>
+            </ul>
+
+            <h6><i class="fa fa-phone"></i> Contact Information</h6>
+            <p>
+                <strong>Data Protection Officer (DPO)</strong><br/>
+                Email: <strong>dpo@myis.ac.th</strong><br/>
+                Phone: <strong>+66-XXX-XXX-XXXX</strong><br/>
+                <small class="text-muted">Office Hours: Monday-Friday 08:00-16:00</small>
+            </p>
+
+            <div class="mt-3 text-center">
+                <small class="text-muted">
+                    <i class="fa fa-calendar"></i> Privacy Policy Version 1.0 | Last Updated: October 2025
+                </small>
+            </div>
+        </div>
+    </template>
+
+    <!-- GDPR Data Export/Delete Notice -->
+    <template id="gdpr_rights_notice" name="GDPR Rights Notice">
+        <div class="alert alert-info" role="alert">
+            <h6 class="alert-heading">
+                <i class="fa fa-info-circle"></i> Your Data Protection Rights
+            </h6>
+            <p class="mb-0" style="font-size: 13px;">
+                You have the right to request access to, correction of, or deletion of your personal data.
+                To exercise these rights, please contact the MYIS IT Department at
+                <strong>it@myis.ac.th</strong> or <strong>+66-XXX-XXX-XXXX</strong>.
+            </p>
+        </div>
+    </template>
+</odoo>

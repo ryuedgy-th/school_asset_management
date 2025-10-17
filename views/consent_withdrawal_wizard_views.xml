@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Consent Withdrawal Wizard Form View -->
+    <record id="view_consent_withdrawal_wizard_form" model="ir.ui.view">
+        <field name="name">asset.consent.withdrawal.wizard.view.form</field>
+        <field name="model">asset.consent.withdrawal.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Withdraw Consent">
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        <h4 class="alert-heading">
+                            <i class="fa fa-exclamation-triangle"/> Warning: Withdrawing Consent
+                        </h4>
+                        <p>
+                            You are about to withdraw your consent for <strong><field name="consent_type" readonly="1"/></strong>.
+                        </p>
+                        <p>
+                            This action is <strong>irreversible</strong> and may affect the services we can provide to you.
+                        </p>
+                    </div>
+
+                    <group>
+                        <field name="consent_log_id" invisible="1"/>
+                    </group>
+
+                    <group string="Consent Details">
+                        <group>
+                            <label for="data_subject_name" string="Name"/>
+                            <div>
+                                <field name="data_subject_name" readonly="1" class="oe_inline"/>
+                            </div>
+                            <label for="data_subject_email" string="Email"/>
+                            <div>
+                                <field name="data_subject_email" readonly="1" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="consent_date" string="Original Consent Date"/>
+                            <div>
+                                <field name="consent_date" readonly="1" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+
+                    <separator string="Consequences of Withdrawal"/>
+                    <div class="alert alert-info" role="alert">
+                        <field name="consequences" readonly="1" widget="html"/>
+                    </div>
+
+                    <group string="Reason for Withdrawal">
+                        <field name="withdrawal_reason" required="1" widget="radio"/>
+                        <field name="withdrawal_reason_text" widget="text"
+                               placeholder="Please provide additional details about why you are withdrawing consent..."
+                               invisible="withdrawal_reason not in ('no_longer_needed', 'other')"/>
+                    </group>
+
+                    <group>
+                        <field name="confirm_understanding" required="1" widget="boolean"/>
+                        <label for="confirm_understanding">
+                            <strong class="text-danger">
+                                I understand the consequences and wish to proceed with withdrawing my consent.
+                            </strong>
+                        </label>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_confirm_withdrawal" string="Confirm Withdrawal"
+                            type="object" class="btn-danger"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Consent Withdrawal Wizard Action -->
+    <record id="action_consent_withdrawal_wizard" model="ir.actions.act_window">
+        <field name="name">Withdraw Consent</field>
+        <field name="res_model">asset.consent.withdrawal.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_asset_consent_log"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+</odoo>

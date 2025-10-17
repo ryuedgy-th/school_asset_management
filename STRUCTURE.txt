@@ -1,0 +1,46 @@
+.
+|____data
+| |____email_template.xml
+| |____sequence.xml
+|____models
+| |____asset_asset.py
+| |____asset_category.py
+| |____asset_inspection.py
+| |____asset_location.py
+| |____asset_movement.py
+| |____asset_student_assignment.py
+| |____asset_teacher_assignment.py
+| |______init__.py
+|____MODULE_SUMMARY.md
+|____README.md
+|____reports
+| |____asset_register_template.xml
+| |____assignment_template.xml
+| |____report_paperformat.xml
+| |______init__.py
+|____security
+| |____ir.model.access.csv
+| |____security.xml
+|____static
+| |____description
+| | |____icon.png.txt
+| | |____index.html
+|____STRUCTURE.txt
+|____views
+| |____asset_asset_views.xml
+| |____asset_category_views.xml
+| |____asset_dashboard.xml
+| |____asset_inspection_views.xml
+| |____asset_location_views.xml
+| |____asset_menus.xml
+| |____asset_student_assignment_views.xml
+| |____asset_teacher_assignment_views.xml
+|____wizards
+| |____asset_import_wizard_views.xml
+| |____student_collection_wizard_views.xml
+| |____student_distribution_wizard_views.xml
+| |____teacher_checkin_wizard_views.xml
+| |____teacher_checkout_wizard_views.xml
+| |______init__.py
+|______init__.py
+|______manifest__.py

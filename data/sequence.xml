@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Asset Code Sequence -->
+        <record id="seq_asset_asset" model="ir.sequence">
+            <field name="name">Asset Code</field>
+            <field name="code">asset.asset</field>
+            <field name="prefix">ASSET-%(range_y)s-</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+        </record>
+
+        <!-- Damage Case Sequence -->
+        <record id="seq_asset_damage_case" model="ir.sequence">
+            <field name="name">Damage Case Number</field>
+            <field name="code">asset.damage.case</field>
+            <field name="prefix">DMG</field>
+            <field name="padding">3</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+        </record>
+
+        <!-- Security Audit Log Sequence -->
+        <record id="seq_security_audit_log" model="ir.sequence">
+            <field name="name">Security Audit Log</field>
+            <field name="code">asset.security.audit.log</field>
+            <field name="prefix">SEC-%(range_y)s-</field>
+            <field name="padding">6</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+        </record>
+
+        <!-- PDPA Consent Log Sequence -->
+        <record id="seq_consent_log" model="ir.sequence">
+            <field name="name">Consent Log Reference</field>
+            <field name="code">asset.consent.log</field>
+            <field name="prefix">CONSENT-%(range_y)s-</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+        </record>
+
+        <!-- PDPA Data Request Sequence -->
+        <record id="seq_data_request" model="ir.sequence">
+            <field name="name">Data Subject Request</field>
+            <field name="code">asset.data.request</field>
+            <field name="prefix">DSR-%(range_y)s-</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="implementation">standard</field>
+        </record>
+
+    </data>
+</odoo>

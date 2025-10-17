@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Student Assignment Tree View -->
+    <record id="view_asset_student_assignment_tree" model="ir.ui.view">
+        <field name="name">asset.student.assignment.tree</field>
+        <field name="model">asset.student.assignment</field>
+        <field name="arch" type="xml">
+            <list string="Student Assignments" decoration-info="status == 'draft'"
+                  decoration-success="status == 'checked_in'"
+                  decoration-warning="is_overdue == True"
+                  decoration-muted="status == 'cancelled'">
+                <field name="name"/>
+                <field name="student_name"/>
+                <field name="parent_email" optional="hide"/>
+                <field name="checkout_date"/>
+                <field name="return_type"/>
+                <field name="expected_return_date" optional="hide"/>
+                <field name="asset_count"/>
+                <field name="checkout_signature_status" widget="badge" string="Signature"
+                       decoration-info="checkout_signature_status == 'not_sent'"
+                       decoration-warning="checkout_signature_status == 'pending'"
+                       decoration-success="checkout_signature_status == 'signed'"
+                       decoration-danger="checkout_signature_status == 'expired'"/>
+                <field name="total_damage_cost" sum="Total Damage"/>
+                <field name="status" widget="badge"/>
+                <field name="is_overdue" invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Student Assignment Form View -->
+    <record id="view_asset_student_assignment_form" model="ir.ui.view">
+        <field name="name">asset.student.assignment.form</field>
+        <field name="model">asset.student.assignment</field>
+        <field name="arch" type="xml">
+            <form string="Student Assignment">
+                <header>
+                    <field name="status" invisible="1"/>
+                    <field name="is_overdue" invisible="1"/>
+                    <field name="total_damage_cost" invisible="1"/>
+                    <field name="damage_case_count" invisible="1"/>
+                    <button name="action_checkout" string="Checkout" type="object"
+                            class="btn-primary" invisible="status != 'draft'"/>
+                    <button name="action_checkin" string="Check-in" type="object"
+                            class="btn-success" invisible="status != 'checked_out'"/>
+                    <button name="action_create_damage_case" string="Create Damage Case" type="object"
+                            class="btn-danger" invisible="total_damage_cost == 0 or damage_case_count > 0"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="status not in ('draft', 'checked_out')"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="draft,checked_out,checked_in"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_assets" type="object"
+                                class="oe_stat_button" icon="fa-cubes">
+                            <field name="asset_count" widget="statinfo" string="Assets"/>
+                        </button>
+                        <button name="action_view_damage_cases" type="object"
+                                class="oe_stat_button" icon="fa-exclamation-triangle"
+                                invisible="damage_case_count == 0">
+                            <field name="damage_case_count" widget="statinfo" string="Damage Cases"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Student Information">
+                            <field name="student_name"/>
+                            <field name="grade_level"/>
+                            <field name="parent_email" widget="email" placeholder="parent@email.com"/>
+                        </group>
+                        <group string="Dates &amp; Return">
+                            <field name="checkout_date"/>
+                            <field name="return_type"/>
+                            <field name="expected_return_date" invisible="return_type != 'specific_date'"/>
+                            <field name="actual_return_date" readonly="1"/>
+                            <field name="days_overdue" invisible="return_type != 'specific_date'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Damage Assessment">
+                            <field name="has_damage" invisible="1"/>
+                            <field name="total_damage_cost" widget="monetary"/>
+                        </group>
+                        <group string="Notes">
+                            <field name="notes" nolabel="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Assets">
+                            <field name="asset_line_ids">
+                                <list>
+                                    <field name="asset_id" domain="[('status', '=', 'available')]"/>
+                                    <field name="asset_code"/>
+                                    <field name="asset_name"/>
+                                    <field name="checkout_condition"/>
+                                    <field name="checkin_condition"/>
+                                    <field name="damage_found"/>
+                                    <field name="repair_cost" sum="Total Cost"/>
+                                </list>
+                            </field>
+                            <p class="text-muted">Click on an asset line to view/add photos and detailed notes</p>
+                        </page>
+                        <page string="Parent Signature">
+                            <group>
+                                <group string="Parent Information">
+                                    <field name="parent_name" readonly="1" placeholder="Filled during signature"/>
+                                    <field name="parent_email"/>
+                                </group>
+                                <group string="Checkout Signature Status">
+                                    <field name="checkout_signature_status" widget="badge"
+                                           decoration-info="checkout_signature_status == 'not_sent'"
+                                           decoration-warning="checkout_signature_status == 'pending'"
+                                           decoration-success="checkout_signature_status == 'signed'"
+                                           decoration-danger="checkout_signature_status == 'expired'"/>
+                                    <field name="checkout_sign_date" readonly="1"/>
+                                    <field name="checkout_token_expiry" readonly="1" invisible="not checkout_token_expiry"/>
+                                </group>
+                            </group>
+
+                            <separator string="Checkout Signature Request"/>
+                            <group>
+                                <group>
+                                    <button name="action_send_checkout_signature_request"
+                                            string="📧 Send Checkout Signature Request"
+                                            type="object"
+                                            class="btn-primary"
+                                            icon="fa-envelope"
+                                            invisible="checkout_signature_status == 'signed'"/>
+
+                                    <button name="action_resend_checkout_signature_request"
+                                            string="🔄 Resend Signature Request"
+                                            type="object"
+                                            class="btn-warning"
+                                            icon="fa-repeat"
+                                            invisible="checkout_signature_status != 'expired'"/>
+
+                                    <button name="action_copy_checkout_link"
+                                            string="🔗 Copy Signature Link"
+                                            type="object"
+                                            class="btn-info"
+                                            icon="fa-copy"
+                                            invisible="checkout_signature_status in ('not_sent', 'signed')"
+                                            help="Copy link to send via LINE/WhatsApp"/>
+                                </group>
+                                <group>
+                                    <button name="action_view_checkout_pdf"
+                                            string="📄 View Signed Waiver PDF"
+                                            type="object"
+                                            class="btn-success"
+                                            icon="fa-file-pdf-o"
+                                            invisible="not checkout_signed_pdf_id"/>
+                                </group>
+                            </group>
+
+                            <!-- Display Parent Signature (if signed) - WATERMARKED FOR SECURITY -->
+                            <group string="Parent Signature (Checkout)" invisible="not checkout_student_signature">
+                                <field name="checkout_student_signature" invisible="1"/>
+                                <field name="checkout_student_signature_watermarked" widget="image" nolabel="1"
+                                       options="{'size': [400, 100]}" readonly="1"
+                                       help="Watermarked signature for display only. Original stored securely."/>
+                                <field name="checkout_ip_address" readonly="1"/>
+                            </group>
+
+                            <separator string="Damage Report" invisible="not has_damage"/>
+                            <group invisible="not has_damage">
+                                <group>
+                                    <field name="damage_report_sent" readonly="1"/>
+                                    <field name="damage_acknowledged" readonly="1"/>
+                                    <field name="damage_acknowledge_date" readonly="1" invisible="not damage_acknowledged"/>
+                                </group>
+                                <group>
+                                    <button name="action_send_damage_report"
+                                            string="⚠️ Send Damage Report to Parent"
+                                            type="object"
+                                            class="btn-warning"
+                                            icon="fa-exclamation-triangle"
+                                            invisible="damage_acknowledged"/>
+
+                                    <button name="action_copy_damage_link"
+                                            string="🔗 Copy Damage Report Link"
+                                            type="object"
+                                            class="btn-info"
+                                            icon="fa-copy"
+                                            invisible="not damage_report_sent or damage_acknowledged"
+                                            help="Copy link to send via LINE/WhatsApp"/>
+
+                                    <button name="action_view_damage_pdf"
+                                            string="📄 View Signed Damage Report"
+                                            type="object"
+                                            class="btn-info"
+                                            icon="fa-file-pdf-o"
+                                            invisible="not damage_signed_pdf_id"/>
+                                </group>
+                            </group>
+
+                            <!-- Display Damage Signature (if signed) - WATERMARKED FOR SECURITY -->
+                            <group string="Parent Damage Acknowledgment Signature" invisible="not damage_signature">
+                                <field name="damage_signature" invisible="1"/>
+                                <field name="damage_signature_watermarked" widget="image" nolabel="1"
+                                       options="{'size': [400, 100]}" readonly="1"
+                                       help="Watermarked signature for display only. Original stored securely."/>
+                                <field name="damage_acknowledge_ip" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Student Assignment Action -->
+    <record id="action_asset_student_assignment" model="ir.actions.act_window">
+        <field name="name">Student Assignments</field>
+        <field name="res_model">asset.student.assignment</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first student assignment
+            </p>
+        </field>
+    </record>
+
+</odoo>

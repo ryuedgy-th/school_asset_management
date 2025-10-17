@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Damage Case Approval Report PDF -->
+    <template id="report_damage_case_approval">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: 'Sarabun', 'THSarabunNew', 'Garuda', sans-serif;">
+                        <!-- Header -->
+                        <div class="text-center" style="margin-bottom: 15px; border-bottom: 2px solid #dc3545; padding-bottom: 10px;">
+                            <h3 style="color: #dc3545; margin-bottom: 5px; font-weight: bold; font-size: 20px;">⚠️ DAMAGE CASE APPROVAL</h3>
+                            <h5 style="color: #003366; margin-top: 0; margin-bottom: 2px; font-size: 14px;">MYIS International School</h5>
+                            <p style="font-size: 11px; color: #666; margin: 0;">
+                                Approved: <span t-esc="o.approval_signature_date.strftime('%b %d, %Y %I:%M %p') if o.approval_signature_date else 'N/A'"/>
+                            </p>
+                        </div>
+
+                        <!-- Case Information -->
+                        <div style="margin-bottom: 10px;">
+                            <h6 style="background-color: #003366; color: white; padding: 5px 10px; margin-bottom: 6px; font-size: 12px;">
+                                Case Information
+                            </h6>
+                            <table style="width: 100%; font-size: 11px;">
+                                <tr>
+                                    <td style="width: 20%; padding: 3px;"><strong>Case Number:</strong></td>
+                                    <td style="width: 30%; padding: 3px;"><span t-esc="o.name"/></td>
+                                    <td style="width: 20%; padding: 3px;"><strong>Status:</strong></td>
+                                    <td style="width: 30%; padding: 3px;"><span t-esc="dict(o._fields['approval_status'].selection).get(o.approval_status, 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 3px;"><strong>Asset Code:</strong></td>
+                                    <td style="padding: 3px;"><span t-esc="o.asset_code"/></td>
+                                    <td style="padding: 3px;"><strong>Damage Date:</strong></td>
+                                    <td style="padding: 3px;"><span t-esc="o.damage_date.strftime('%b %d, %Y') if o.damage_date else 'N/A'"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 3px;"><strong>Reported By:</strong></td>
+                                    <td colspan="3" style="padding: 3px;"><span t-esc="o.reported_by.name if o.reported_by else 'N/A'"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Damage Description -->
+                        <div style="background-color: #fff3cd; border: 1px solid #ffc107; padding: 8px; margin-bottom: 10px;">
+                            <h6 style="margin: 0 0 5px 0; color: #856404; font-size: 12px;"><strong>Damage Description:</strong></h6>
+                            <p style="margin: 0; color: #856404; font-size: 10px; white-space: pre-wrap;"><span t-esc="o.damage_description or 'No description provided'"/></p>
+                        </div>
+
+                        <!-- Responsible Party -->
+                        <div style="margin-bottom: 10px;">
+                            <h6 style="background-color: #0066cc; color: white; padding: 5px 10px; margin-bottom: 6px; font-size: 12px;">
+                                Responsible Party
+                            </h6>
+                            <table style="width: 100%; font-size: 11px;">
+                                <tr>
+                                    <td style="width: 20%; padding: 3px;"><strong>Type:</strong></td>
+                                    <td style="width: 80%; padding: 3px;"><span t-esc="dict(o._fields['responsible_type'].selection).get(o.responsible_type, 'N/A') if o.responsible_type else 'N/A'"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 3px;"><strong>Name:</strong></td>
+                                    <td style="padding: 3px;">
+                                        <span t-if="o.responsible_teacher_id" t-esc="o.responsible_teacher_id.name"/>
+                                        <span t-elif="o.responsible_student_name" t-esc="o.responsible_student_name"/>
+                                        <span t-else="">N/A</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Cost Information -->
+                        <div style="margin-bottom: 10px;">
+                            <table style="width: 100%; font-size: 12px;">
+                                <tr style="background-color: #dc3545; color: white;">
+                                    <td style="padding: 8px; text-align: right; font-weight: bold;">ESTIMATED REPAIR COST:</td>
+                                    <td style="padding: 8px; text-align: right; font-weight: bold; width: 25%;">
+                                        $<span t-esc="'%.2f' % (o.estimated_cost or 0.0)"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Approval Information -->
+                        <div style="margin-top: 15px;">
+                            <h6 style="background-color: #28a745; color: white; padding: 5px 10px; margin-bottom: 8px; font-size: 12px;">
+                                Manager Approval
+                            </h6>
+
+                            <table style="width: 100%; margin-top: 8px;">
+                                <tr>
+                                    <td style="width: 60%; vertical-align: top; padding-right: 15px;">
+                                        <!-- Signature -->
+                                        <div style="margin-bottom: 5px; font-size: 11px;">
+                                            <strong>Signature:</strong>
+                                        </div>
+                                        <div style="border: 2px solid #28a745; padding: 8px; background-color: #f8f9fa; min-height: 80px; text-align: center;">
+                                            <t t-if="o.approval_signature">
+                                                <img t-att-src="image_data_uri(o.approval_signature)"
+                                                     style="max-width: 100%; max-height: 70px;"
+                                                     alt="Signature"/>
+                                            </t>
+                                        </div>
+                                        <div style="margin-top: 5px; font-size: 10px;">
+                                            <strong>Date:</strong> <span t-esc="o.approval_signature_date.strftime('%b %d, %Y %I:%M %p') if o.approval_signature_date else 'N/A'"/><br/>
+                                            <strong>IP:</strong> <span t-esc="o.approval_signature_ip or 'N/A'"/>
+                                        </div>
+                                    </td>
+                                    <td style="width: 40%; vertical-align: top;">
+                                        <!-- Approval Details -->
+                                        <div style="background-color: #d4edda; padding: 10px; border-left: 3px solid #28a745;">
+                                            <p style="margin: 0 0 5px 0; font-size: 11px; font-weight: bold;">✅ Manager Decision</p>
+                                            <p style="margin: 0; font-size: 10px; line-height: 1.4;">
+                                                <strong>Status:</strong> <span t-esc="dict(o._fields['approval_status'].selection).get(o.approval_status, 'N/A')"/><br/>
+                                                <t t-if="o.approval_notes">
+                                                    <strong>Notes:</strong> <span t-esc="o.approval_notes"/>
+                                                </t>
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style="margin-top: 15px; padding-top: 8px; border-top: 1px solid #dee2e6; font-size: 9px; color: #666; text-align: center;">
+                            <p style="margin: 0;">
+                                📄 Signed via MYIS Asset Management | Case: <span t-esc="o.name"/> | Contact: MYIS IT Department
+                            </p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Report Action -->
+    <record id="action_report_damage_case_approval" model="ir.actions.report">
+        <field name="name">Damage Case Approval</field>
+        <field name="model">asset.damage.case</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_asset_management.report_damage_case_approval</field>
+        <field name="report_file">school_asset_management.report_damage_case_approval</field>
+        <field name="binding_model_id" ref="model_asset_damage_case"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_us"/>
+    </record>
+</odoo>

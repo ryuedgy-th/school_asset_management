@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inspection Damage Report PDF -->
+    <template id="report_inspection_damage_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <!-- Header -->
+                        <div class="text-center" style="margin-bottom: 20px; border-bottom: 3px solid #dc3545; padding-bottom: 15px;">
+                            <h2 style="color: #dc3545; margin-bottom: 5px; font-weight: bold;">⚠️ INSPECTION DAMAGE REPORT</h2>
+                            <h4 style="color: #003366; margin-top: 0;">MYIS International School</h4>
+                            <p style="font-size: 12px; color: #666; margin: 5px 0;">
+                                <t t-if="o.custodian_type == 'teacher' and o.teacher_signature_date">
+                                    Signed Document - <span t-esc="o.teacher_signature_date.strftime('%B %d, %Y at %I:%M %p')"/>
+                                </t>
+                                <t t-elif="o.custodian_type == 'student' and o.parent_signature_date">
+                                    Signed Document - <span t-esc="o.parent_signature_date.strftime('%B %d, %Y at %I:%M %p')"/>
+                                </t>
+                                <t t-else="">
+                                    Generated on <span t-esc="datetime.datetime.now().strftime('%B %d, %Y at %I:%M %p')"/>
+                                </t>
+                            </p>
+                        </div>
+
+                        <!-- Inspection Information -->
+                        <div style="margin-bottom: 20px;">
+                            <h5 style="background-color: #003366; color: white; padding: 8px 10px; margin-bottom: 10px;">
+                                Inspection Information
+                            </h5>
+                            <table style="width: 100%; font-size: 13px;">
+                                <tr>
+                                    <td style="width: 25%; padding: 5px;"><strong>Inspection Date:</strong></td>
+                                    <td style="width: 25%; padding: 5px;"><span t-esc="o.inspection_date.strftime('%B %d, %Y') if o.inspection_date else 'N/A'"/></td>
+                                    <td style="width: 25%; padding: 5px;"><strong>Inspection Type:</strong></td>
+                                    <td style="width: 25%; padding: 5px;"><span t-esc="dict(o._fields['inspection_type'].selection).get(o.inspection_type, 'N/A')"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 5px;"><strong>Inspector:</strong></td>
+                                    <td style="padding: 5px;"><span t-esc="o.inspector_id.name"/></td>
+                                    <td style="padding: 5px;"><strong>Reference:</strong></td>
+                                    <td style="padding: 5px;"><span t-esc="o.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 5px;"><strong>Asset Code:</strong></td>
+                                    <td style="padding: 5px;"><strong><span t-esc="o.asset_id.asset_code"/></strong></td>
+                                    <td style="padding: 5px;"><strong>Asset Name:</strong></td>
+                                    <td style="padding: 5px;"><span t-esc="o.asset_id.name or 'N/A'"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Custodian Information -->
+                        <div style="margin-bottom: 20px;">
+                            <h5 style="background-color: #17a2b8; color: white; padding: 8px 10px; margin-bottom: 10px;">
+                                Current Custodian
+                            </h5>
+                            <table style="width: 100%; font-size: 13px;">
+                                <tr>
+                                    <td style="width: 25%; padding: 5px;"><strong>Custodian Type:</strong></td>
+                                    <td style="padding: 5px;">
+                                        <t t-if="o.custodian_type == 'teacher'">
+                                            <span style="background-color: #007bff; color: white; padding: 3px 8px; border-radius: 3px;">Teacher</span>
+                                        </t>
+                                        <t t-elif="o.custodian_type == 'student'">
+                                            <span style="background-color: #28a745; color: white; padding: 3px 8px; border-radius: 3px;">Student</span>
+                                        </t>
+                                        <t t-else="">
+                                            <span style="background-color: #6c757d; color: white; padding: 3px 8px; border-radius: 3px;">No Custodian</span>
+                                        </t>
+                                    </td>
+                                </tr>
+                                <t t-if="o.custodian_type == 'teacher'">
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>Teacher Name:</strong></td>
+                                        <td style="padding: 5px;"><span t-esc="o.custodian_id.name"/></td>
+                                    </tr>
+                                </t>
+                                <t t-if="o.custodian_type == 'student'">
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>Student Name:</strong></td>
+                                        <td style="padding: 5px;"><span t-esc="o.student_name"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 5px;"><strong>Parent/Guardian:</strong></td>
+                                        <td style="padding: 5px;"><span t-esc="o.parent_name"/> (<span t-esc="o.parent_email"/>)</td>
+                                    </tr>
+                                </t>
+                            </table>
+                        </div>
+
+                        <!-- Damage Alert -->
+                        <div style="background-color: #f8d7da; border: 2px solid #dc3545; padding: 15px; margin-bottom: 20px;">
+                            <h5 style="color: #721c24; margin: 0 0 10px 0; font-weight: bold;">
+                                DAMAGE IDENTIFIED DURING INSPECTION
+                            </h5>
+                            <p style="margin: 0; color: #721c24; font-size: 12px;">
+                                <t t-if="o.custodian_type == 'teacher'">
+                                    The asset under your care was found damaged during a routine inspection. Please review the details below and acknowledge receipt of this report.
+                                </t>
+                                <t t-elif="o.custodian_type == 'student'">
+                                    The asset assigned to your child was found damaged during a routine inspection. As per the signed Asset Use Agreement, parents/guardians are financially responsible for damage caused by negligence or misuse.
+                                </t>
+                                <t t-else="">
+                                    Damage was identified during routine inspection. The asset was not assigned to any custodian at the time of inspection.
+                                </t>
+                            </p>
+                        </div>
+
+                        <!-- Damage Details -->
+                        <div style="margin-bottom: 20px;">
+                            <h5 style="background-color: #dc3545; color: white; padding: 8px 10px; margin-bottom: 10px;">
+                                Damage Assessment
+                            </h5>
+
+                            <div style="margin-bottom: 20px; border: 1px solid #ffc107; background-color: #fff3cd; padding: 15px; page-break-inside: avoid;">
+                                <!-- Condition Comparison -->
+                                <table style="width: 100%; font-size: 12px; margin-bottom: 15px;">
+                                    <tr>
+                                        <td style="width: 50%; padding-right: 10px;">
+                                            <div style="background-color: white; border: 1px solid #ddd; padding: 8px;">
+                                                <strong style="color: #28a745;">Condition Before Inspection:</strong><br/>
+                                                <span t-esc="dict(o._fields['condition_before'].selection).get(o.condition_before, 'N/A') if o.condition_before else 'N/A'"/>
+                                            </div>
+                                        </td>
+                                        <td style="width: 50%; padding-left: 10px;">
+                                            <div style="background-color: white; border: 1px solid #ddd; padding: 8px;">
+                                                <strong style="color: #dc3545;">Condition After Inspection:</strong><br/>
+                                                <span t-esc="dict(o._fields['condition_after'].selection).get(o.condition_after, 'N/A')"/>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <!-- Damage Description -->
+                                <div style="background-color: white; border: 1px solid #dc3545; padding: 10px; margin-bottom: 15px;">
+                                    <strong style="color: #dc3545;">Damage Description:</strong><br/>
+                                    <span style="font-size: 12px;" t-esc="o.damage_description or 'See photos and inspection notes'"/>
+                                </div>
+
+                                <!-- Issues Found -->
+                                <t t-if="o.issues_found">
+                                    <div style="background-color: white; border: 1px solid #ffc107; padding: 10px; margin-bottom: 15px;">
+                                        <strong style="color: #856404;">Additional Issues Found:</strong><br/>
+                                        <span style="font-size: 12px; white-space: pre-line;" t-esc="o.issues_found"/>
+                                    </div>
+                                </t>
+
+                                <!-- Action Required -->
+                                <div style="background-color: white; border: 1px solid #ddd; padding: 10px; margin-bottom: 15px;">
+                                    <strong>Action Required:</strong>
+                                    <span style="margin-left: 10px;">
+                                        <t t-if="o.action_required == 'repair'">
+                                            <span style="background-color: #ffc107; color: #000; padding: 3px 8px; border-radius: 3px; font-weight: bold;">REPAIR NEEDED</span>
+                                        </t>
+                                        <t t-elif="o.action_required == 'replace'">
+                                            <span style="background-color: #dc3545; color: white; padding: 3px 8px; border-radius: 3px; font-weight: bold;">REPLACE</span>
+                                        </t>
+                                        <t t-elif="o.action_required == 'monitor'">
+                                            <span style="background-color: #17a2b8; color: white; padding: 3px 8px; border-radius: 3px;">Monitor</span>
+                                        </t>
+                                        <t t-else="">
+                                            <span style="background-color: #28a745; color: white; padding: 3px 8px; border-radius: 3px;">None</span>
+                                        </t>
+                                    </span>
+                                </div>
+
+                                <!-- Repair Cost -->
+                                <t t-if="o.repair_cost and o.repair_cost > 0">
+                                    <div style="background-color: #dc3545; color: white; padding: 12px; text-align: right; font-weight: bold; font-size: 14px;">
+                                        Estimated Repair Cost: $<span t-esc="'%.2f' % o.repair_cost"/>
+                                    </div>
+                                </t>
+
+                                <!-- Inspection Photos -->
+                                <t t-if="o.photo_ids">
+                                    <div style="margin-top: 15px;">
+                                        <strong style="font-size: 12px; color: #856404;">Inspection Photos:</strong>
+                                        <div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 10px;">
+                                            <t t-foreach="o.photo_ids[:6]" t-as="photo">
+                                                <div style="width: 30%; border: 1px solid #ddd; padding: 5px; background-color: white;">
+                                                    <img t-att-src="'data:image/png;base64,%s' % photo.datas.decode('utf-8') if isinstance(photo.datas, bytes) else 'data:image/png;base64,%s' % photo.datas"
+                                                         style="width: 100%; height: auto;"
+                                                         alt="Inspection photo"/>
+                                                </div>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Financial Responsibility Notice (for students only) -->
+                        <t t-if="o.custodian_type == 'student' and o.repair_cost and o.repair_cost > 0">
+                            <div style="background-color: #e3f2fd; border-left: 4px solid #0066cc; padding: 15px; margin-bottom: 20px; page-break-inside: avoid;">
+                                <h6 style="margin: 0 0 8px 0; color: #003366; font-weight: bold;">Financial Responsibility</h6>
+                                <p style="margin: 0; font-size: 12px; line-height: 1.5; color: #003366;">
+                                    As per the Student Asset Use Agreement, parents/guardians are financially responsible for damage to school assets caused by negligence, misuse, or intentional damage. The IT department will contact you within 3-5 business days regarding payment arrangements for the above repair costs.
+                                </p>
+                            </div>
+                        </t>
+
+                        <!-- Teacher Acknowledgment Section -->
+                        <t t-if="o.custodian_type == 'teacher' and o.teacher_damage_acknowledged">
+                            <div style="margin-top: 30px; page-break-inside: avoid;">
+                                <h5 style="background-color: #17a2b8; color: white; padding: 8px 10px; margin-bottom: 15px;">
+                                    Teacher Acknowledgment
+                                </h5>
+
+                                <div style="margin-bottom: 20px;">
+                                    <p style="font-size: 12px; font-weight: bold; margin-bottom: 10px;">
+                                        By signing below, I acknowledge that I have reviewed the inspection findings and damage assessment above.
+                                    </p>
+                                </div>
+
+                                <table style="width: 100%; margin-top: 20px;">
+                                    <tr>
+                                        <td style="width: 60%; vertical-align: top; padding-right: 20px;">
+                                            <!-- Teacher Signature -->
+                                            <div style="margin-bottom: 10px;">
+                                                <strong>Teacher Signature:</strong>
+                                            </div>
+                                            <div style="border: 2px solid #17a2b8; padding: 10px; background-color: #f8f9fa; min-height: 120px; text-align: center;">
+                                                <t t-if="o.teacher_signature">
+                                                    <img t-att-src="image_data_uri(o.teacher_signature)"
+                                                         style="max-width: 100%; max-height: 100px;"
+                                                         alt="Teacher Signature"/>
+                                                </t>
+                                            </div>
+                                            <div style="margin-top: 8px;">
+                                                <strong>Name:</strong> <span t-esc="o.custodian_id.name"/><br/>
+                                                <strong>Date:</strong> <span t-esc="o.teacher_signature_date.strftime('%B %d, %Y at %I:%M %p') if o.teacher_signature_date else 'N/A'"/>
+                                            </div>
+                                            <t t-if="o.teacher_response">
+                                                <div style="margin-top: 10px; background-color: #f8f9fa; padding: 10px; border-left: 3px solid #17a2b8;">
+                                                    <strong>Teacher Response:</strong><br/>
+                                                    <span style="font-size: 12px; white-space: pre-line;" t-esc="o.teacher_response"/>
+                                                </div>
+                                            </t>
+                                        </td>
+                                        <td style="width: 40%; vertical-align: top;">
+                                            <!-- Signature Details -->
+                                            <div style="background-color: #d1ecf1; padding: 15px; border-left: 4px solid #17a2b8;">
+                                                <p style="margin: 0 0 8px 0; font-size: 11px; font-weight: bold;">
+                                                    ✅ Acknowledgment Recorded
+                                                </p>
+                                                <p style="margin: 0; font-size: 10px; line-height: 1.4;">
+                                                    This damage report was acknowledged by the teacher in the presence of IT staff on <span t-esc="o.teacher_signature_date.strftime('%B %d, %Y at %I:%M %p') if o.teacher_signature_date else 'N/A'"/>.
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </t>
+
+                        <!-- Parent Acknowledgment Section -->
+                        <t t-if="o.custodian_type == 'student' and o.parent_damage_acknowledged">
+                            <div style="margin-top: 30px; page-break-inside: avoid;">
+                                <h5 style="background-color: #17a2b8; color: white; padding: 8px 10px; margin-bottom: 15px;">
+                                    Parent/Guardian Acknowledgment
+                                </h5>
+
+                                <div style="margin-bottom: 20px;">
+                                    <p style="font-size: 12px; font-weight: bold; margin-bottom: 10px;">
+                                        By signing below, I acknowledge that I have reviewed the inspection findings and damage assessment above, and understand my financial responsibility for the repair costs as outlined in the Asset Use Agreement.
+                                    </p>
+                                </div>
+
+                                <table style="width: 100%; margin-top: 20px;">
+                                    <tr>
+                                        <td style="width: 60%; vertical-align: top; padding-right: 20px;">
+                                            <!-- Parent Signature -->
+                                            <div style="margin-bottom: 10px;">
+                                                <strong>Parent/Guardian Signature:</strong>
+                                            </div>
+                                            <div style="border: 2px solid #17a2b8; padding: 10px; background-color: #f8f9fa; min-height: 120px; text-align: center;">
+                                                <t t-if="o.parent_signature">
+                                                    <img t-att-src="image_data_uri(o.parent_signature)"
+                                                         style="max-width: 100%; max-height: 100px;"
+                                                         alt="Parent Signature"/>
+                                                </t>
+                                            </div>
+                                            <div style="margin-top: 8px;">
+                                                <strong>Name:</strong> <span t-esc="o.parent_name"/><br/>
+                                                <strong>Date:</strong> <span t-esc="o.parent_signature_date.strftime('%B %d, %Y at %I:%M %p') if o.parent_signature_date else 'N/A'"/><br/>
+                                                <strong>IP Address:</strong> <span t-esc="o.parent_signature_ip or 'N/A'"/>
+                                            </div>
+                                        </td>
+                                        <td style="width: 40%; vertical-align: top;">
+                                            <!-- Signature Details -->
+                                            <div style="background-color: #d1ecf1; padding: 15px; border-left: 4px solid #17a2b8;">
+                                                <p style="margin: 0 0 8px 0; font-size: 11px; font-weight: bold;">
+                                                    ✅ Acknowledgment Verified
+                                                </p>
+                                                <p style="margin: 0; font-size: 10px; line-height: 1.4;">
+                                                    This damage report was acknowledged electronically via the MYIS Asset Management System. The signature was captured on <span t-esc="o.parent_signature_date.strftime('%B %d, %Y at %I:%M %p') if o.parent_signature_date else 'N/A'"/> from IP address <span t-esc="o.parent_signature_ip or 'Unknown'"/>.
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </t>
+
+                        <!-- Footer -->
+                        <div style="margin-top: 40px; padding-top: 15px; border-top: 1px solid #dee2e6; font-size: 10px; color: #666; text-align: center;">
+                            <p style="margin: 0;">
+                                <t t-if="o.custodian_type == 'student' and o.parent_damage_acknowledged">
+                                    📄 Signed online via MYIS Asset Management System | Document ID: <span t-esc="o.name"/>
+                                </t>
+                                <t t-else="">
+                                    📄 Generated via MYIS Asset Management System | Reference: <span t-esc="o.name"/>
+                                </t>
+                            </p>
+                            <p style="margin: 5px 0 0 0;">
+                                For questions, contact: MYIS IT Department
+                            </p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Report Action -->
+    <record id="action_report_inspection_damage" model="ir.actions.report">
+        <field name="name">Inspection Damage Report</field>
+        <field name="model">asset.inspection</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_asset_management.report_inspection_damage_report</field>
+        <field name="report_file">school_asset_management.report_inspection_damage_report</field>
+        <field name="binding_model_id" ref="model_asset_inspection"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_assignment"/>
+    </record>
+</odoo>

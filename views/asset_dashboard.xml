@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Asset Dashboard Kanban View with Statistics -->
+    <record id="view_asset_dashboard" model="ir.ui.view">
+        <field name="name">asset.dashboard</field>
+        <field name="model">asset.dashboard</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_dashboard" create="false" edit="false" delete="false" sample="1">
+                <field name="total_assets"/>
+                <field name="available_assets"/>
+                <field name="assigned_teacher"/>
+                <field name="assigned_student"/>
+                <field name="maintenance_assets"/>
+                <field name="warranty_expiring"/>
+                <field name="total_asset_value"/>
+                <field name="total_damages"/>
+                <field name="total_damage_cost"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="container o_kanban_card_content">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="o_kanban_primary_left">
+                                        <div class="o_primary">
+                                            <h1>Asset Management Dashboard</h1>
+                                            <p class="text-muted">Real-time overview of school assets</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Statistics Cards Row 1 -->
+                            <div class="row mt-3">
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="card bg-primary text-white">
+                                        <div class="card-body">
+                                            <h4 class="card-title">📦 Total Assets</h4>
+                                            <h2><t t-esc="record.total_assets.raw_value"/></h2>
+                                            <p class="mb-0">All assets in system</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="card bg-success text-white">
+                                        <div class="card-body">
+                                            <h4 class="card-title">✅ Available</h4>
+                                            <h2><t t-esc="record.available_assets.raw_value"/></h2>
+                                            <p class="mb-0">Ready for assignment</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="card bg-info text-white">
+                                        <div class="card-body">
+                                            <h4 class="card-title">👨‍🏫 Teachers</h4>
+                                            <h2><t t-esc="record.assigned_teacher.raw_value"/></h2>
+                                            <p class="mb-0">Assigned to teachers</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="card bg-info text-white">
+                                        <div class="card-body">
+                                            <h4 class="card-title">👨‍🎓 Students</h4>
+                                            <h2><t t-esc="record.assigned_student.raw_value"/></h2>
+                                            <p class="mb-0">Assigned to students</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Statistics Cards Row 2 -->
+                            <div class="row">
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="card bg-warning text-white">
+                                        <div class="card-body">
+                                            <h4 class="card-title">🔧 Maintenance</h4>
+                                            <h2><t t-esc="record.maintenance_assets.raw_value"/></h2>
+                                            <p class="mb-0">Under maintenance/repair</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="card bg-danger text-white">
+                                        <div class="card-body">
+                                            <h4 class="card-title">⚠️ Warranty Expiring</h4>
+                                            <h2><t t-esc="record.warranty_expiring.raw_value"/></h2>
+                                            <p class="mb-0">Expires within 30 days</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="card bg-secondary text-white">
+                                        <div class="card-body">
+                                            <h4 class="card-title">💰 Total Value</h4>
+                                            <h2><t t-esc="'%.0f' % record.total_asset_value.raw_value"/> ฿</h2>
+                                            <p class="mb-0">Total asset value</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-6 mb-3">
+                                    <div class="card bg-dark text-white">
+                                        <div class="card-body">
+                                            <h4 class="card-title">💸 Damage Cost</h4>
+                                            <h2><t t-esc="'%.0f' % record.total_damage_cost.raw_value"/> ฿</h2>
+                                            <p class="mb-0">Total damages (<t t-esc="record.total_damages.raw_value"/> items)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick Action Buttons -->
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <h3>Quick Actions</h3>
+                                    <div class="btn-group" role="group">
+                                        <a type="action" name="%(action_asset_asset)d" class="btn btn-primary">
+                                            <i class="fa fa-cubes"/> View All Assets
+                                        </a>
+                                        <a type="action" name="%(action_asset_teacher_assignment)d" class="btn btn-info">
+                                            <i class="fa fa-user"/> Teacher Assignments
+                                        </a>
+                                        <a type="action" name="%(action_asset_student_assignment)d" class="btn btn-success">
+                                            <i class="fa fa-graduation-cap"/> Student Assignments
+                                        </a>
+                                        <a type="action" name="%(action_asset_inspection)d" class="btn btn-warning">
+                                            <i class="fa fa-search"/> Inspections
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Note about charts -->
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div class="alert alert-info">
+                                        <strong>📊 View Detailed Charts:</strong>
+                                        <ul class="mb-0 mt-2">
+                                            <li>Go to <strong>Assets → Graph View</strong> for status distribution</li>
+                                            <li>Go to <strong>Assets → Pivot View</strong> for detailed analytics</li>
+                                            <li>Use filters to analyze by category, location, or condition</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Graph View for Asset Analysis -->
+    <record id="view_asset_graph" model="ir.ui.view">
+        <field name="name">asset.asset.graph</field>
+        <field name="model">asset.asset</field>
+        <field name="arch" type="xml">
+            <graph string="Asset Analysis" type="bar" sample="1">
+                <field name="category_id"/>
+                <field name="status" type="col"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Pivot View for Asset Analytics -->
+    <record id="view_asset_pivot" model="ir.ui.view">
+        <field name="name">asset.asset.pivot</field>
+        <field name="model">asset.asset</field>
+        <field name="arch" type="xml">
+            <pivot string="Asset Analytics" sample="1">
+                <field name="category_id" type="row"/>
+                <field name="status" type="col"/>
+                <field name="purchase_cost" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="action_asset_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">asset.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'form_view_initial_mode': 'readonly'}</field>
+    </record>
+
+    <!-- Dashboard Form View -->
+    <record id="view_asset_dashboard_form" model="ir.ui.view">
+        <field name="name">asset.dashboard.form</field>
+        <field name="model">asset.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Asset Dashboard" create="false" edit="false" delete="false">
+                <sheet>
+                    <div class="container o_kanban_card_content">
+                        <div class="row">
+                            <div class="col-12">
+                                <h1>Asset Management Dashboard</h1>
+                                <p class="text-muted">Real-time overview of school assets</p>
+                            </div>
+                        </div>
+
+                        <!-- Statistics Cards Row 1 -->
+                        <div class="row mt-3">
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card bg-primary text-white">
+                                    <div class="card-body">
+                                        <h4 class="card-title">📦 Total Assets</h4>
+                                        <h2><field name="total_assets" readonly="1" nolabel="1"/></h2>
+                                        <p class="mb-0">All assets in system</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card bg-success text-white">
+                                    <div class="card-body">
+                                        <h4 class="card-title">✅ Available</h4>
+                                        <h2><field name="available_assets" readonly="1" nolabel="1"/></h2>
+                                        <p class="mb-0">Ready for assignment</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body">
+                                        <h4 class="card-title">👨‍🏫 Teachers</h4>
+                                        <h2><field name="assigned_teacher" readonly="1" nolabel="1"/></h2>
+                                        <p class="mb-0">Assigned to teachers</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card bg-info text-white">
+                                    <div class="card-body">
+                                        <h4 class="card-title">👨‍🎓 Students</h4>
+                                        <h2><field name="assigned_student" readonly="1" nolabel="1"/></h2>
+                                        <p class="mb-0">Assigned to students</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Statistics Cards Row 2 -->
+                        <div class="row">
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card bg-warning text-white">
+                                    <div class="card-body">
+                                        <h4 class="card-title">🔧 Maintenance</h4>
+                                        <h2><field name="maintenance_assets" readonly="1" nolabel="1"/></h2>
+                                        <p class="mb-0">Under maintenance/repair</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card bg-danger text-white">
+                                    <div class="card-body">
+                                        <h4 class="card-title">⚠️ Warranty Expiring</h4>
+                                        <h2><field name="warranty_expiring" readonly="1" nolabel="1"/></h2>
+                                        <p class="mb-0">Expires within 30 days</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card bg-secondary text-white">
+                                    <div class="card-body">
+                                        <h4 class="card-title">💰 Total Value</h4>
+                                        <h2><field name="total_asset_value" widget="monetary" readonly="1" nolabel="1"/> ฿</h2>
+                                        <p class="mb-0">Total asset value</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 mb-3">
+                                <div class="card bg-dark text-white">
+                                    <div class="card-body">
+                                        <h4 class="card-title">💸 Damage Cost</h4>
+                                        <h2><field name="total_damage_cost" widget="monetary" readonly="1" nolabel="1"/> ฿</h2>
+                                        <p class="mb-0">Total damages (<field name="total_damages" readonly="1" nolabel="1"/> items)</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Action Buttons -->
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <h3>Quick Actions</h3>
+                                <div class="btn-group" role="group">
+                                    <button type="action" name="%(action_asset_asset)d" class="btn btn-primary">
+                                        <i class="fa fa-cubes"/> View All Assets
+                                    </button>
+                                    <button type="action" name="%(action_asset_teacher_assignment)d" class="btn btn-info">
+                                        <i class="fa fa-user"/> Teacher Assignments
+                                    </button>
+                                    <button type="action" name="%(action_asset_student_assignment)d" class="btn btn-success">
+                                        <i class="fa fa-graduation-cap"/> Student Assignments
+                                    </button>
+                                    <button type="action" name="%(action_asset_inspection)d" class="btn btn-warning">
+                                        <i class="fa fa-search"/> Inspections
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

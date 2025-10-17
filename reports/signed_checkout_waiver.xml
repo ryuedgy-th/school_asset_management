@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Student Checkout Waiver PDF Report -->
+    <template id="report_signed_checkout_waiver">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: 'Sarabun', 'THSarabunNew', 'Garuda', 'Loma', sans-serif;">
+                        <!-- Header -->
+                        <div class="text-center" style="margin-bottom: 12px; border-bottom: 2px solid #574193; padding-bottom: 10px;">
+                            <h3 style="color: #574193; margin-bottom: 5px; font-weight: bold; font-size: 18px;">MYIS INTERNATIONAL SCHOOL</h3>
+                            <h5 style="color: #574193; margin-top: 0; margin-bottom: 3px; font-size: 14px;">Student 1:1 iPad Use Waiver Form</h5>
+                            <p style="color: #666; margin: 0; font-size: 11px; font-weight: 500;">With home loan inclusion</p>
+                        </div>
+
+                        <!-- Student Information -->
+                        <div style="margin-bottom: 10px;">
+                            <h6 style="background-color: #eeeeee; color: #181a18; padding: 5px 10px; margin-bottom: 6px; font-size: 12px; font-weight: bold;">
+                                Student Information
+                            </h6>
+                            <table style="width: 100%; font-size: 10px; table-layout: fixed;">
+                                <colgroup>
+                                    <col style="width: 20%;"/>
+                                    <col style="width: 30%;"/>
+                                    <col style="width: 15%;"/>
+                                    <col style="width: 35%;"/>
+                                </colgroup>
+                                <tr>
+                                    <td style="padding: 3px;"><strong>Student:</strong></td>
+                                    <td style="padding: 3px;"><span t-esc="o.student_name"/></td>
+                                    <td style="padding: 3px;"><strong>Grade:</strong></td>
+                                    <td style="padding: 3px;"><span t-esc="o.grade_level"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 3px;"><strong>Assignment #:</strong></td>
+                                    <td style="padding: 3px;"><span t-esc="o.name"/></td>
+                                    <td style="padding: 3px;"><strong>Date:</strong></td>
+                                    <td style="padding: 3px;"><span t-esc="o.checkout_date.strftime('%b %d, %Y') if o.checkout_date else 'N/A'"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 3px;"><strong>Parent:</strong></td>
+                                    <td colspan="3" style="padding: 3px;"><span t-esc="o.parent_name"/> (<span t-esc="o.parent_email"/>)</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Assets Assigned -->
+                        <div style="margin-bottom: 10px;">
+                            <h6 style="background-color: #eeeeee; color: #181a18; padding: 5px 10px; margin-bottom: 6px; font-size: 12px; font-weight: bold;">
+                                Assets Assigned
+                            </h6>
+                            <table class="table table-bordered" style="width: 100%; font-size: 10px; border-collapse: collapse;">
+                                <thead style="background-color: #f2f2f2;">
+                                    <tr>
+                                        <th style="border: 1px solid #ddd; padding: 4px; width: 5%;">#</th>
+                                        <th style="border: 1px solid #ddd; padding: 4px; width: 15%;">Asset Code</th>
+                                        <th style="border: 1px solid #ddd; padding: 4px; width: 40%;">Asset Name</th>
+                                        <th style="border: 1px solid #ddd; padding: 4px; width: 15%;">Condition</th>
+                                        <th style="border: 1px solid #ddd; padding: 4px; width: 25%;">Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="o.asset_line_ids" t-as="line">
+                                        <tr>
+                                            <td style="border: 1px solid #ddd; padding: 4px; text-align: center;"><span t-esc="line_index + 1"/></td>
+                                            <td style="border: 1px solid #ddd; padding: 4px;"><span t-esc="line.asset_code"/></td>
+                                            <td style="border: 1px solid #ddd; padding: 4px;"><span t-esc="line.asset_name"/></td>
+                                            <td style="border: 1px solid #ddd; padding: 4px;">
+                                                <span t-esc="dict(line._fields['checkout_condition'].selection).get(line.checkout_condition, 'N/A')"/>
+                                            </td>
+                                            <td style="border: 1px solid #ddd; padding: 4px; font-size: 9px;">
+                                                <span t-esc="line.checkout_notes or '-'"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Checkout Photos -->
+                        <t t-set="has_checkout_photos" t-value="any(line.checkout_photo_ids for line in o.asset_line_ids)"/>
+                        <div style="margin-bottom: 10px;" t-if="has_checkout_photos">
+                            <h6 style="background-color: #eeeeee; color: #181a18; padding: 5px 10px; margin-bottom: 6px; font-size: 12px; font-weight: bold;">
+                                Checkout Photos
+                            </h6>
+                            <t t-foreach="o.asset_line_ids" t-as="line">
+                                <t t-if="line.checkout_photo_ids">
+                                    <div style="margin-bottom: 8px; border: 1px solid #dee2e6; padding: 6px; background-color: #f8f9fa;">
+                                        <strong style="font-size: 10px; color: #574193;">
+                                            <span t-esc="line.asset_name"/> (<span t-esc="line.asset_code"/>)
+                                        </strong>
+                                        <div style="margin-top: 4px;">
+                                            <t t-foreach="line.checkout_photo_ids[:4]" t-as="photo">
+                                                <img t-att-src="image_data_uri(photo.datas)"
+                                                     style="max-width: 23%; height: auto; margin-right: 5px; margin-bottom: 3px; border: 1px solid #ddd; border-radius: 3px;"
+                                                     alt="Checkout photo"/>
+                                            </t>
+                                            <t t-if="len(line.checkout_photo_ids) > 4">
+                                                <span style="font-size: 9px; color: #666; display: block; margin-top: 2px;">
+                                                    (+ <span t-esc="len(line.checkout_photo_ids) - 4"/> more photos)
+                                                </span>
+                                            </t>
+                                        </div>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div style="margin-bottom: 10px;">
+                            <h6 style="background-color: #ffc107; color: #000; padding: 5px 10px; margin-bottom: 6px; font-size: 12px;">
+                                Terms &amp; Conditions
+                            </h6>
+                            <div style="font-size: 9.5px; line-height: 1.4; padding: 10px; background-color: #f8f9fa; border: 1px solid #dee2e6;">
+                                <p style="margin: 0 0 6px 0; font-weight: bold; font-size: 10px; font-style: italic;">
+                                    Students and parents must read, sign and return this agreement to indicate they will follow its provisions.
+                                </p>
+                                <ol style="margin: 0; padding-left: 20px;">
+                                    <li style="margin-bottom: 2px;">Access to technology at MYIS is a privilege. Access to the network and internet connection is available to students for school purposes only.</li>
+                                    <li style="margin-bottom: 2px;">Students' use of technology must be in support of teaching and learning in accordance with the educational goals and objectives of MYIS.</li>
+                                    <li style="margin-bottom: 2px;">Passwords should be kept secret.</li>
+                                    <li style="margin-bottom: 2px;">Only school-approved software should be used on school devices.</li>
+                                    <li style="margin-bottom: 2px;">Students are not permitted to use social networking websites or chat services through the school network/on the MYIS iPad.</li>
+                                    <li style="margin-bottom: 2px;">Students should tell a teacher/parent if they see a site or content that should be blocked.</li>
+                                    <li style="margin-bottom: 2px;">Students should tell a teacher if they see any problems with the device.</li>
+                                    <li style="margin-bottom: 2px;">Students should keep devices in good working condition and return it in the same condition in which it was received, excepting normal wear from usage.</li>
+                                    <li style="margin-bottom: 2px;">Students should keep the device secure at all times and not relinquish possession of it to anyone else aside from their teacher/parent.</li>
+                                    <li style="margin-bottom: 2px;">Students are liable for any damage or loss of the devices issued to them and agree to reimburse the school for replacement fees in the event the device is lost, stolen or damaged.</li>
+                                </ol>
+                                <p style="margin: 8px 0 6px 0; font-weight: bold; font-size: 9.5px;">
+                                    Parent must read and agree to the following terms before borrowing a school iPad to take home during Distance Learning Periods:
+                                </p>
+                                <ol style="margin: 0; padding-left: 20px;">
+                                    <li style="margin-bottom: 2px;">The use of the MYIS iPad is only for Distance Learning purposes only.</li>
+                                    <li style="margin-bottom: 2px;">There should not be any new applications or software added to the iPad at any time.</li>
+                                    <li style="margin-bottom: 2px;">Parents/families take full responsibility for the return of the MYIS iPad in perfect working order and in the same state it was borrowed in.</li>
+                                    <li style="margin-bottom: 2px;">Families are liable for any damage or loss of the devices issued to them and agree to reimburse the school for replacement fees in the event the device is lost, stolen or damaged for <strong>฿10,900</strong>.</li>
+                                </ol>
+                                <p style="margin: 6px 0 0 0; font-weight: bold; font-style: italic; font-size: 9px;">
+                                    Violation of the above policies may result in restricted access to school devices and the school network. By signing below, I agree to abide by all the terms and conditions of the above policy.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Signature Section -->
+                        <div style="margin-top: 10px;">
+                            <h6 style="background-color: #6ab42d; color: white; padding: 5px 10px; margin-bottom: 6px; font-size: 12px;">
+                                Signature
+                            </h6>
+
+                            <p style="font-size: 9px; font-weight: bold; margin: 6px 0;">
+                                By signing, I agree to all terms and accept financial responsibility for damage/loss from negligence.
+                            </p>
+
+                            <table style="width: 100%; margin-top: 6px;">
+                                <tr>
+                                    <td style="width: 55%; vertical-align: top; padding-right: 12px;">
+                                        <!-- Parent Signature -->
+                                        <div style="margin-bottom: 4px; font-size: 10px;">
+                                            <strong>Parent/Guardian Signature:</strong>
+                                        </div>
+                                        <div style="border: 2px solid #6ab42d; padding: 8px; background-color: #f8f9fa; min-height: 70px; text-align: center;">
+                                            <t t-if="o.checkout_student_signature_watermarked">
+                                                <img t-att-src="image_data_uri(o.checkout_student_signature_watermarked)"
+                                                     style="max-width: 100%; max-height: 60px;"
+                                                     alt="Parent Signature (Watermarked for Security)"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="color: #999; font-style: italic; font-size: 9px;">Parent Signature</span>
+                                            </t>
+                                        </div>
+                                        <div style="margin-top: 5px; font-size: 9px;">
+                                            <strong>Name:</strong> <span t-esc="o.parent_name"/><br/>
+                                            <strong>Date:</strong> <span t-esc="o.checkout_sign_date.strftime('%b %d, %Y %I:%M %p') if o.checkout_sign_date else 'N/A'"/>
+                                        </div>
+                                    </td>
+                                    <td style="width: 45%; vertical-align: top;">
+                                        <!-- Signature Details -->
+                                        <div style="background-color: #f0f0f0; padding: 10px; border-left: 3px solid #574193;">
+                                            <p style="margin: 0 0 5px 0; font-size: 10px; font-weight: bold;">
+                                                ✅ Verified
+                                            </p>
+                                            <p style="margin: 0; font-size: 8.5px; line-height: 1.4;">
+                                                Signed electronically via MYIS Asset System on <span t-esc="o.checkout_sign_date.strftime('%b %d, %Y %I:%M %p') if o.checkout_sign_date else 'N/A'"/>.
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #dee2e6; font-size: 8px; color: #666; text-align: center;">
+                            <p style="margin: 0;">
+                                Signed online via MYIS Asset System | ID: <span t-esc="o.name"/> | Contact: MYIS IT Department
+                            </p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Report Action -->
+    <record id="action_report_student_checkout_waiver" model="ir.actions.report">
+        <field name="name">Student Checkout Waiver</field>
+        <field name="model">asset.student.assignment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_asset_management.report_signed_checkout_waiver</field>
+        <field name="report_file">school_asset_management.report_signed_checkout_waiver</field>
+        <field name="binding_model_id" ref="model_asset_student_assignment"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_assignment"/>
+    </record>
+</odoo>

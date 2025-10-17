@@ -1,0 +1,848 @@
+/* ========================================================================
+   MYIS International School - Signature Page Styles (Minimalist Design)
+   Apple-inspired clean and professional design
+   Brand Colors: #574193 (Purple), #6ab42d (Green)
+   ======================================================================== */
+
+/* ========================================================================
+   Root Variables - MYIS Brand Colors (Minimalist Palette)
+   ======================================================================== */
+:root {
+    /* Brand Colors */
+    --myis-purple: #574193;           /* Primary - Headings */
+    --myis-green: #6ab42d;            /* Accent - Buttons */
+    --myis-dark-text: #181a18;        /* Body text on white */
+    --myis-white: #FFFFFF;            /* Background */
+
+    /* Neutral Palette */
+    --myis-gray-50: #F9FAFB;          /* Subtle background */
+    --myis-gray-100: #F3F4F6;         /* Light background */
+    --myis-gray-200: #E5E7EB;         /* Dividers */
+    --myis-gray-300: #D1D5DB;         /* Borders */
+    --myis-gray-400: #9CA3AF;         /* Disabled */
+    --myis-gray-500: #6B7280;         /* Secondary text */
+    --myis-gray-600: #4B5563;         /* Muted text */
+    --myis-gray-900: #111827;         /* Headings alt */
+
+    /* Semantic Colors (Minimal use) */
+    --myis-danger: #EF4444;           /* Errors only */
+    --myis-warning: #F59E0B;          /* Warnings only */
+    --myis-info: #3B82F6;             /* Info only */
+
+    /* Spacing & Sizing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --spacing-xl: 32px;
+    --spacing-2xl: 48px;
+
+    /* Border Radius (Rounded like website) */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
+
+    /* Shadows (Subtle) */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* ========================================================================
+   Typography - Clean Hierarchy
+   ======================================================================== */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--myis-dark-text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--myis-purple);
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: var(--spacing-md);
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+}
+
+h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+h4 {
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+h5, h6 {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+p {
+    margin-bottom: var(--spacing-md);
+    color: var(--myis-dark-text);
+}
+
+.text-muted {
+    color: var(--myis-gray-500) !important;
+}
+
+.text-secondary {
+    color: var(--myis-gray-600) !important;
+}
+
+/* ========================================================================
+   Layout - Clean Container
+   ======================================================================== */
+body {
+    background-color: #e0e0e0;
+}
+
+.signature-page,
+.damage-report-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+    background-color: var(--myis-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+@media (min-width: 768px) {
+    .signature-page,
+    .damage-report-page {
+        padding: var(--spacing-2xl) var(--spacing-xl);
+    }
+}
+
+/* ========================================================================
+   Header Section - Minimal & Clean
+   ======================================================================== */
+.signature-page .text-center,
+.damage-report-page .text-center {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.signature-page h2.text-primary {
+    color: var(--myis-purple) !important;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+}
+
+.signature-page h4.text-secondary {
+    color: var(--myis-gray-600) !important;
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: var(--spacing-sm);
+}
+
+.signature-page .text-muted {
+    color: var(--myis-gray-500) !important;
+    font-size: 0.95rem;
+}
+
+/* ========================================================================
+   Cards - Flat Minimal Design (No Colored Headers)
+   ======================================================================== */
+.card {
+    background-color: var(--myis-white);
+    border: 1px solid var(--myis-gray-200);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/* Remove all colored card headers */
+.card-header {
+    background-color: #eeeeee !important;
+    border-bottom: 1px solid var(--myis-gray-200);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md) var(--radius-md) 0 0 !important;
+}
+
+.card-header h5,
+.card-header h6 {
+    color: var(--myis-purple);
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 0;
+}
+
+.card-header.bg-primary,
+.card-header.bg-info,
+.card-header.bg-success,
+.card-header.bg-warning,
+.card-header.bg-danger {
+    background-color: transparent !important;
+    color: var(--myis-purple) !important;
+    border-bottom: 1px solid var(--myis-gray-200);
+}
+
+.card-header.bg-primary h5,
+.card-header.bg-info h5,
+.card-header.bg-success h5,
+.card-header.bg-warning h5,
+.card-header.bg-danger h5 {
+    color: var(--myis-purple) !important;
+}
+
+.card-body {
+    padding: var(--spacing-lg);
+}
+
+/* Remove colored card borders */
+.card.border-primary,
+.card.border-info,
+.card.border-success,
+.card.border-warning,
+.card.border-danger {
+    border-color: var(--myis-gray-200) !important;
+}
+
+/* Special accent for important sections (subtle left border) */
+.card.border-primary {
+    border-left: 3px solid var(--myis-purple) !important;
+}
+
+.card.border-success {
+    border-left: 3px solid var(--myis-green) !important;
+}
+
+/* ========================================================================
+   Asset Table - Clean & Readable
+   ======================================================================== */
+.table {
+    width: 100%;
+    margin-bottom: 0;
+    color: var(--myis-dark-text);
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table thead th {
+    background-color: var(--myis-gray-50);
+    color: var(--myis-gray-900);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: var(--spacing-md);
+    border-bottom: 2px solid var(--myis-gray-200);
+}
+
+.table tbody td {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid var(--myis-gray-200);
+    vertical-align: middle;
+}
+
+.table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table tbody tr:hover {
+    background-color: var(--myis-gray-50);
+}
+
+/* Remove colored table headers */
+.table-light {
+    background-color: var(--myis-gray-50) !important;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ========================================================================
+   Badges - Minimal Style
+   ======================================================================== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: var(--radius-full);
+    letter-spacing: 0.025em;
+}
+
+.badge.bg-success {
+    background-color: #ECFDF5 !important;
+    color: #047857 !important;
+    border: 1px solid #A7F3D0;
+}
+
+.badge.bg-primary {
+    background-color: #EEF2FF !important;
+    color: #4F46E5 !important;
+    border: 1px solid #C7D2FE;
+}
+
+.badge.bg-warning {
+    background-color: #FFFBEB !important;
+    color: #B45309 !important;
+    border: 1px solid #FDE68A;
+}
+
+.badge.bg-danger {
+    background-color: #FEF2F2 !important;
+    color: #DC2626 !important;
+    border: 1px solid #FECACA;
+}
+
+/* ========================================================================
+   Buttons - Green Accent (Brand Color)
+   ======================================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-lg {
+    padding: 14px 28px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    border-radius: var(--radius-md);
+}
+
+/* Primary Button - Green */
+.btn-success,
+.btn-primary {
+    background-color: var(--myis-green) !important;
+    color: var(--myis-white) !important;
+    border: none;
+}
+
+.btn-success:hover,
+.btn-primary:hover {
+    background-color: #5a9625 !important;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-success:active,
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Secondary Button - Outline */
+.btn-outline-secondary {
+    background-color: transparent;
+    color: var(--myis-gray-600);
+    border: 1px solid var(--myis-gray-300);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--myis-gray-50);
+    border-color: var(--myis-gray-400);
+    color: var(--myis-gray-900);
+}
+
+/* Danger Button */
+.btn-danger {
+    background-color: var(--myis-danger) !important;
+    color: var(--myis-white) !important;
+}
+
+.btn-danger:hover {
+    background-color: #DC2626 !important;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ========================================================================
+   Forms & Inputs - Clean Minimal Style
+   ======================================================================== */
+.form-label {
+    display: block;
+    margin-bottom: var(--spacing-sm);
+    color: var(--myis-gray-900);
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--myis-dark-text);
+    background-color: var(--myis-white);
+    border: 1px solid var(--myis-gray-300);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--myis-purple);
+    box-shadow: 0 0 0 3px rgba(87, 65, 147, 0.1);
+}
+
+.form-text {
+    display: block;
+    margin-top: var(--spacing-xs);
+    font-size: 0.875rem;
+    color: var(--myis-gray-500);
+}
+
+/* Checkboxes - Custom Minimal Style */
+.form-check {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
+    background-color: var(--myis-gray-50) !important;
+    border: 1px solid var(--myis-gray-200) !important;
+    border-radius: var(--radius-sm);
+    transition: none !important;
+}
+
+.form-check:hover {
+    background-color: var(--myis-gray-50) !important;
+    border: 1px solid var(--myis-gray-200) !important;
+}
+
+.form-check-input {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    margin-right: var(--spacing-md);
+    border: 2px solid var(--myis-gray-300) !important;
+    border-radius: 4px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: none !important;
+}
+
+.form-check-input:hover {
+    border: 2px solid var(--myis-gray-300) !important;
+}
+
+.form-check-input:checked {
+    background-color: var(--myis-green) !important;
+    border-color: var(--myis-green) !important;
+}
+
+.form-check-input:focus {
+    outline: none;
+    border-color: var(--myis-purple) !important;
+    box-shadow: 0 0 0 3px rgba(87, 65, 147, 0.1);
+}
+
+.form-check-label {
+    font-size: 0.95rem;
+    color: var(--myis-dark-text);
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+/* Remove colored backgrounds from form-check */
+.form-check.bg-light {
+    background-color: var(--myis-gray-50) !important;
+}
+
+/* ========================================================================
+   Signature Canvas - Minimal & Clean
+   ======================================================================== */
+.signature-pad-container {
+    position: relative;
+    background-color: var(--myis-white);
+    border: 2px solid var(--myis-gray-300);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-md);
+    transition: all 0.2s ease;
+}
+
+.signature-pad-container:hover {
+    border-color: var(--myis-gray-400);
+}
+
+.signature-canvas {
+    display: block;
+    width: 100%;
+    height: 180px;
+    touch-action: none;
+    cursor: crosshair;
+    border-radius: var(--radius-md);
+}
+
+@media (min-width: 768px) {
+    .signature-canvas {
+        height: 220px;
+    }
+}
+
+/* Signature States */
+.signature-pad-container.signing {
+    border-color: var(--myis-purple);
+    box-shadow: 0 0 0 3px rgba(87, 65, 147, 0.1);
+}
+
+.signature-pad-container.has-signature {
+    border-color: var(--myis-green);
+    background-color: #FAFFF9;
+}
+
+.signature-pad-container.error {
+    border-color: var(--myis-danger);
+}
+
+/* ========================================================================
+   Alerts - Minimal Style
+   ======================================================================== */
+.alert {
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    border: 1px solid;
+    margin-bottom: var(--spacing-md);
+}
+
+.alert-info {
+    background-color: #EFF6FF;
+    border-color: #DBEAFE;
+    color: #1E40AF;
+}
+
+.alert-success {
+    background-color: #ECFDF5;
+    border-color: #D1FAE5;
+    color: #065F46;
+}
+
+.alert-warning {
+    background-color: #FFFBEB;
+    border-color: #FEF3C7;
+    color: #92400E;
+}
+
+.alert-danger {
+    background-color: #FEF2F2;
+    border-color: #FECACA;
+    color: #991B1B;
+}
+
+.alert-secondary {
+    background-color: var(--myis-gray-50);
+    border-color: var(--myis-gray-200);
+    color: var(--myis-gray-900);
+}
+
+.alert-heading {
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* ========================================================================
+   Icons - Minimal Use
+   ======================================================================== */
+.fa {
+    margin-right: var(--spacing-sm);
+    color: var(--myis-gray-500);
+}
+
+h1 .fa, h2 .fa, h3 .fa, h4 .fa, h5 .fa, h6 .fa {
+    color: var(--myis-purple);
+}
+
+.btn .fa {
+    margin-right: var(--spacing-sm);
+    color: inherit;
+}
+
+/* ========================================================================
+   Status Messages
+   ======================================================================== */
+#status-message {
+    transition: all 0.3s ease;
+}
+
+#status-message.show {
+    display: block !important;
+}
+
+#status-message .alert {
+    margin-bottom: 0;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================================================
+   Required Field Indicator
+   ======================================================================== */
+.text-danger {
+    color: var(--myis-danger) !important;
+}
+
+/* ========================================================================
+   Mobile Responsive
+   ======================================================================== */
+@media (max-width: 576px) {
+    :root {
+        --spacing-lg: 16px;
+        --spacing-xl: 24px;
+        --spacing-2xl: 32px;
+    }
+
+    .signature-page,
+    .damage-report-page {
+        padding: var(--spacing-md);
+    }
+
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .card-body {
+        padding: var(--spacing-md);
+    }
+
+    .btn-lg {
+        padding: 12px 24px;
+        font-size: 1rem;
+    }
+
+    .table {
+        font-size: 0.875rem;
+    }
+
+    .table th,
+    .table td {
+        padding: var(--spacing-sm);
+    }
+}
+
+/* ========================================================================
+   Print Styles
+   ======================================================================== */
+@media print {
+    .signature-page,
+    .damage-report-page {
+        padding: 0;
+    }
+
+    .card {
+        page-break-inside: avoid;
+        border: 1px solid var(--myis-gray-300);
+        box-shadow: none;
+    }
+
+    .btn,
+    #clear-signature,
+    #submit-signature,
+    #submit-damage-signature {
+        display: none !important;
+    }
+}
+
+/* ========================================================================
+   Accessibility
+   ======================================================================== */
+.btn:focus,
+.form-control:focus,
+.form-check-input:focus {
+    outline: 2px solid var(--myis-purple);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Dark mode support (if needed in future) */
+@media (prefers-color-scheme: dark) {
+    /* Keep light theme for official documents */
+    /* Documents should always be light and professional */
+}
+
+/* ========================================================================
+   Modal Styles (Bootstrap Modal Override)
+   ======================================================================== */
+.modal-content {
+    border-radius: var(--radius-md);
+    border: 1px solid var(--myis-gray-200);
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+    background-color: var(--myis-white);
+    border-bottom: 1px solid var(--myis-gray-200);
+    padding: var(--spacing-lg);
+}
+
+.modal-header .modal-title {
+    color: var(--myis-purple);
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.modal-header .btn-close {
+    padding: var(--spacing-sm);
+}
+
+.modal-body {
+    padding: var(--spacing-lg);
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.modal-body h6 {
+    color: #574193 !important;
+}
+
+.modal-footer {
+    background-color: var(--myis-gray-50);
+    border-top: 1px solid var(--myis-gray-200);
+    padding: var(--spacing-md) var(--spacing-lg);
+}
+
+.modal-footer .btn {
+    min-width: 100px;
+}
+
+.modal-footer .btn-secondary {
+    background-color: #d9dede !important;
+    color: var(--myis-gray-900) !important;
+    border: 1px solid var(--myis-gray-300) !important;
+}
+
+.modal-footer .btn-secondary:hover {
+    background-color: #c9cece !important;
+    border-color: var(--myis-gray-400) !important;
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-backdrop.show {
+    opacity: 0.5;
+}
+
+/* ========================================================================
+   Loading States
+   ======================================================================== */
+.btn.loading {
+    pointer-events: none;
+    position: relative;
+    color: transparent !important;
+}
+
+.btn.loading::after {
+    content: "";
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 50%;
+    left: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+    border: 2px solid transparent;
+    border-top-color: var(--myis-white);
+    border-radius: 50%;
+    animation: button-loading-spinner 0.6s linear infinite;
+}
+
+@keyframes button-loading-spinner {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ========================================================================
+   Utility Classes
+   ======================================================================== */
+.text-center {
+    text-align: center;
+}
+
+.mb-0 { margin-bottom: 0 !important; }
+.mb-1 { margin-bottom: var(--spacing-xs) !important; }
+.mb-2 { margin-bottom: var(--spacing-sm) !important; }
+.mb-3 { margin-bottom: var(--spacing-md) !important; }
+.mb-4 { margin-bottom: var(--spacing-lg) !important; }
+.mb-5 { margin-bottom: var(--spacing-xl) !important; }
+
+.mt-0 { margin-top: 0 !important; }
+.mt-1 { margin-top: var(--spacing-xs) !important; }
+.mt-2 { margin-top: var(--spacing-sm) !important; }
+.mt-3 { margin-top: var(--spacing-md) !important; }
+.mt-4 { margin-top: var(--spacing-lg) !important; }
+.mt-5 { margin-top: var(--spacing-xl) !important; }
+
+.fw-bold { font-weight: 600 !important; }
+.fw-normal { font-weight: 400 !important; }
+
+.d-grid { display: grid !important; }
+.gap-2 { gap: var(--spacing-sm) !important; }
+
+/* Override Bootstrap colored backgrounds */
+.bg-primary,
+.bg-info,
+.bg-success,
+.bg-warning,
+.bg-danger {
+    background-color: transparent !important;
+}
+
+/* Keep text colors only where needed */
+.text-white {
+    color: var(--myis-white) !important;
+}

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Damage Case Tree View -->
+    <record id="view_asset_damage_case_tree" model="ir.ui.view">
+        <field name="name">asset.damage.case.tree</field>
+        <field name="model">asset.damage.case</field>
+        <field name="arch" type="xml">
+            <list string="Damage Cases">
+                <field name="name"/>
+                <field name="asset_code"/>
+                <field name="damage_source"/>
+                <field name="damage_date"/>
+                <field name="responsible_type"/>
+                <field name="estimated_cost" sum="Total Estimated"/>
+                <field name="actual_cost" sum="Total Actual"/>
+                <field name="approval_status"
+                       decoration-warning="approval_status == 'pending'"
+                       decoration-success="approval_status == 'approved'"
+                       decoration-danger="approval_status == 'rejected'"/>
+                <field name="status"
+                       decoration-info="status in ('draft', 'pending_approval')"
+                       decoration-success="status in ('approved', 'repaired', 'closed')"
+                       decoration-warning="status == 'in_repair'"
+                       decoration-danger="status == 'rejected'"
+                       widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Damage Case Form View -->
+    <record id="view_asset_damage_case_form" model="ir.ui.view">
+        <field name="name">asset.damage.case.form</field>
+        <field name="model">asset.damage.case</field>
+        <field name="arch" type="xml">
+            <form string="Damage Case">
+                <header>
+                    <field name="approval_status" invisible="1"/>
+                    <field name="approval_token" invisible="1"/>
+
+                    <!-- Submit for Approval -->
+                    <button name="action_submit_for_approval"
+                            string="Submit for Approval"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="status != 'draft'"/>
+
+                    <!-- Resend/Copy Approval Link -->
+                    <button name="action_resend_approval_request"
+                            string="Resend Approval Request"
+                            type="object"
+                            invisible="status != 'pending_approval'"/>
+                    <button name="action_copy_approval_link"
+                            string="Copy Approval Link"
+                            type="object"
+                            invisible="not approval_token or status not in ('pending_approval', 'approved')"/>
+
+                    <!-- Manual Approval/Rejection (for internal use) -->
+                    <button name="action_approve"
+                            string="Approve"
+                            type="object"
+                            class="oe_highlight"
+                            groups="base.group_system"
+                            invisible="approval_status == 'approved'"/>
+                    <button name="action_reject"
+                            string="Reject"
+                            type="object"
+                            groups="base.group_system"
+                            invisible="approval_status == 'rejected'"/>
+
+                    <!-- Repair Workflow -->
+                    <button name="action_send_to_repair"
+                            string="Send to Repair"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="status != 'approved'"/>
+                    <button name="action_receive_from_repair"
+                            string="Receive from Repair"
+                            type="object"
+                            class="oe_highlight"
+                            invisible="status != 'in_repair'"/>
+
+                    <!-- Close/Reopen -->
+                    <button name="action_close_case"
+                            string="Close Case"
+                            type="object"
+                            invisible="status not in ('repaired', 'rejected', 'approved')"/>
+                    <button name="action_reopen_case"
+                            string="Reopen Case"
+                            type="object"
+                            invisible="status != 'closed'"/>
+
+                    <!-- View Signed PDF -->
+                    <button name="action_view_approval_pdf"
+                            string="View Signed PDF"
+                            type="object"
+                            invisible="not approval_signed_pdf_id"/>
+
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="draft,pending_approval,approved,in_repair,repaired,closed"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <!-- Add smart buttons here if needed -->
+                    </div>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group string="Source Information">
+                            <field name="damage_source"/>
+                            <field name="inspection_id"
+                                   invisible="damage_source != 'inspection'"
+                                   readonly="damage_source != 'inspection'"/>
+                            <field name="teacher_assignment_id"
+                                   invisible="damage_source != 'checkin_teacher'"
+                                   readonly="damage_source != 'checkin_teacher'"/>
+                            <field name="student_assignment_id"
+                                   invisible="damage_source != 'checkin_student'"
+                                   readonly="damage_source != 'checkin_student'"/>
+                            <field name="damage_date"/>
+                            <field name="reported_by"/>
+                        </group>
+
+                        <group string="Asset Information">
+                            <field name="asset_id"/>
+                            <field name="asset_code"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Damage Details">
+                            <field name="damage_description"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group string="Responsible Party">
+                            <field name="responsible_type"/>
+                            <field name="responsible_teacher_id"
+                                   invisible="responsible_type != 'teacher'"/>
+                            <field name="responsible_student_name"
+                                   invisible="responsible_type != 'student'"/>
+                        </group>
+
+                        <group string="Cost Information">
+                            <field name="estimated_cost"/>
+                            <field name="actual_cost"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Approval Details">
+                            <group>
+                                <group string="Approval Information">
+                                    <field name="approval_status" readonly="1"/>
+                                    <field name="approver_id"
+                                           options="{'no_create': True, 'no_open': True}"
+                                           domain="[('user_id', '!=', False)]"/>
+                                    <field name="approver_email" readonly="1"/>
+                                    <field name="approval_date" readonly="1"/>
+                                    <field name="approval_notes" readonly="1"/>
+                                </group>
+
+                                <group string="Approval Signature" invisible="not approval_signature">
+                                    <field name="approval_signature" widget="image" nolabel="1" readonly="1"/>
+                                    <field name="approval_signature_date" readonly="1"/>
+                                    <field name="approval_signature_ip" readonly="1"/>
+                                    <field name="approval_signed_pdf_id" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Repair Information">
+                            <group>
+                                <group string="Repair Decision">
+                                    <field name="repair_decision"/>
+                                    <field name="repair_vendor"/>
+                                </group>
+
+                                <group string="Repair Timeline">
+                                    <field name="repair_sent_date"/>
+                                    <field name="repair_received_date"/>
+                                </group>
+                            </group>
+
+                            <group>
+                                <field name="repair_notes" placeholder="Enter repair notes, invoice numbers, etc..."/>
+                            </group>
+                        </page>
+
+                        <page string="Photos">
+                            <field name="photo_ids" widget="many2many_binary" nolabel="1"/>
+                        </page>
+
+                        <page string="Additional Notes">
+                            <field name="notes" placeholder="Enter any additional notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Damage Case Action -->
+    <record id="action_asset_damage_case" model="ir.actions.act_window">
+        <field name="name">Damage Cases</field>
+        <field name="res_model">asset.damage.case</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Damage Case
+            </p>
+            <p>
+                Track and manage asset damage cases, including approval workflow and repair tracking.
+            </p>
+        </field>
+    </record>
+
+</odoo>

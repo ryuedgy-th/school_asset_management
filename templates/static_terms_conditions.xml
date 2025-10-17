@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Static Terms and Conditions Template -->
+    <template id="terms_and_conditions_student_assignment" name="MYIS Student Asset Use Agreement">
+        <div class="terms-content" style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h3 style="color: #574193; margin-bottom: 5px;">MYIS INTERNATIONAL SCHOOL</h3>
+                <h4 style="color: #574193; margin-top: 0;">Student 1:1 iPad Use Waiver Form</h4>
+                <p style="color: #574193; margin: 0; font-weight: 500;">With home loan inclusion</p>
+            </div>
+
+            <p style="margin-bottom: 15px; font-size: 14px; font-style: italic;">
+                Students and parents must read, sign and return this agreement to indicate they will follow its provisions.
+            </p>
+
+            <div style="background-color: #f8f9fa; padding: 15px; border-left: 4px solid #574193; margin-bottom: 20px;">
+                <ol style="margin: 0; padding-left: 20px; font-size: 14px;">
+                    <li style="margin-bottom: 10px;">
+                        Access to technology at MYIS is a privilege. Access to the network and internet connection is available to students for school purposes only.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        Students' use of technology must be in support of teaching and learning in accordance with the educational goals and objectives of MYIS.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        Passwords should be kept secret.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        Only school-approved software should be used on school devices.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        Students are not permitted to use social networking websites or chat services through the school network/on the MYIS iPad.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        Students should tell a teacher/parent if they see a site or content that should be blocked.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        Students should tell a teacher if they see any problems with the device.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        Students should keep devices in good working condition and return it in the same condition in which it was received, excepting normal wear from usage.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        Students should keep the device secure at all times and not relinquish possession of it to anyone else aside from their teacher/parent.
+                    </li>
+                    <li style="margin-bottom: 10px;">
+                        Students are liable for any damage or loss of the devices issued to them and agree to reimburse the school for replacement fees in the event the device is lost, stolen or damaged.
+                    </li>
+                </ol>
+            </div>
+
+            <div style="background-color: #fff3cd; border: 2px solid #ffc107; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+                <h5 style="color: #856404; margin-top: 0; margin-bottom: 10px; font-weight: bold;">
+                    Parent must read and agree to the following terms before borrowing a school iPad to take home during Distance Learning Periods:
+                </h5>
+                <ol style="margin: 0; padding-left: 20px; font-size: 14px;">
+                    <li style="margin-bottom: 8px;">
+                        The use of the MYIS iPad is only for Distance Learning purposes only.
+                    </li>
+                    <li style="margin-bottom: 8px;">
+                        There should not be any new applications or software added to the iPad at any time.
+                    </li>
+                    <li style="margin-bottom: 8px;">
+                        Parents/families take full responsibility for the return of the MYIS iPad in perfect working order and in the same state it was borrowed in.
+                    </li>
+                    <li style="margin-bottom: 8px;">
+                        Families are liable for any damage or loss of the devices issued to them and agree to reimburse the school for replacement fees in the event the device is lost, stolen or damaged for <strong>฿10,900</strong>.
+                    </li>
+                </ol>
+            </div>
+
+            <div style="border-top: 2px solid #dee2e6; padding-top: 15px; margin-top: 20px;">
+                <p style="font-size: 15px; font-weight: bold; font-style: italic; color: #574193; margin-bottom: 10px;">
+                    Violation of the above policies may result in restricted access to school devices and the school network. By signing below, I agree to abide by all the terms and conditions of the above policy.
+                </p>
+            </div>
+        </div>
+    </template>
+</odoo>

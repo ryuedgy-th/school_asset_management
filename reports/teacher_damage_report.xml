@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Teacher Damage Acknowledgment PDF Report -->
+    <template id="report_teacher_damage_acknowledgment">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page" style="font-family: 'Sarabun', 'THSarabunNew', 'Garuda', 'Loma', sans-serif;">
+                        <!-- Header -->
+                        <div class="text-center" style="margin-bottom: 12px; border-bottom: 2px solid #574193; padding-bottom: 10px;">
+                            <h3 style="color: #574193; margin-bottom: 5px; font-weight: bold; font-size: 18px;">MYIS INTERNATIONAL SCHOOL</h3>
+                            <h5 style="color: #dc3545; margin-top: 0; margin-bottom: 3px; font-size: 14px;">Asset Damage Acknowledgment Report</h5>
+                            <p style="color: #666; margin: 0; font-size: 11px; font-weight: 500;">Teacher Damage Report</p>
+                        </div>
+
+                        <!-- Alert Banner -->
+                        <div style="background-color: #fff3cd; border: 2px solid #ffc107; border-radius: 5px; padding: 10px; margin-bottom: 12px;">
+                            <p style="margin: 0; font-size: 11px; font-weight: bold; color: #856404;">
+                                ⚠️ DAMAGE REPORT - Damage found during check-in inspection
+                            </p>
+                        </div>
+
+                        <!-- Teacher Information -->
+                        <div style="margin-bottom: 10px;">
+                            <h6 style="background-color: #eeeeee; color: #181a18; padding: 5px 10px; margin-bottom: 6px; font-size: 12px; font-weight: bold;">
+                                Teacher Information
+                            </h6>
+                            <table style="width: 100%; font-size: 10px; table-layout: fixed;">
+                                <colgroup>
+                                    <col style="width: 20%;"/>
+                                    <col style="width: 30%;"/>
+                                    <col style="width: 20%;"/>
+                                    <col style="width: 30%;"/>
+                                </colgroup>
+                                <tr>
+                                    <td style="padding: 3px;"><strong>Teacher:</strong></td>
+                                    <td style="padding: 3px;"><span t-esc="o.teacher_id.name"/></td>
+                                    <td style="padding: 3px;"><strong>Email:</strong></td>
+                                    <td style="padding: 3px;"><span t-esc="o.teacher_email"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 3px;"><strong>Assignment #:</strong></td>
+                                    <td style="padding: 3px;"><span t-esc="o.name"/></td>
+                                    <td style="padding: 3px;"><strong>Check-in Date:</strong></td>
+                                    <td style="padding: 3px;"><span t-esc="o.checkin_date.strftime('%b %d, %Y') if o.checkin_date else 'N/A'"/></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- Damaged Assets Details -->
+                        <div style="margin-bottom: 10px;">
+                            <h6 style="background-color: #dc3545; color: white; padding: 5px 10px; margin-bottom: 6px; font-size: 12px;">
+                                Damaged Assets
+                            </h6>
+
+                            <t t-set="damaged_assets" t-value="o.asset_line_ids.filtered(lambda line: line.has_damage)"/>
+
+                            <t t-if="damaged_assets">
+                                <t t-foreach="damaged_assets" t-as="line">
+                                    <div style="border: 1px solid #dee2e6; border-radius: 5px; padding: 8px; margin-bottom: 10px; background-color: #fff;">
+                                        <!-- Asset Header -->
+                                        <div style="margin-bottom: 6px; padding-bottom: 6px; border-bottom: 2px solid #ffc107;">
+                                            <table style="width: 100%; font-size: 10px;">
+                                                <tr>
+                                                    <td style="width: 60%;">
+                                                        <strong style="color: #dc3545; font-size: 11px;">
+                                                            <span t-esc="line.asset_name"/>
+                                                        </strong><br/>
+                                                        <span style="color: #666;">
+                                                            Asset Code: <span t-esc="line.asset_code"/> |
+                                                            Category: <span t-esc="line.asset_category"/>
+                                                        </span>
+                                                    </td>
+                                                    <td style="width: 40%; text-align: right; vertical-align: top;">
+                                                        <div style="background-color: #dc3545; color: white; padding: 4px 8px; border-radius: 3px; display: inline-block; font-weight: bold; font-size: 11px;">
+                                                            Repair Cost: <span t-esc="'%.2f' % line.repair_cost if line.repair_cost else '0.00'"/> THB
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                        <!-- Condition Comparison -->
+                                        <div style="margin-bottom: 6px;">
+                                            <table style="width: 100%; font-size: 9.5px;">
+                                                <tr>
+                                                    <td style="width: 50%; padding: 4px; background-color: #d4edda; border-radius: 3px;">
+                                                        <strong style="color: #155724;">Checkout Condition:</strong><br/>
+                                                        <t t-if="line.checkout_condition">
+                                                            <span t-esc="dict(line._fields['checkout_condition'].selection).get(line.checkout_condition, 'N/A')"/>
+                                                        </t>
+                                                        <t t-else="">N/A</t>
+                                                    </td>
+                                                    <td style="width: 10%;"></td>
+                                                    <td style="width: 40%; padding: 4px; background-color: #f8d7da; border-radius: 3px;">
+                                                        <strong style="color: #721c24;">Check-in Condition:</strong><br/>
+                                                        <t t-if="line.checkin_condition">
+                                                            <span t-esc="dict(line._fields['checkin_condition'].selection).get(line.checkin_condition, 'N/A')"/>
+                                                        </t>
+                                                        <t t-else="">N/A</t>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                        <!-- Damage Description -->
+                                        <div style="background-color: #fff3cd; padding: 6px; border-left: 3px solid #ffc107; font-size: 9.5px; margin-bottom: 6px;">
+                                            <strong style="color: #856404;">Damage Description:</strong><br/>
+                                            <span t-esc="line.damage_description or 'See photos below'"/>
+                                        </div>
+
+                                        <!-- Check-in Photos -->
+                                        <t t-if="line.checkin_photo_ids">
+                                            <div style="margin-top: 6px;">
+                                                <strong style="font-size: 9.5px;">Check-in Photos:</strong><br/>
+                                                <div style="margin-top: 4px;">
+                                                    <t t-foreach="line.checkin_photo_ids[:3]" t-as="photo">
+                                                        <img t-att-src="image_data_uri(photo.datas)"
+                                                             style="max-width: 30%; height: auto; margin-right: 5px; border: 1px solid #ddd; border-radius: 3px;"
+                                                             alt="Damage photo"/>
+                                                    </t>
+                                                    <t t-if="len(line.checkin_photo_ids) > 3">
+                                                        <span style="font-size: 9px; color: #666;">
+                                                            (+ <span t-esc="len(line.checkin_photo_ids) - 3"/> more photos)
+                                                        </span>
+                                                    </t>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </t>
+                            </t>
+                            <t t-else="">
+                                <p style="font-size: 10px; color: #666; font-style: italic;">No damaged assets recorded.</p>
+                            </t>
+                        </div>
+
+                        <!-- Financial Responsibility Notice -->
+                        <div style="margin-bottom: 10px;">
+                            <h6 style="background-color: #eeeeee; color: #181a18; padding: 5px 10px; margin-bottom: 6px; font-size: 12px; font-weight: bold;">
+                                Financial Responsibility
+                            </h6>
+                            <div style="font-size: 9.5px; line-height: 1.4; padding: 8px; background-color: #f0f0f0; border: 1px solid #dee2e6; border-radius: 3px;">
+                                <p style="margin: 0 0 4px 0; font-weight: bold;">
+                                    As per the MYIS iDevice Essential Agreement:
+                                </p>
+                                <p style="margin: 0;">
+                                    Staff members are responsible for damage caused by negligence or misuse.
+                                    The IT department will follow up regarding the repair or replacement of damaged asset(s).
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Teacher Acknowledgment Signature -->
+                        <div style="margin-top: 10px;">
+                            <h6 style="background-color: #6ab42d; color: white; padding: 5px 10px; margin-bottom: 6px; font-size: 12px;">
+                                Teacher Acknowledgment
+                            </h6>
+
+                            <p style="font-size: 9px; font-weight: bold; margin: 6px 0; background-color: #f8f9fa; padding: 6px; border-left: 3px solid #6ab42d;">
+                                By signing, I acknowledge that I have reviewed the damage assessment and understand my responsibility regarding the damaged asset(s).
+                            </p>
+
+                            <table style="width: 100%; margin-top: 6px;">
+                                <tr>
+                                    <td style="width: 55%; vertical-align: top; padding-right: 12px;">
+                                        <!-- Teacher Signature -->
+                                        <div style="margin-bottom: 4px; font-size: 10px;">
+                                            <strong>Teacher Signature:</strong>
+                                        </div>
+                                        <div style="border: 2px solid #6ab42d; padding: 8px; background-color: #f8f9fa; min-height: 70px; text-align: center;">
+                                            <t t-if="o.damage_signature_watermarked">
+                                                <img t-att-src="image_data_uri(o.damage_signature_watermarked)"
+                                                     style="max-width: 100%; max-height: 60px;"
+                                                     alt="Teacher Signature (Watermarked for Security)"/>
+                                            </t>
+                                            <t t-else="">
+                                                <span style="color: #999; font-style: italic; font-size: 9px;">Pending Acknowledgment</span>
+                                            </t>
+                                        </div>
+                                        <div style="margin-top: 5px; font-size: 9px;">
+                                            <strong>Name:</strong> <span t-esc="o.teacher_id.name"/><br/>
+                                            <strong>Date:</strong> <span t-esc="o.damage_sign_date.strftime('%b %d, %Y %I:%M %p') if o.damage_sign_date else 'N/A'"/>
+                                        </div>
+                                    </td>
+                                    <td style="width: 45%; vertical-align: top;">
+                                        <!-- Acknowledgment Status -->
+                                        <div t-attf-style="background-color: {{ '#f0f0f0' if o.damage_acknowledged else '#fff3cd' }}; padding: 10px; border-left: 3px solid {{ '#574193' if o.damage_acknowledged else '#ffc107' }};">
+                                            <p style="margin: 0 0 5px 0; font-size: 10px; font-weight: bold;">
+                                                <t t-if="o.damage_acknowledged">
+                                                    ✅ Acknowledged
+                                                </t>
+                                                <t t-else="">
+                                                    ⏳ Pending Acknowledgment
+                                                </t>
+                                            </p>
+                                            <t t-if="o.damage_acknowledged">
+                                                <p style="margin: 0; font-size: 8.5px; line-height: 1.4;">
+                                                    Signed electronically via MYIS Asset System on <span t-esc="o.damage_sign_date.strftime('%b %d, %Y %I:%M %p') if o.damage_sign_date else 'N/A'"/>.
+                                                </p>
+                                                <p style="margin: 4px 0 0 0; font-size: 8px; color: #666;">
+                                                    IP Address: <span t-esc="o.damage_ip_address or 'N/A'"/>
+                                                </p>
+                                            </t>
+                                            <t t-else="">
+                                                <p style="margin: 0; font-size: 8.5px; line-height: 1.4; color: #856404;">
+                                                    Teacher acknowledgment is pending. An email notification has been sent.
+                                                </p>
+                                            </t>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- IT Department Notes (if any) -->
+                        <t t-if="o.it_notes">
+                            <div style="margin-top: 10px;">
+                                <h6 style="background-color: #6c757d; color: white; padding: 5px 10px; margin-bottom: 6px; font-size: 12px;">
+                                    IT Department Notes
+                                </h6>
+                                <div style="font-size: 9.5px; padding: 8px; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 3px;">
+                                    <span t-esc="o.it_notes"/>
+                                </div>
+                            </div>
+                        </t>
+
+                        <!-- Footer -->
+                        <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #dee2e6; font-size: 8px; color: #666; text-align: center;">
+                            <p style="margin: 0;">
+                                Damage Report Generated via MYIS Asset System | Assignment ID: <span t-esc="o.name"/> | Contact: MYIS IT Department
+                            </p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <!-- Report Action -->
+    <record id="action_report_teacher_damage_acknowledgment" model="ir.actions.report">
+        <field name="name">Teacher Damage Report</field>
+        <field name="model">asset.teacher.assignment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">school_asset_management.report_teacher_damage_acknowledgment</field>
+        <field name="report_file">school_asset_management.report_teacher_damage_acknowledgment</field>
+        <field name="binding_model_id" ref="model_asset_teacher_assignment"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_assignment"/>
+    </record>
+</odoo>
