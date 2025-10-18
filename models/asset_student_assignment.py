@@ -935,11 +935,14 @@ class AssetStudentAssignment(models.Model):
         if not is_valid_hmac:
             _logger.warning(f'HMAC verification failed: {hmac_error} for {token_type} on record {self.id}')
             # Log security event
-            self.env['security_audit_log'].sudo().create({
-                'event_type': f'token_{hmac_error}',
-                'details': f'Token {hmac_error} for {token_type} signature on record {self.id}',
-                'severity': 'warning',
-            })
+            self.env['asset.security.audit.log'].sudo().log_security_event(
+                event_type=f'token_{hmac_error}',
+                ip_address='Unknown',
+                error_message=f'Token {hmac_error} for {token_type} signature on record {self.id}',
+                related_model=self._name,
+                related_id=self.id,
+                additional_info={'token_type': token_type}
+            )
             return hmac_error
 
         return 'valid'

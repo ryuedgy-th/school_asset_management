@@ -16,8 +16,8 @@
                     <h6 class="text-primary"><i class="fa fa-building"></i> ผู้ควบคุมข้อมูลส่วนบุคคล (Data Controller)</h6>
                     <p class="mb-2">
                         <strong>MYIS International School</strong><br/>
-                        ที่อยู่: [ระบุที่อยู่โรงเรียน]<br/>
-                        เบอร์โทร: +66-XXX-XXX-XXXX<br/>
+                        ที่อยู่: [Contact school administration for address]<br/>
+                        เบอร์โทร: [Contact school administration]<br/>
                         อีเมล: <strong>dpo@myis.ac.th</strong> (Data Protection Officer)
                     </p>
                 </div>
@@ -109,7 +109,7 @@
                         <li><strong>สิทธิในการเพิกถอนความยินยอม</strong> (Right to Withdraw Consent) - เพิกถอนความยินยอมได้ตลอดเวลา</li>
                     </ol>
                     <p class="mb-0 mt-3">
-                        <strong>วิธีการใช้สิทธิ:</strong> ติดต่อ DPO ที่ <strong>dpo@myis.ac.th</strong> หรือ <strong>+66-XXX-XXX-XXXX</strong>
+                        <strong>วิธีการใช้สิทธิ:</strong> ติดต่อ DPO ที่ <strong>dpo@myis.ac.th</strong>
                     </p>
                 </div>
 
@@ -198,7 +198,7 @@
                     <p class="mb-0">
                         <strong>Data Protection Officer (DPO)</strong><br/>
                         อีเมล: <strong>dpo@myis.ac.th</strong><br/>
-                        โทร: <strong>+66-XXX-XXX-XXXX</strong><br/>
+                        โทร: <strong>[Contact school administration]</strong><br/>
                         <small class="text-muted">เวลาทำการ: จันทร์-ศุกร์ 08:00-16:00 น.</small>
                     </p>
                 </div>
@@ -226,7 +226,7 @@
             <p>
                 <strong>MYIS International School</strong><br/>
                 Data Protection Officer: <strong>dpo@myis.ac.th</strong><br/>
-                Phone: +66-XXX-XXX-XXXX
+                Phone: [Contact school administration]
             </p>
 
             <h6><i class="fa fa-list-alt"></i> Purpose of Data Collection</h6>
@@ -302,7 +302,7 @@
                 <li><strong>Right to Withdraw Consent</strong> - Withdraw consent at any time</li>
             </ol>
             <p>
-                <strong>How to Exercise Your Rights:</strong> Contact our DPO at <strong>dpo@myis.ac.th</strong> or <strong>+66-XXX-XXX-XXXX</strong>. We will respond within 30 days as required by PDPA.
+                <strong>How to Exercise Your Rights:</strong> Contact our DPO at <strong>dpo@myis.ac.th</strong>. We will respond within 30 days as required by PDPA.
             </p>
 
             <h6><i class="fa fa-lock"></i> Data Security Measures</h6>
@@ -341,7 +341,7 @@
             <p>
                 <strong>MYIS International School</strong><br/>
                 Data Protection Officer: <strong>dpo@myis.ac.th</strong><br/>
-                Phone: +66-XXX-XXX-XXXX
+                Phone: [Contact school administration]
             </p>
 
             <h6><i class="fa fa-list-alt"></i> Purpose of Data Collection</h6>
@@ -417,7 +417,7 @@
                 <li><strong>Right to Withdraw Consent</strong> - Withdraw consent at any time</li>
             </ol>
             <p>
-                <strong>How to Exercise Your Rights:</strong> Contact our DPO at <strong>dpo@myis.ac.th</strong> or <strong>+66-XXX-XXX-XXXX</strong>. We will respond within 30 days as required by PDPA.
+                <strong>How to Exercise Your Rights:</strong> Contact our DPO at <strong>dpo@myis.ac.th</strong>. We will respond within 30 days as required by PDPA.
             </p>
 
             <h6><i class="fa fa-lock"></i> Data Security Measures</h6>
@@ -455,7 +455,7 @@
             <p class="mb-0" style="font-size: 13px;">
                 You have the right to request access to, correction of, or deletion of your personal data.
                 To exercise these rights, please contact the MYIS IT Department at
-                <strong>it@myis.ac.th</strong> or <strong>+66-XXX-XXX-XXXX</strong>.
+                <strong>it@myis.ac.th</strong>.
             </p>
         </div>
     </template>

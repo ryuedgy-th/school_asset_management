@@ -4,6 +4,9 @@ from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError, UserError
 import json
 import base64
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class AssetDataRequest(models.Model):
@@ -262,6 +265,70 @@ class AssetDataRequest(models.Model):
             )
         )
 
+        # Send email notification
+        self._send_email('school_asset_management.email_dsr_identity_verified')
+
+    def action_start_processing(self):
+        """Start processing the verified DSR request"""
+        self.ensure_one()
+
+        if self.status != 'identity_verified':
+            raise UserError(_('Can only start processing requests with verified identity.'))
+
+        self.write({
+            'status': 'in_progress',
+            'processing_start_date': fields.Datetime.now(),
+        })
+
+        # Send email notification
+        self._send_email('school_asset_management.email_dsr_in_progress')
+
+        self.message_post(
+            body=_('Request processing started'),
+            subject=_('DSR Processing Started')
+        )
+
+    def action_reject(self):
+        """Reject the DSR request with reason"""
+        self.ensure_one()
+
+        if self.status == 'completed':
+            raise UserError(_('Cannot reject a completed request.'))
+
+        # Open wizard to get rejection reason
+        return {
+            'name': _('Reject DSR Request'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'asset.data.request',
+            'res_id': self.id,
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_status': 'rejected',
+                'show_rejection_reason': True,
+            }
+        }
+
+    def _finalize_rejection(self):
+        """Finalize rejection after reason is provided"""
+        self.ensure_one()
+
+        if not self.response_message:
+            raise UserError(_('Please provide a rejection reason in the Response Message field.'))
+
+        self.write({
+            'status': 'rejected',
+            'completion_date': fields.Datetime.now(),
+        })
+
+        # Send rejection email
+        self._send_email('school_asset_management.email_dsr_rejected')
+
+        self.message_post(
+            body=_('Request rejected: %s') % self.response_message,
+            subject=_('DSR Request Rejected')
+        )
+
     def action_process_access_request(self):
         """Process Right to Access request - Export all personal data"""
         self.ensure_one()
@@ -464,15 +531,103 @@ class AssetDataRequest(models.Model):
 
         # Note: Audit logs kept for security but with minimal PII
 
+    def _send_email(self, template_xmlid):
+        """
+        Send email using specified template
+
+        Args:
+            template_xmlid (str): XML ID of email template (e.g., 'school_asset_management.email_dsr_received')
+
+        Returns:
+            bool: True if email sent successfully, False otherwise
+        """
+        self.ensure_one()
+
+        try:
+            template = self.env.ref(template_xmlid, raise_if_not_found=False)
+            if not template:
+                _logger.warning(f'Email template {template_xmlid} not found')
+                return False
+
+            if not self.requester_email:
+                _logger.warning(f'No email address for DSR {self.name}')
+                return False
+
+            # Send email
+            template.send_mail(self.id, force_send=False, raise_exception=False)
+
+            # Log to chatter
+            self.message_post(
+                body=_('Email sent to %s using template %s') % (self.requester_email, template.name),
+                subject=_('Email Notification Sent'),
+                message_type='notification',
+                subtype_xmlid='mail.mt_note',
+            )
+
+            _logger.info(f'Sent {template_xmlid} email to {self.requester_email} for DSR {self.name}')
+            return True
+
+        except Exception as e:
+            _logger.error(f'Failed to send email {template_xmlid} for DSR {self.name}: {e}')
+            return False
+
     def _send_confirmation_email(self):
-        """Send confirmation email to requester"""
-        # TODO: Implement email template
-        pass
+        """Send confirmation email to requester when request is received"""
+        return self._send_email('school_asset_management.email_dsr_received')
 
     def _send_completion_email(self):
         """Send completion email with results"""
-        # TODO: Implement email template
-        pass
+        return self._send_email('school_asset_management.email_dsr_completed')
+
+    @api.model
+    def _cron_check_deadlines(self):
+        """
+        Scheduled action to check for DSR requests approaching deadline
+        Sends warning emails 3 days before the 30-day deadline
+        """
+        from datetime import timedelta
+
+        # PDPA requires response within 30 days of request
+        deadline_days = 30
+        warning_days = 3  # Warn 3 days before deadline
+
+        # Calculate the date range for warnings (requests from 27 days ago)
+        today = fields.Date.today()
+        warning_date = today - timedelta(days=deadline_days - warning_days)
+
+        # Find requests that need deadline warnings
+        requests = self.search([
+            ('request_date', '=', warning_date),
+            ('status', 'in', ['draft', 'submitted', 'identity_verified', 'in_progress']),
+        ])
+
+        _logger.info(f'Checking DSR deadlines: Found {len(requests)} requests approaching deadline')
+
+        for request in requests:
+            # Calculate days remaining
+            request_date = fields.Date.from_string(request.request_date)
+            days_since_request = (today - request_date).days
+            days_remaining = deadline_days - days_since_request
+
+            # Send warning email
+            request._send_email('school_asset_management.email_dsr_deadline_warning')
+
+            # Create activity for DPO
+            request.activity_schedule(
+                'mail.mail_activity_data_warning',
+                summary=_('DSR Deadline Warning: %d days remaining') % days_remaining,
+                note=_('Request %s from %s is approaching the 30-day PDPA deadline. Please process urgently.') % (
+                    request.name, request.requester_name
+                ),
+                date_deadline=today + timedelta(days=days_remaining),
+            )
+
+            _logger.warning(
+                f'DSR deadline warning: Request {request.name} has {days_remaining} days remaining '
+                f'(requested on {request.request_date})'
+            )
+
+        return True
 
     def _notify_dpo(self):
         """Notify DPO/IT team about new data request"""

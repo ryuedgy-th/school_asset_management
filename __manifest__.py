@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Asset Management',
-    'version': '19.0.1.6.0',
+    'version': '19.0.1.10.0',
     'category': 'Inventory/Assets',
     'summary': 'Asset Management System for International School IT Department',
     'description': """
@@ -45,6 +45,8 @@
         'data/email_template.xml',
         'data/redis_config.xml',
         'data/default_config.xml',
+        'data/dsr_email_templates.xml',
+        'data/dsr_scheduled_actions.xml',
 
         # Views - Base Models
         'views/asset_category_views.xml',
@@ -108,6 +110,9 @@
     'assets': {
         'web.assets_frontend': [
             'school_asset_management/static/src/css/signature_page.css',
+            # Base class must be loaded first
+            'school_asset_management/static/src/js/base_signature_pad.js',
+            # Specific implementations (order doesn't matter after base)
             'school_asset_management/static/src/js/signature_pad.js',
             'school_asset_management/static/src/js/damage_signature_pad.js',
             'school_asset_management/static/src/js/inspection_damage_signature_pad.js',
@@ -125,4 +130,5 @@
     'installable': True,
     'application': True,
     'auto_install': False,
+    'post_init_hook': 'post_init_hook',
 }

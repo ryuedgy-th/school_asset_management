@@ -16,6 +16,7 @@ class SecurityAuditLog(models.Model):
         ('token_invalid', 'Invalid Token Attempt'),
         ('token_expired', 'Expired Token Attempt'),
         ('token_used', 'Used Token Attempt'),
+        ('token_tampered', 'Token Tampering Detected'),
         ('rate_limit_exceeded', 'Rate Limit Exceeded'),
         ('validation_failed', 'Validation Failed'),
     ], string='Event Type', required=True, index=True)
@@ -57,7 +58,7 @@ class SecurityAuditLog(models.Model):
     def log_signature_attempt(self, event_type, signature_type, ip_address, token=None,
                               related_model=None, related_id=None, error_message=None, **kwargs):
         """
-        Log security event
+        Log signature-related security event
 
         Args:
             event_type: Type of event (signature_success, signature_failed, etc.)
@@ -83,6 +84,36 @@ class SecurityAuditLog(models.Model):
             'teacher_email': kwargs.get('teacher_email'),
             'user_agent': kwargs.get('user_agent'),
             'additional_info': str(kwargs) if kwargs else None,
+        }
+        return self.create(vals)
+
+    @api.model
+    def log_security_event(self, event_type, ip_address, error_message=None,
+                          related_model=None, related_id=None, additional_info=None, **kwargs):
+        """
+        Log general security event (rate limiting, validation errors, etc.)
+
+        Args:
+            event_type: Type of event (rate_limit_exceeded, validation_failed, etc.)
+            ip_address: Client IP address
+            error_message: Error message if applicable
+            related_model: Model name
+            related_id: Record ID
+            additional_info: Additional information (can be dict or string)
+            **kwargs: Additional fields
+        """
+        # Convert additional_info dict to string
+        if isinstance(additional_info, dict):
+            additional_info = str(additional_info)
+
+        vals = {
+            'event_type': event_type,
+            'ip_address': ip_address,
+            'error_message': error_message,
+            'related_model': related_model,
+            'related_id': related_id,
+            'additional_info': additional_info,
+            'user_agent': kwargs.get('user_agent'),
         }
         return self.create(vals)
 

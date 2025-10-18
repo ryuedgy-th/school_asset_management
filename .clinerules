@@ -1,237 +1,282 @@
 # School Asset Management - Development Rules
 
-## Project Context
-This is an Odoo 19 module for school asset management with PDPA compliance.
-Current phase: Code improvement and refactoring before implementing new wizards.
-Odoo Server อยู่ที่ root@128.199.203.205, SSHkey:~/.ssh/RyusOpen, ModulePath:opt/odoo19/custom_addons/school_asset_management/
-## Documentation Files (READ THESE FIRST)
-- IMPROVEMENT_PLAN.md: List of issues and priorities (Gemini analysis + Claude feedback)
-- IMPROVEMENT_WORKFLOW.md: Task-by-task prompts with implementation details
-- ODOO19_BEST_PRACTICES.md: Complete Odoo 19 coding standards
-- DEVELOPMENT_PLAN.md: Future wizard development plan
+## 🎯 Project Context
+Odoo 19 module for school asset management with PDPA compliance.
+**Current Phase:** All Improvements Complete - Ready for Wizard Development
+**Status:** ✅ Phase 1-4 Complete (100%)
 
-## CRITICAL: Odoo 19 Best Practices (MANDATORY)
+## 📡 Server Information
+**Odoo Server:** root@128.199.203.205
+**SSH Key:** ~/.ssh/RyusOpen
+**Module Path:** /opt/odoo19/custom_addons/school_asset_management/
 
-### Python Standards
-- ✅ USE: `from odoo import models, fields, api, _`
-- ✅ USE: `logging.getLogger(__name__)` for logging
-- ✅ USE: ORM API only (search, create, write, unlink)
-- ✅ USE: `@api.depends` for computed fields
-- ✅ USE: `@api.model` for class methods
-- ✅ USE: Type hints: `def method(self, param: str) -> bool:`
-- ✅ USE: Docstrings (Google style) for all classes/methods
-- ✅ USE: `self.env['ir.config_parameter'].get_param()` for config
-- ✅ USE: `self.env['model.name']` for accessing models
-- ✅ USE: Exception handling with try-except and logging
+## 📚 Documentation (READ THESE FIRST)
 
-- ❌ NEVER: `print()` statements (use `_logger` instead)
-- ❌ NEVER: Raw SQL queries (use ORM)
-- ❌ NEVER: Loop for batch operations (use `records.write()`)
-- ❌ NEVER: N+1 queries (use `mapped()` or prefetch)
-- ❌ NEVER: Missing `_description` in models (required in Odoo 19)
-- ❌ NEVER: Hardcoded values (use config parameters)
+### Main Documentation:
+1. **PROJECT_STATUS.md** - Project overview, version history, task status
+2. **ODOO19_BEST_PRACTICES.md** - Complete Odoo 19 coding standards (MANDATORY)
+3. **TASK_*.md** - Implementation records for completed tasks
 
-### XML View Standards (Odoo 19)
-- ✅ USE: `<list>` tag (NOT `<tree>` - deprecated in Odoo 19)
-- ✅ USE: `invisible` attribute (NOT `attrs` - deprecated)
-- ✅ USE: `widget="badge"` for state fields
-- ✅ USE: Proper view structure (header → sheet → chatter)
-- ✅ USE: `<form>`, `<list>`, `<search>`, `<kanban>`
+### Reference Documentation:
+- **ARCHIVE_IMPROVEMENT_WORKFLOW.md** - Detailed task prompts (archived, reference only)
 
-- ❌ NEVER: `<tree>` tags (use `<list>`)
-- ❌ NEVER: `attrs` attribute (use `invisible`, `readonly`, `required`)
-- ❌ NEVER: `widget="boolean_button"` (use `widget="boolean"`)
+---
 
-### Controller Standards
-- ✅ USE: `from odoo import http` and `from odoo.http import request`
-- ✅ USE: `request.env['model.name']` for database access
-- ✅ USE: Proper route definition with `@http.route()`
-- ✅ USE: `type='http'` for web pages, `type='json'` for APIs
-- ✅ USE: Input validation for all parameters
-- ✅ USE: Error handling with try-except
-- ✅ USE: Security audit logging
+## ⚠️ CRITICAL: Odoo 19 Standards (MANDATORY)
 
-- ❌ NEVER: Direct database access without validation
-- ❌ NEVER: Missing CSRF protection (unless intentional with documentation)
+### Python Standards ✅
+```python
+# ✅ DO
+from odoo import models, fields, api, _
+import logging
+_logger = logging.getLogger(__name__)
 
-### JavaScript Standards (Odoo 19)
-- ✅ USE: `/** @odoo-module **/` for OWL components
-- ✅ USE: `import { Component } from "@odoo/owl"`
-- ✅ USE: Legacy format if needed: `odoo.define('module.Class', function(require) {...})`
-- ✅ USE: Proper error handling and logging
+@api.depends('field1', 'field2')
+def _compute_field(self):
+    for record in self:
+        record.computed = record.field1 + record.field2
 
-### Security Rules
-- ✅ USE: `ir.model.access.csv` for model-level access rights
-- ✅ USE: `ir.rule` for record-level security
-- ✅ USE: `sudo()` only when necessary with validation
-- ✅ USE: Input validation for all user inputs
-- ✅ USE: Security audit logging for sensitive operations
+# ❌ DON'T
+print("Debug")  # Never use print()
+self.env.cr.execute("SELECT ...")  # Avoid raw SQL
+```
 
-### Module Structure
+### XML View Standards (Odoo 19) ✅
+```xml
+<!-- ✅ DO: Use <list> tag (Odoo 19) -->
+<list>
+    <field name="name"/>
+    <field name="state" widget="badge" invisible="not active"/>
+</list>
+
+<!-- ❌ DON'T: Use deprecated tags -->
+<tree>  <!-- DEPRECATED in Odoo 19 -->
+<field name="state" attrs="{'invisible': [...]}" />  <!-- DEPRECATED -->
+```
+
+### JavaScript Standards ✅
+```javascript
+// ✅ DO: Use proper module format
+/** @odoo-module **/
+import { Component } from "@odoo/owl";
+
+// ✅ DO: Error handling
+try {
+    // code
+} catch (error) {
+    console.error('Error:', error);
+}
+```
+
+### Security Rules ✅
+- ✅ Use `ir.model.access.csv` for model-level access
+- ✅ Use `ir.rule` for record-level security
+- ✅ Use `sudo()` only when necessary with validation
+- ✅ Log all security-sensitive operations
+
+---
+
+## 📋 All Tasks Complete ✅
+
+### ✅ Phase 1: CRITICAL (Complete)
+- [x] Task 1.1: Redis Rate Limiting - `models/security_helpers.py`
+- [x] Task 1.2: External Dependencies - `__manifest__.py`
+
+### ✅ Phase 2: HIGH PRIORITY (Complete)
+- [x] Task 2.1: HMAC Token Security - `models/asset_*_assignment.py`
+- [x] Task 2.2: Token Decorator Pattern - `controllers/main.py`
+- [x] Task 2.3: PDPA Email Templates - `data/dsr_email_templates.xml`
+
+### ✅ Phase 3: RELIABILITY (Complete)
+- [x] Task 3.1: Bundle Font File (19.0.1.8.0)
+- [x] Task 3.2: JavaScript Refactoring (19.0.1.9.0)
+
+### ✅ Phase 4: CLEANUP (Complete)
+- [x] Task 4.1: Code Cleanup (19.0.1.10.0)
+
+**See PROJECT_STATUS.md for full details**
+
+---
+
+## 🔧 Module Structure
+
 ```
 school_asset_management/
 ├── __init__.py
 ├── __manifest__.py
-├── models/
-├── views/
-├── security/
-│   ├── security.xml
-│   └── ir.model.access.csv
-├── data/
-├── controllers/
-├── static/src/
-├── templates/
-├── reports/
-├── wizards/
-└── tests/
+├── models/          # Business logic (100% complete)
+├── views/           # UI components (100% complete, Odoo 19 compliant)
+├── security/        # Access control (100% complete)
+├── data/            # Default data, sequences
+├── controllers/     # Public pages (100% complete)
+├── static/src/      # JavaScript, CSS
+├── templates/       # QWeb templates
+├── reports/         # PDF reports (100% complete)
+├── wizards/         # Wizards (20% complete - 1/5 done)
+└── tests/           # Unit tests
 ```
 
-### Field Definitions
-```python
-field_name = fields.Type(
-    string='Label',           # Required
-    required=True,            # If mandatory
-    index=True,              # If searchable
-    copy=False,              # If shouldn't duplicate
-    help='Description',       # User-facing help
-    tracking=True,           # For mail tracking
-)
-```
+---
 
-### Email Templates
-- ✅ USE: Proper `mail.template` structure
-- ✅ USE: MYIS brand colors (Purple #574193, Green #6ab42d)
-- ✅ USE: Responsive HTML
-- ✅ USE: `${object.field}` syntax for dynamic content
+## ✅ Mandatory Coding Standards
 
-### Performance Best Practices
-- ✅ USE: Batch operations: `records.write({'field': value})`
-- ✅ USE: `mapped()` for extraction: `records.mapped('partner_id.email')`
-- ✅ USE: `filtered()` for filtering: `records.filtered(lambda r: r.state == 'draft')`
-- ✅ USE: `search_read()` for list views
-- ✅ USE: `exists()` to check existence
+### Before Writing Code:
+1. ✅ Read `ODOO19_BEST_PRACTICES.md` for the relevant section
+2. ✅ Check `PROJECT_STATUS.md` for current task priorities
+3. ✅ Review `TASK_*.md` for similar implementations
 
-## Current Improvement Phases
+### Code Quality Checklist:
+- [ ] No `print()` statements (use `_logger`)
+- [ ] No raw SQL (use ORM: `search`, `create`, `write`, `unlink`)
+- [ ] All models have `_description` (required in Odoo 19)
+- [ ] All methods have docstrings (Google style)
+- [ ] Type hints present: `def method(self, param: str) -> bool:`
+- [ ] Use `<list>` not `<tree>` in views
+- [ ] Use `invisible` not `attrs` in views
+- [ ] Exception handling with try-except
+- [ ] Input validation for all user inputs
+- [ ] Security audit logging for sensitive operations
 
-### Phase 1: CRITICAL (Must do before production)
-1. Redis Rate Limiting - Fix in-memory dict issue (multi-worker env)
-2. External Dependencies - Add Pillow and redis to __manifest__.py
-
-### Phase 2: HIGH PRIORITY (Must do before wizards)
-1. HMAC Token Security - Replace UUID with HMAC-SHA256 + expiration
-2. Token Decorator - Reduce code duplication in controllers
-3. PDPA Email Templates - Complete missing email notifications
-
-### Phase 3: RELIABILITY
-1. Bundle Font File - Include fonts in module
-2. JavaScript Refactoring - Create base class for signature pads
-
-### Phase 4: CLEANUP
-1. Remove obsolete files and fix data
-
-## When Writing Code
-
-### Always Check:
-1. Read ODOO19_BEST_PRACTICES.md for the relevant section
-2. No `print()` statements (use `_logger`)
-3. No raw SQL (use ORM)
-4. All models have `_description`
-5. All methods have docstrings
-6. Use `<list>` not `<tree>` in views
-7. Use `invisible` not `attrs`
-8. User-facing strings use `_()`
-9. Exception handling present
-10. Security audit logging for sensitive ops
-
-### Before Committing:
+### Testing Before Commit:
 ```bash
-# Check for violations
-grep -r "print(" school_asset_management/  # Should return nothing
-grep -r "<tree" school_asset_management/views/  # Should return nothing
-
-# Test
-odoo-bin -d db -u school_asset_management --test-enable
-
-# Validate manifest
+# Validate syntax
 python3 -c "import ast; ast.parse(open('__manifest__.py').read())"
+
+# Check for violations
+grep -r "print(" models/ controllers/  # Should return nothing
+grep -r "<tree" views/  # Should return nothing
+
+# Run tests
+odoo-bin -d db -u school_asset_management --test-enable
 ```
+
+---
+
+## 🎯 Git Workflow
 
 ### Commit Message Format:
 ```
-feat: [description]      # New feature
-fix: [description]       # Bug fix
-refactor: [description]  # Code refactoring
-docs: [description]      # Documentation
-test: [description]      # Tests
-chore: [description]     # Maintenance
+feat: add feature        # New feature
+fix: fix bug            # Bug fix
+refactor: improve code  # Code refactoring
+docs: update docs       # Documentation
+test: add tests         # Tests
+chore: maintenance      # Maintenance
 ```
 
-## Current Module Status
-- Core models: ✅ 100% complete
-- Views: ✅ Odoo 19 compliant
-- Security: ✅ Implemented
-- PDPA: ✅ Implemented
-- Wizards: ⏳ Partially implemented (consent_withdrawal only)
-- Pending: teacher_checkout, teacher_checkin, student_distribution, student_collection wizards
+### Branch Strategy:
+- `main` - Production-ready code
+- `feature/*` - New features
+- `fix/*` - Bug fixes
+- `refactor/*` - Code improvements
 
-## Code Quality Checklist
-- [ ] Follows PEP 8
-- [ ] No print statements
-- [ ] No raw SQL
-- [ ] All models have _description
-- [ ] Docstrings present
-- [ ] Type hints used
-- [ ] Exception handling
-- [ ] Input validation
-- [ ] Security logging
-- [ ] Tests pass
-- [ ] No deprecation warnings
+---
 
-## Testing Strategy
+## 🔒 Security & PDPA
+
+### Security Features:
+- ✅ Token-based authentication for public pages
+- ⏸️ Rate limiting (needs Redis upgrade - Task 1.1)
+- ✅ Security audit logging
+- ✅ Watermarked signatures (prevents forgery)
+
+### PDPA Compliance:
+- ✅ Consent tracking (`asset.consent.log`)
+- ✅ Data subject rights (`asset.data.request`)
+- ✅ Privacy policy consent forms
+- ⏸️ Email notifications (Task 2.3)
+
+---
+
+## 🎨 Brand Standards
+
+**MYIS Colors:**
+- **Purple:** #574193 (Primary - headings, buttons)
+- **Green:** #6ab42d (Accent - success, CTAs)
+- **Gray:** #eeeeee, #f0f0f0 (Backgrounds)
+
+**Design:** Minimal & Professional, Responsive HTML, Bootstrap 5
+
+---
+
+## 📊 Performance Best Practices
+
+```python
+# ✅ DO: Batch operations
+records.write({'field': value})
+
+# ✅ DO: Use mapped() for extraction
+emails = records.mapped('partner_id.email')
+
+# ✅ DO: Use filtered() for filtering
+draft_records = records.filtered(lambda r: r.state == 'draft')
+
+# ✅ DO: Use search_read() for list views
+data = model.search_read(domain, fields)
+
+# ❌ DON'T: Loop for batch operations
+for record in records:
+    record.field = value  # Slow!
+```
+
+---
+
+## 🚀 Development Priority
+
+### ✅ All Improvement Tasks Complete
+**Phase 1-4:** All tasks completed successfully
+- ✅ Redis Rate Limiting (production-ready)
+- ✅ HMAC Token Security (secure)
+- ✅ PDPA Email Templates (compliant)
+- ✅ Code Cleanup & Refactoring (maintainable)
+
+### 🎯 Next: Wizard Development
+**Ready to implement:**
+- Teacher Checkout/Check-in Wizards
+- Student Distribution/Collection Wizards
+- Follow ODOO19_BEST_PRACTICES.md
+- Test thoroughly before deployment
+
+---
+
+## 📞 Quick Reference
+
+**Documentation:** `PROJECT_STATUS.md` for overview, `ODOO19_BEST_PRACTICES.md` for standards
+**Server:** root@128.199.203.205 (SSH: ~/.ssh/RyusOpen)
+**Version:** 19.0.1.10.0
+**Status:** ✅ Phase 3-4 Complete, Ready for Phase 1-2
+
+---
+
+## 🔍 Common Tasks
+
+### Deploy to Production:
 ```bash
-# Unit tests
-odoo-bin -d db -u school_asset_management --test-enable --stop-after-init
+# Sync files
+scp -i ~/.ssh/RyusOpen [files] root@128.199.203.205:/opt/odoo19/custom_addons/school_asset_management/
 
-# Specific test class
-odoo-bin -d db --test-tags=TestClassName
-
-# Code quality
-flake8 school_asset_management/
+# Upgrade module (via Odoo UI)
+Apps > School Asset Management > Upgrade
 ```
 
-## References
-- Odoo 19 Docs: https://www.odoo.com/documentation/19.0/
-- ORM API: https://www.odoo.com/documentation/19.0/developer/reference/backend/orm.html
-- Views: https://www.odoo.com/documentation/19.0/developer/reference/backend/views.html
+### Check Logs:
+```bash
+ssh -i ~/.ssh/RyusOpen root@128.199.203.205
+sudo tail -f /var/log/odoo19/odoo.log | grep -i error
+```
 
-## Special Notes
-- This is a PDPA-compliant system - always log security events
-- Use MYIS brand colors: Purple #574193, Green #6ab42d
-- All signatures use watermarks (signature_watermark.py)
-- Token-based authentication for public signature pages
-- Rate limiting required for public endpoints
-- Multi-worker environment in production (need Redis)
+### Module Development:
+```bash
+# Restart Odoo (after code changes)
+sudo systemctl restart odoo19
 
-## When Asked to Implement Features
-1. Check if it's in IMPROVEMENT_WORKFLOW.md first (improvement tasks take priority)
-2. Follow the exact prompt structure from workflow file
-3. Reference ODOO19_BEST_PRACTICES.md for code standards
-4. Include proper error handling and logging
-5. Add security audit logs for sensitive operations
-6. Write docstrings and comments
-7. Follow Odoo 19 standards strictly
+# Check module status
+odoo-bin -d db -u school_asset_management --test-enable
+```
 
-## When Reviewing Code
-- Point out violations of Odoo 19 standards
-- Suggest ORM alternatives to raw SQL
-- Flag missing error handling
-- Identify security issues
-- Check for deprecated syntax (<tree>, attrs, etc.)
-- Verify proper logging usage
+---
 
-## Priority Order
-1. Fix CRITICAL issues (Phase 1) - blocks production
-2. Fix HIGH issues (Phase 2) - blocks wizard development
-3. Reliability improvements (Phase 3)
-4. Code cleanup (Phase 4)
-5. New wizard development (after Phase 1-2)
+**Last Updated:** 2025-10-18
+**Current Version:** 19.0.1.10.0
+**Status:** ✅ All improvements complete
+**Next Milestone:** Wizard Development

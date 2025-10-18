@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import secrets
 from typing import Optional, Tuple
 from datetime import datetime, timedelta
 from odoo import models, api
@@ -232,12 +233,12 @@ class SignatureSecurityHelper:
             attempts: Number of attempts
         """
         try:
-            self.env['security_audit_log'].sudo().create({
-                'event_type': 'rate_limit_exceeded',
-                'ip_address': ip_address,
-                'details': f'Rate limit exceeded on {endpoint} endpoint. Attempts: {attempts}',
-                'severity': 'warning',
-            })
+            self.env['asset.security.audit.log'].sudo().log_security_event(
+                event_type='rate_limit_exceeded',
+                ip_address=ip_address,
+                error_message=f'Rate limit exceeded on {endpoint} endpoint. Attempts: {attempts}',
+                additional_info={'endpoint': endpoint, 'attempts': attempts}
+            )
         except Exception as e:
             _logger.error(f'Failed to log rate limit event: {e}')
 
@@ -255,14 +256,55 @@ class SignatureSecurityHelper:
         )
 
         try:
-            # Sanitize token for logging (first 8 chars only)
-            sanitized_token = token[:8] + '...' if len(token) > 8 else token
-
-            self.env['security_audit_log'].sudo().create({
-                'event_type': f'failed_{attempt_type}_attempt',
-                'ip_address': ip_address,
-                'details': f'Failed {attempt_type} attempt with token: {sanitized_token}',
-                'severity': 'warning',
-            })
+            self.env['asset.security.audit.log'].sudo().log_signature_attempt(
+                event_type='signature_failed',
+                signature_type=attempt_type,
+                ip_address=ip_address,
+                token=token,
+                error_message=f'Failed {attempt_type} attempt'
+            )
         except Exception as e:
             _logger.error(f'Failed to log security event: {e}')
+
+    @api.model
+    def ensure_signature_secret_exists(self):
+        """Ensure that HMAC secret key exists and is properly generated.
+
+        This method should be called during module installation and
+        whenever token validation is performed.
+
+        Returns:
+            str: The secret key value
+        """
+        try:
+            # Get current secret
+            current_secret = self._get_config_param('school_asset.signature_secret')
+
+            # Generate new secret if it doesn't exist or is the default placeholder
+            if not current_secret or current_secret == 'CHANGE_ME_DURING_INSTALLATION':
+                new_secret = secrets.token_hex(32)
+
+                # Store the new secret
+                self.env['ir.config_parameter'].sudo().set_param(
+                    'school_asset.signature_secret',
+                    new_secret
+                )
+
+                _logger.info('Generated new HMAC secret key for signature tokens')
+                return new_secret
+
+            return current_secret
+
+        except Exception as e:
+            _logger.error(f'Error managing signature secret: {e}')
+            # Fallback: generate a temporary secret
+            return secrets.token_hex(32)
+
+    @api.model
+    def get_signature_secret(self):
+        """Get the HMAC secret key for token generation/validation.
+
+        Returns:
+            str: The secret key value
+        """
+        return self.ensure_signature_secret_exists()

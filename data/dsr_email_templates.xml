@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <!--
+            PDPA Data Subject Request (DSR) Email Templates
+            ================================================
+            Templates for notifying users about their data request status
+
+            Brand Colors:
+            - Purple: #574193
+            - Green: #6ab42d
+        -->
+
+        <!-- Common Email Header Style -->
+        <template id="dsr_email_header" name="DSR Email Header">
+            <div style="font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+                <!-- Header -->
+                <div style="background: linear-gradient(135deg, #574193 0%, #6ab42d 100%); padding: 30px 20px; text-align: center;">
+                    <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: bold;">
+                        Magic Years International School
+                    </h1>
+                    <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 14px; opacity: 0.9;">
+                        Data Protection &amp; Privacy
+                    </p>
+                </div>
+            </div>
+        </template>
+
+        <!-- Common Email Footer -->
+        <template id="dsr_email_footer" name="DSR Email Footer">
+            <div style="background: #f5f5f5; padding: 20px; text-align: center; border-top: 3px solid #574193;">
+                <p style="margin: 0 0 10px 0; font-size: 14px; color: #666;">
+                    <strong>ติดต่อเรา / Contact Us</strong>
+                </p>
+                <p style="margin: 0 0 5px 0; font-size: 13px; color: #666;">
+                    Email: <a href="mailto:it@magicyears.ac.th" style="color: #574193;">it@magicyears.ac.th</a>
+                </p>
+                <p style="margin: 0 0 5px 0; font-size: 13px; color: #666;">
+                    โทร / Tel: 02-123-4567
+                </p>
+                <p style="margin: 15px 0 0 0; font-size: 11px; color: #999;">
+                    © ${datetime.datetime.now().year} Magic Years International School. All rights reserved.
+                </p>
+                <p style="margin: 5px 0 0 0; font-size: 11px; color: #999;">
+                    This email contains confidential information. Please do not forward.
+                </p>
+            </div>
+        </template>
+
+        <!-- 1. DSR Received Email -->
+        <record id="email_dsr_received" model="mail.template">
+            <field name="name">DSR: Request Received</field>
+            <field name="model_id" ref="model_asset_data_request"/>
+            <field name="subject">[MYIS] ได้รับคำขอใช้สิทธิ์ตาม PDPA - ${object.name}</field>
+            <field name="email_from">${(object.company_id.email or 'it@magicyears.ac.th')|safe}</field>
+            <field name="email_to">${object.requester_email}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+    <!-- Header -->
+    ${object.env['ir.ui.view']._render_template('school_asset_management.dsr_email_header', {})}
+
+    <!-- Body -->
+    <div style="padding: 30px 20px;">
+        <h2 style="color: #574193; margin: 0 0 20px 0; font-size: 20px;">
+            เรียน คุณ${object.requester_name}
+        </h2>
+
+        <p style="color: #333; line-height: 1.6; margin: 0 0 15px 0;">
+            เราได้รับคำขอใช้สิทธิ์ของท่านตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) เรียบร้อยแล้ว
+        </p>
+
+        <!-- Request Details -->
+        <div style="background: #f9f9f9; border-left: 4px solid #6ab42d; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>หมายเลขคำขอ:</strong> ${object.name}
+            </p>
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>ประเภทคำขอ:</strong> ${dict(object._fields['request_type'].selection).get(object.request_type, 'N/A')}
+            </p>
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>วันที่ส่งคำขอ:</strong> ${format_datetime(object.create_date, tz='Asia/Bangkok', dt_format='dd/MM/yyyy HH:mm')}
+            </p>
+            <p style="margin: 0; color: #333;">
+                <strong>สถานะ:</strong> <span style="color: #6ab42d; font-weight: bold;">รอยืนยันตัวตน</span>
+            </p>
+        </div>
+
+        <h3 style="color: #574193; margin: 20px 0 10px 0; font-size: 16px;">
+            ขั้นตอนถัดไป
+        </h3>
+
+        <ul style="color: #333; line-height: 1.8; margin: 0 0 20px 20px;">
+            <li>เจ้าหน้าที่จะติดต่อท่านเพื่อยืนยันตัวตนภายใน <strong>3 วันทำการ</strong></li>
+            <li>หลังจากยืนยันตัวตนแล้ว เราจะดำเนินการตามคำขอของท่าน</li>
+            <li>ระยะเวลาดำเนินการโดยรวม: <strong>ไม่เกิน 30 วัน</strong></li>
+        </ul>
+
+        <div style="background: #fff4e6; border: 1px solid #ffa726; border-radius: 4px; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0; color: #333; font-size: 13px;">
+                <strong>⚠️ หมายเหตุ:</strong> กรุณาเตรียมเอกสารยืนยันตัวตน (สำเนาบัตรประชาชนหรือหนังสือเดินทาง)
+                เพื่อความรวดเร็วในการดำเนินการ
+            </p>
+        </div>
+
+        <p style="color: #333; line-height: 1.6; margin: 20px 0 0 0;">
+            หากท่านมีคำถามหรือต้องการข้อมูลเพิ่มเติม กรุณาติดต่อเราได้ตามช่องทางด้านล่าง
+        </p>
+    </div>
+
+    <!-- Footer -->
+    ${object.env['ir.ui.view']._render_template('school_asset_management.dsr_email_footer', {})}
+</div>
+            </field>
+        </record>
+
+        <!-- 2. DSR Identity Verified Email -->
+        <record id="email_dsr_identity_verified" model="mail.template">
+            <field name="name">DSR: Identity Verified</field>
+            <field name="model_id" ref="model_asset_data_request"/>
+            <field name="subject">[MYIS] ยืนยันตัวตนสำเร็จ - ${object.name}</field>
+            <field name="email_from">${(object.company_id.email or 'it@magicyears.ac.th')|safe}</field>
+            <field name="email_to">${object.requester_email}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+    ${object.env['ir.ui.view']._render_template('school_asset_management.dsr_email_header', {})}
+
+    <div style="padding: 30px 20px;">
+        <h2 style="color: #574193; margin: 0 0 20px 0; font-size: 20px;">
+            เรียน คุณ${object.requester_name}
+        </h2>
+
+        <div style="background: #e8f5e9; border-left: 4px solid #6ab42d; padding: 15px; margin: 0 0 20px 0;">
+            <p style="margin: 0; color: #2e7d32; font-weight: bold;">
+                ✓ การยืนยันตัวตนของท่านเสร็จสมบูรณ์แล้ว
+            </p>
+        </div>
+
+        <p style="color: #333; line-height: 1.6; margin: 0 0 15px 0;">
+            ขอบคุณสำหรับความร่วมมือในการยืนยันตัวตน เราจะเริ่มดำเนินการตามคำขอของท่านตั้งแต่บัดนี้เป็นต้นไป
+        </p>
+
+        <div style="background: #f9f9f9; padding: 15px; margin: 20px 0; border-radius: 4px;">
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>หมายเลขคำขอ:</strong> ${object.name}
+            </p>
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>ประเภทคำขอ:</strong> ${dict(object._fields['request_type'].selection).get(object.request_type, 'N/A')}
+            </p>
+            % if object.deadline_date:
+            <p style="margin: 0; color: #333;">
+                <strong>กำหนดเสร็จสิ้น:</strong> <span style="color: #6ab42d;">${format_datetime(object.deadline_date, tz='Asia/Bangkok', dt_format='dd/MM/yyyy')}</span>
+            </p>
+            % endif
+        </div>
+
+        <h3 style="color: #574193; margin: 20px 0 10px 0; font-size: 16px;">
+            สิ่งที่จะเกิดขึ้นต่อไป
+        </h3>
+
+        <ul style="color: #333; line-height: 1.8; margin: 0 0 20px 20px;">
+            <li>เจ้าหน้าที่กำลังรวบรวมข้อมูลตามที่ท่านร้องขอ</li>
+            <li>ท่านจะได้รับอีเมลอัพเดทความคืบหน้า</li>
+            <li>เราจะดำเนินการให้เสร็จภายในกำหนดเวลา</li>
+        </ul>
+
+        <p style="color: #333; line-height: 1.6; margin: 20px 0 0 0;">
+            ขอบคุณสำหรับความไว้วางใจ
+        </p>
+    </div>
+
+    ${object.env['ir.ui.view']._render_template('school_asset_management.dsr_email_footer', {})}
+</div>
+            </field>
+        </record>
+
+        <!-- 3. DSR In Progress Email -->
+        <record id="email_dsr_in_progress" model="mail.template">
+            <field name="name">DSR: In Progress</field>
+            <field name="model_id" ref="model_asset_data_request"/>
+            <field name="subject">[MYIS] กำลังดำเนินการตามคำขอ - ${object.name}</field>
+            <field name="email_from">${(object.company_id.email or 'it@magicyears.ac.th')|safe}</field>
+            <field name="email_to">${object.requester_email}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+    ${object.env['ir.ui.view']._render_template('school_asset_management.dsr_email_header', {})}
+
+    <div style="padding: 30px 20px;">
+        <h2 style="color: #574193; margin: 0 0 20px 0; font-size: 20px;">
+            เรียน คุณ${object.requester_name}
+        </h2>
+
+        <div style="background: #fff3e0; border-left: 4px solid #ffa726; padding: 15px; margin: 0 0 20px 0;">
+            <p style="margin: 0; color: #f57c00; font-weight: bold;">
+                🔄 กำลังดำเนินการตามคำขอของท่าน
+            </p>
+        </div>
+
+        <p style="color: #333; line-height: 1.6; margin: 0 0 15px 0;">
+            เรากำลังดำเนินการตามคำขอเลขที่ <strong>${object.name}</strong> ของท่าน
+            และคาดว่าจะเสร็จสิ้นภายในกำหนดเวลา
+        </p>
+
+        <div style="background: #f9f9f9; padding: 15px; margin: 20px 0; border-radius: 4px;">
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>ประเภทคำขอ:</strong> ${dict(object._fields['request_type'].selection).get(object.request_type, 'N/A')}
+            </p>
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>สถานะ:</strong> <span style="color: #ffa726; font-weight: bold;">กำลังดำเนินการ</span>
+            </p>
+            % if object.deadline_date:
+            <p style="margin: 0; color: #333;">
+                <strong>คาดว่าจะเสร็จ:</strong> ${format_datetime(object.deadline_date, tz='Asia/Bangkok', dt_format='dd/MM/yyyy')}
+            </p>
+            % endif
+        </div>
+
+        <h3 style="color: #574193; margin: 20px 0 10px 0; font-size: 16px;">
+            ช่องทางติดต่อสอบถาม
+        </h3>
+
+        <p style="color: #333; line-height: 1.6; margin: 0 0 15px 0;">
+            หากท่านมีคำถามเกี่ยวกับความคืบหน้าของคำขอ กรุณาติดต่อเราได้ที่:
+        </p>
+
+        <ul style="color: #333; line-height: 1.8; margin: 0 0 20px 20px;">
+            <li>Email: <a href="mailto:it@magicyears.ac.th" style="color: #574193;">it@magicyears.ac.th</a></li>
+            <li>โทร: 02-123-4567</li>
+            <li>ระบุหมายเลขคำขอ: <strong>${object.name}</strong></li>
+        </ul>
+
+        <p style="color: #333; line-height: 1.6; margin: 20px 0 0 0;">
+            ขอบคุณสำหรับความอดทนรอคอย
+        </p>
+    </div>
+
+    ${object.env['ir.ui.view']._render_template('school_asset_management.dsr_email_footer', {})}
+</div>
+            </field>
+        </record>
+
+        <!-- 4. DSR Completed Email -->
+        <record id="email_dsr_completed" model="mail.template">
+            <field name="name">DSR: Completed</field>
+            <field name="model_id" ref="model_asset_data_request"/>
+            <field name="subject">[MYIS] ดำเนินการตามคำขอเสร็จสิ้น - ${object.name}</field>
+            <field name="email_from">${(object.company_id.email or 'it@magicyears.ac.th')|safe}</field>
+            <field name="email_to">${object.requester_email}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+    ${object.env['ir.ui.view']._render_template('school_asset_management.dsr_email_header', {})}
+
+    <div style="padding: 30px 20px;">
+        <h2 style="color: #574193; margin: 0 0 20px 0; font-size: 20px;">
+            เรียน คุณ${object.requester_name}
+        </h2>
+
+        <div style="background: #e8f5e9; border-left: 4px solid #6ab42d; padding: 15px; margin: 0 0 20px 0;">
+            <p style="margin: 0; color: #2e7d32; font-weight: bold; font-size: 16px;">
+                ✓ ดำเนินการตามคำขอของท่านเสร็จสิ้นแล้ว
+            </p>
+        </div>
+
+        <p style="color: #333; line-height: 1.6; margin: 0 0 15px 0;">
+            เราได้ดำเนินการตามคำขอเลขที่ <strong>${object.name}</strong> ของท่านเรียบร้อยแล้ว
+        </p>
+
+        <div style="background: #f9f9f9; padding: 15px; margin: 20px 0; border-radius: 4px;">
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>ประเภทคำขอ:</strong> ${dict(object._fields['request_type'].selection).get(object.request_type, 'N/A')}
+            </p>
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>วันที่เสร็จสิ้น:</strong> ${format_datetime(object.completion_date or object.write_date, tz='Asia/Bangkok', dt_format='dd/MM/yyyy HH:mm')}
+            </p>
+            % if object.completion_notes:
+            <p style="margin: 0; color: #333;">
+                <strong>หมายเหตุ:</strong> ${object.completion_notes}
+            </p>
+            % endif
+        </div>
+
+        <h3 style="color: #574193; margin: 20px 0 10px 0; font-size: 16px;">
+            ผลการดำเนินการ
+        </h3>
+
+        <p style="color: #333; line-height: 1.6; margin: 0 0 15px 0;">
+            % if object.request_type == 'access':
+            ข้อมูลของท่านได้ถูกจัดส่งไปยังที่อยู่อีเมลที่ท่านระบุไว้แล้ว
+            % elif object.request_type == 'rectification':
+            ข้อมูลของท่านได้รับการแก้ไขตามที่ร้องขอเรียบร้อยแล้ว
+            % elif object.request_type == 'erasure':
+            ข้อมูลของท่านได้ถูกลบออกจากระบบตามที่ร้องขอเรียบร้อยแล้ว
+            % elif object.request_type == 'restriction':
+            การประมวลผลข้อมูลของท่านได้ถูกจำกัดตามที่ร้องขอเรียบร้อยแล้ว
+            % elif object.request_type == 'portability':
+            ข้อมูลของท่านได้ถูกจัดเตรียมในรูปแบบที่สามารถนำไปใช้งานได้เรียบร้อยแล้ว
+            % elif object.request_type == 'objection':
+            ความคัดค้านของท่านได้รับการบันทึกและดำเนินการเรียบร้อยแล้ว
+            % else:
+            คำขอของท่านได้รับการดำเนินการเรียบร้อยแล้ว
+            % endif
+        </p>
+
+        <div style="background: #e3f2fd; border: 1px solid #2196f3; border-radius: 4px; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0 0 10px 0; color: #333; font-weight: bold;">
+                สิทธิ์ของท่าน
+            </p>
+            <p style="margin: 0; color: #333; font-size: 13px; line-height: 1.6;">
+                หากท่านไม่พอใจผลการดำเนินการ ท่านมีสิทธิ์ยื่นเรื่องร้องเรียนต่อ
+                <strong>สำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (สคส.)</strong>
+                ภายใน 90 วัน นับจากวันที่ท่านทราบหรือควรทราบถึงการละเมิดสิทธิ์
+            </p>
+        </div>
+
+        <p style="color: #333; line-height: 1.6; margin: 20px 0 0 0;">
+            ขอบคุณที่ให้ความไว้วางใจ Magic Years International School
+        </p>
+    </div>
+
+    ${object.env['ir.ui.view']._render_template('school_asset_management.dsr_email_footer', {})}
+</div>
+            </field>
+        </record>
+
+        <!-- 5. DSR Rejected Email -->
+        <record id="email_dsr_rejected" model="mail.template">
+            <field name="name">DSR: Rejected</field>
+            <field name="model_id" ref="model_asset_data_request"/>
+            <field name="subject">[MYIS] แจ้งผลการพิจารณาคำขอ - ${object.name}</field>
+            <field name="email_from">${(object.company_id.email or 'it@magicyears.ac.th')|safe}</field>
+            <field name="email_to">${object.requester_email}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+    ${object.env['ir.ui.view']._render_template('school_asset_management.dsr_email_header', {})}
+
+    <div style="padding: 30px 20px;">
+        <h2 style="color: #574193; margin: 0 0 20px 0; font-size: 20px;">
+            เรียน คุณ${object.requester_name}
+        </h2>
+
+        <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 15px; margin: 0 0 20px 0;">
+            <p style="margin: 0; color: #c62828; font-weight: bold;">
+                ผลการพิจารณาคำขอ
+            </p>
+        </div>
+
+        <p style="color: #333; line-height: 1.6; margin: 0 0 15px 0;">
+            ขออภัยเป็นอย่างยิ่ง เราไม่สามารถดำเนินการตามคำขอเลขที่ <strong>${object.name}</strong> ของท่านได้
+        </p>
+
+        <div style="background: #f9f9f9; padding: 15px; margin: 20px 0; border-radius: 4px;">
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>ประเภทคำขอ:</strong> ${dict(object._fields['request_type'].selection).get(object.request_type, 'N/A')}
+            </p>
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>วันที่พิจารณา:</strong> ${format_datetime(object.write_date, tz='Asia/Bangkok', dt_format='dd/MM/yyyy')}
+            </p>
+            % if object.rejection_reason:
+            <p style="margin: 0; color: #333;">
+                <strong>เหตุผลที่ปฏิเสธ:</strong><br/>
+                ${object.rejection_reason}
+            </p>
+            % endif
+        </div>
+
+        <h3 style="color: #574193; margin: 20px 0 10px 0; font-size: 16px;">
+            เหตุผลในการปฏิเสธ
+        </h3>
+
+        <p style="color: #333; line-height: 1.6; margin: 0 0 15px 0;">
+            % if object.rejection_reason:
+            ${object.rejection_reason}
+            % else:
+            คำขอของท่านไม่เป็นไปตามเงื่อนไขที่กฎหมายกำหนด หรือมีเหตุผลอันชอบด้วยกฎหมายที่ทำให้เราไม่สามารถดำเนินการได้
+            % endif
+        </p>
+
+        <div style="background: #fff3e0; border: 1px solid #ffa726; border-radius: 4px; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0 0 10px 0; color: #333; font-weight: bold;">
+                สิทธิ์ในการอุทธรณ์
+            </p>
+            <p style="margin: 0; color: #333; font-size: 13px; line-height: 1.6;">
+                หากท่านไม่เห็นด้วยกับการตัดสินใจนี้ ท่านมีสิทธิ์:
+            </p>
+            <ul style="margin: 10px 0 0 20px; color: #333; font-size: 13px; line-height: 1.6;">
+                <li>ติดต่อเราเพื่อขอคำอธิบายเพิ่มเติม</li>
+                <li>ยื่นอุทธรณ์ภายใน 30 วัน</li>
+                <li>ยื่นเรื่องร้องเรียนต่อ สคส.</li>
+            </ul>
+        </div>
+
+        <h3 style="color: #574193; margin: 20px 0 10px 0; font-size: 16px;">
+            ช่องทางร้องเรียน
+        </h3>
+
+        <div style="background: #f5f5f5; padding: 15px; border-radius: 4px;">
+            <p style="margin: 0 0 10px 0; color: #333; font-size: 13px; font-weight: bold;">
+                สำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (สคส.)
+            </p>
+            <p style="margin: 0 0 5px 0; color: #333; font-size: 13px;">
+                เว็บไซต์: <a href="https://www.pdpc.or.th" style="color: #574193;">www.pdpc.or.th</a>
+            </p>
+            <p style="margin: 0; color: #333; font-size: 13px;">
+                โทร: 02-141-6767
+            </p>
+        </div>
+
+        <p style="color: #333; line-height: 1.6; margin: 20px 0 0 0;">
+            หากมีข้อสงสัยเพิ่มเติม กรุณาติดต่อเราได้ตามช่องทางด้านล่าง
+        </p>
+    </div>
+
+    ${object.env['ir.ui.view']._render_template('school_asset_management.dsr_email_footer', {})}
+</div>
+            </field>
+        </record>
+
+        <!-- 6. DSR Deadline Warning Email (Internal) -->
+        <record id="email_dsr_deadline_warning" model="mail.template">
+            <field name="name">DSR: Deadline Warning (Internal)</field>
+            <field name="model_id" ref="model_asset_data_request"/>
+            <field name="subject">[MYIS INTERNAL] แจ้งเตือน: คำขอ DSR ใกล้ครบกำหนด - ${object.name}</field>
+            <field name="email_from">${(object.company_id.email or 'it@magicyears.ac.th')|safe}</field>
+            <field name="email_to">${user.email}</field>
+            <field name="body_html" type="html">
+<div style="font-family: Arial, Helvetica, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+    <!-- Header -->
+    <div style="background: #f44336; padding: 20px; text-align: center;">
+        <h1 style="color: #ffffff; margin: 0; font-size: 22px;">
+            ⚠️ DSR Deadline Warning
+        </h1>
+        <p style="color: #ffffff; margin: 10px 0 0 0; font-size: 14px;">
+            Internal Notification - Staff Only
+        </p>
+    </div>
+
+    <div style="padding: 30px 20px;">
+        <div style="background: #fff3e0; border-left: 4px solid #ffa726; padding: 15px; margin: 0 0 20px 0;">
+            <p style="margin: 0; color: #f57c00; font-weight: bold;">
+                คำขอนี้ใกล้จะครบกำหนด 30 วัน - กรุณาดำเนินการโดยด่วน!
+            </p>
+        </div>
+
+        <h2 style="color: #574193; margin: 0 0 15px 0; font-size: 18px;">
+            รายละเอียดคำขอ
+        </h2>
+
+        <div style="background: #f9f9f9; padding: 15px; margin: 0 0 20px 0; border-radius: 4px;">
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>หมายเลขคำขอ:</strong> ${object.name}
+            </p>
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>ผู้ร้องขอ:</strong> ${object.requester_name}
+            </p>
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>อีเมล:</strong> ${object.requester_email}
+            </p>
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>ประเภทคำขอ:</strong> ${dict(object._fields['request_type'].selection).get(object.request_type, 'N/A')}
+            </p>
+            <p style="margin: 0 0 10px 0; color: #333;">
+                <strong>วันที่ส่งคำขอ:</strong> ${format_datetime(object.create_date, tz='Asia/Bangkok', dt_format='dd/MM/yyyy HH:mm')}
+            </p>
+            % if object.deadline_date:
+            <p style="margin: 0; color: #333;">
+                <strong style="color: #f44336;">วันที่ครบกำหนด:</strong>
+                <span style="color: #f44336; font-weight: bold;">${format_datetime(object.deadline_date, tz='Asia/Bangkok', dt_format='dd/MM/yyyy')}</span>
+            </p>
+            % endif
+        </div>
+
+        <div style="background: #ffebee; border: 1px solid #f44336; border-radius: 4px; padding: 15px; margin: 20px 0;">
+            <p style="margin: 0 0 10px 0; color: #c62828; font-weight: bold;">
+                ⏰ เวลาที่เหลือ
+            </p>
+            <p style="margin: 0; color: #333; font-size: 14px;">
+                % if object.deadline_date:
+                ${(object.deadline_date - datetime.datetime.now()).days} วัน
+                % else:
+                ไม่ได้ระบุ deadline
+                % endif
+            </p>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <a href="${object.get_base_url()}/web#id=${object.id}&amp;model=asset.data.request&amp;view_type=form"
+               style="display: inline-block; background: #574193; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 4px; font-weight: bold;">
+                เปิดคำขอนี้ใน Odoo
+            </a>
+        </div>
+
+        <p style="color: #999; font-size: 12px; margin: 20px 0 0 0; text-align: center;">
+            This is an automated notification. Please do not reply to this email.
+        </p>
+    </div>
+
+    <div style="background: #f5f5f5; padding: 15px; text-align: center; border-top: 3px solid #f44336;">
+        <p style="margin: 0; font-size: 12px; color: #666;">
+            © ${datetime.datetime.now().year} Magic Years International School - Internal Use Only
+        </p>
+    </div>
+</div>
+            </field>
+        </record>
+
+    </data>
+</odoo>

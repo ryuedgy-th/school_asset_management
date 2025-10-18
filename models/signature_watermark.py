@@ -5,9 +5,50 @@ Adds watermarks to signature images to prevent unauthorized use
 """
 
 import io
+import os
 import base64
+import logging
 from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 from datetime import datetime
+
+_logger = logging.getLogger(__name__)
+
+
+def _get_font_path():
+    """
+    Get bundled font path from module
+
+    Priority:
+    1. Bundled font in module (data/fonts/)
+    2. System font (/usr/share/fonts/)
+    3. None (will use PIL default font)
+
+    Returns:
+        str: Path to font file, or None if not found
+    """
+    # Try bundled font first
+    module_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    bundled_font = os.path.join(module_path, 'data', 'fonts', 'DejaVuSans-Bold.ttf')
+
+    if os.path.exists(bundled_font):
+        _logger.debug(f'Using bundled font: {bundled_font}')
+        return bundled_font
+
+    # Fallback to system fonts
+    system_fonts = [
+        '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
+        '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf',
+        'C:/Windows/Fonts/arialbd.ttf',  # Windows fallback
+    ]
+
+    for font_path in system_fonts:
+        if os.path.exists(font_path):
+            _logger.warning(f'Bundled font not found, using system font: {font_path}')
+            return font_path
+
+    # No font found
+    _logger.warning('No TrueType font found, will use PIL default font')
+    return None
 
 
 def add_watermark_to_signature(signature_data, watermark_text="SCHOOL USE ONLY", reference_number="", timestamp=None):
@@ -42,27 +83,18 @@ def add_watermark_to_signature(signature_data, watermark_text="SCHOOL USE ONLY",
         # Get image dimensions
         width, height = image.size
 
-        # Try to use a standard font, fallback to default if not available
+        # Load font with error handling
         try:
-            # Try multiple font paths (works on different systems)
-            font_paths = [
-                '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
-                '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf',
-                'C:/Windows/Fonts/arialbd.ttf',  # Windows fallback
-            ]
-            font_large = None
-            font_small = None
-            for font_path in font_paths:
-                try:
-                    font_large = ImageFont.truetype(font_path, int(height * 0.15))
-                    font_small = ImageFont.truetype(font_path, int(height * 0.08))
-                    break
-                except:
-                    continue
-            if not font_large:
+            font_path = _get_font_path()
+            if font_path:
+                font_large = ImageFont.truetype(font_path, int(height * 0.15))
+                font_small = ImageFont.truetype(font_path, int(height * 0.08))
+            else:
+                _logger.warning('Using PIL default font for watermark (may look poor)')
                 font_large = ImageFont.load_default()
                 font_small = ImageFont.load_default()
-        except:
+        except Exception as e:
+            _logger.error(f'Error loading font: {e}, using default font')
             font_large = ImageFont.load_default()
             font_small = ImageFont.load_default()
 
@@ -131,8 +163,8 @@ def add_watermark_to_signature(signature_data, watermark_text="SCHOOL USE ONLY",
         return base64.b64encode(output.getvalue())
 
     except Exception as e:
-        # If watermarking fails, return original (with log warning in production)
-        print(f"Watermark error: {e}")
+        # If watermarking fails, return original
+        _logger.error(f'Watermark error: {e}', exc_info=True)
         return signature_data
 
 
@@ -171,5 +203,5 @@ def create_signature_preview(signature_data, max_width=400, max_height=150):
         return add_watermark_to_signature(preview_data, watermark_text="PREVIEW")
 
     except Exception as e:
-        print(f"Preview error: {e}")
+        _logger.error(f'Preview error: {e}', exc_info=True)
         return signature_data
