@@ -3,7 +3,7 @@
 from odoo import http, fields, _
 from odoo.http import request
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.school_asset_management.models.security_helpers import SignatureSecurityHelper
+from ..models.security_helpers import SignatureSecurityHelper
 import logging
 import base64
 from datetime import datetime
