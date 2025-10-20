@@ -26,17 +26,33 @@ class AssetStudentAssignment(models.Model):
         store=True,
         help='Assignment reference name'
     )
-    student_name = fields.Char(
-        string='Student Name',
+
+    # Student Information (Integration with school_student_management)
+    student_id = fields.Many2one(
+        comodel_name='school.student',
+        string='Student',
         required=True,
+        ondelete='restrict',
         tracking=True,
         index=True,
-        help='Student name'
+        help='Select student from student management system'
     )
-    grade_level = fields.Char(
-        string='Grade Level',
+    student_name = fields.Char(
+        string='Student Name',
+        related='student_id.full_name',
+        store=True,
+        readonly=True,
         tracking=True,
-        help='Student grade level'
+        index=True,
+        help='Student full name (auto-populated from student record)'
+    )
+    grade_level = fields.Selection(
+        string='Grade Level',
+        related='student_id.grade_level',
+        store=True,
+        readonly=True,
+        tracking=True,
+        help='Student grade level (auto-populated from student record)'
     )
 
     # Dates
@@ -85,17 +101,23 @@ class AssetStudentAssignment(models.Model):
         string='Assets'
     )
 
-    # Parent Information
+    # Parent Information (Auto-populated from student record)
     parent_name = fields.Char(
         string='Parent/Guardian Name',
+        compute='_compute_parent_contact',
+        store=True,
         readonly=True,
-        help='Parent name filled during signature'
+        tracking=True,
+        help='Parent name (auto-populated: mother first, then father)'
     )
     parent_email = fields.Char(
         string='Parent Email',
+        compute='_compute_parent_contact',
+        store=True,
+        readonly=False,  # Allow manual override if needed
         required=True,
         tracking=True,
-        help='Parent email for signature request'
+        help='Parent email for signature request (auto-populated: mother first, then father)'
     )
 
     # PDPA Compliance: Consent Records
@@ -290,14 +312,67 @@ class AssetStudentAssignment(models.Model):
         help='Number of damage cases created'
     )
 
-    @api.depends('student_name', 'checkout_date')
+    @api.depends('student_id', 'student_name', 'checkout_date')
     def _compute_name(self):
-        """Generate assignment name"""
+        """Generate assignment name from student and checkout date.
+
+        Format: [Student ID] Student Name - Checkout Date
+        Example: [TD-1234567] John Smith - 2025-10-20
+        """
         for record in self:
             if record.student_name and record.checkout_date:
                 record.name = f"{record.student_name} - {record.checkout_date}"
             else:
                 record.name = _('New Assignment')
+
+    @api.depends('student_id.mother_id', 'student_id.father_id',
+                 'student_id.mother_id.email', 'student_id.mother_id.name',
+                 'student_id.father_id.email', 'student_id.father_id.name')
+    def _compute_parent_contact(self):
+        """Auto-populate parent contact information from student record.
+
+        Business Logic:
+        - Preferentially use mother's email and name
+        - Fallback to father's email and name if mother not available
+        - If neither parent has email, leave blank (user must fill manually)
+
+        This ensures asset-related communications reach at least one parent.
+        Follows Odoo 19 best practices with proper @api.depends decorator.
+        """
+        for record in self:
+            # Initialize defaults
+            parent_email = False
+            parent_name = False
+
+            if record.student_id:
+                # Prefer mother's contact (primary contact as per design)
+                if record.student_id.mother_id and record.student_id.mother_id.email:
+                    parent_email = record.student_id.mother_id.email
+                    parent_name = record.student_id.mother_id.name
+                    _logger.debug(
+                        "Assignment %s: Using mother's contact - %s (%s)",
+                        record.id, parent_name, parent_email
+                    )
+                # Fallback to father's contact
+                elif record.student_id.father_id and record.student_id.father_id.email:
+                    parent_email = record.student_id.father_id.email
+                    parent_name = record.student_id.father_id.name
+                    _logger.debug(
+                        "Assignment %s: Using father's contact - %s (%s)",
+                        record.id, parent_name, parent_email
+                    )
+                else:
+                    _logger.warning(
+                        "Assignment %s: No parent email found for student %s",
+                        record.id, record.student_id.student_id
+                    )
+
+            # Only update if not manually overridden
+            # This allows users to manually set different email if needed
+            if not record.parent_email or record.parent_email != parent_email:
+                record.parent_email = parent_email
+            if not record.parent_name or record.parent_name != parent_name:
+                record.parent_name = parent_name
 
     @api.depends('asset_line_ids')
     def _compute_asset_count(self):

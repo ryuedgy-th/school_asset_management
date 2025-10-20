@@ -26,8 +26,8 @@ access_asset_inspection_checklist_user,asset.inspection.checklist.user,model_ass
 access_asset_movement_manager,asset.movement.manager,model_asset_movement,group_asset_manager,1,1,1,1
 access_asset_movement_user,asset.movement.user,model_asset_movement,group_asset_user,1,0,0,0
 access_asset_movement_teacher,asset.movement.teacher,model_asset_movement,group_asset_teacher,1,0,0,0
-access_asset_dashboard_manager,asset.dashboard.manager,model_asset_dashboard,group_asset_manager,1,0,0,0
-access_asset_dashboard_user,asset.dashboard.user,model_asset_dashboard,group_asset_user,1,0,0,0
+access_asset_dashboard_manager,asset.dashboard.manager,model_asset_dashboard,group_asset_manager,1,1,1,1
+access_asset_dashboard_user,asset.dashboard.user,model_asset_dashboard,group_asset_user,1,1,1,0
 access_asset_dashboard_teacher,asset.dashboard.teacher,model_asset_dashboard,group_asset_teacher,1,0,0,0
 access_asset_damage_case_manager,asset.damage.case.manager,model_asset_damage_case,group_asset_manager,1,1,1,1
 access_asset_damage_case_user,asset.damage.case.user,model_asset_damage_case,group_asset_user,1,1,1,0

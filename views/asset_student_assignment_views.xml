@@ -11,7 +11,9 @@
                   decoration-warning="is_overdue == True"
                   decoration-muted="status == 'cancelled'">
                 <field name="name"/>
+                <field name="student_id" optional="hide"/>
                 <field name="student_name"/>
+                <field name="grade_level" optional="hide"/>
                 <field name="parent_email" optional="hide"/>
                 <field name="checkout_date"/>
                 <field name="return_type"/>
@@ -68,9 +70,12 @@
                     </div>
                     <group>
                         <group string="Student Information">
-                            <field name="student_name"/>
-                            <field name="grade_level"/>
-                            <field name="parent_email" widget="email" placeholder="parent@email.com"/>
+                            <field name="student_id" options="{'no_create': True, 'no_open': True}"
+                                   placeholder="Select student..."/>
+                            <field name="student_name" readonly="1" force_save="1"/>
+                            <field name="grade_level" readonly="1" force_save="1"/>
+                            <field name="parent_name" readonly="1" placeholder="Auto-filled from student"/>
+                            <field name="parent_email" widget="email" placeholder="Auto-filled from student (can override)"/>
                         </group>
                         <group string="Dates &amp; Return">
                             <field name="checkout_date"/>
@@ -221,6 +226,9 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first student assignment
+            </p>
+            <p>
+                Select a student from the student management system and assign assets to them.
             </p>
         </field>
     </record>
