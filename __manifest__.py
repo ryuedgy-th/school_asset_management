@@ -28,6 +28,7 @@
         'mail',
         'hr',
         'website',
+        'school_student_management',  # Integration with student management system
     ],
     'external_dependencies': {
         'python': [
@@ -120,6 +121,7 @@
             'school_asset_management/static/src/js/teacher_damage_signature_pad.js',
         ],
         'web.assets_backend': [
+            'school_asset_management/static/src/css/dashboard_minimal.css',
             'school_asset_management/static/src/css/consent_form_fix.css',
             'school_asset_management/static/src/js/copy_signature_link.js',
             'school_asset_management/static/src/xml/copy_link_template.xml',

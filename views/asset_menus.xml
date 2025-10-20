@@ -26,18 +26,6 @@
               action="action_asset_asset"
               sequence="1"/>
 
-    <menuitem id="menu_asset_category"
-              name="Categories"
-              parent="menu_asset_assets"
-              action="action_asset_category"
-              sequence="2"/>
-
-    <menuitem id="menu_asset_location"
-              name="Locations"
-              parent="menu_asset_assets"
-              action="action_asset_location"
-              sequence="3"/>
-
     <!-- Assignments Menu Group -->
     <menuitem id="menu_asset_assignments"
               name="Assignments"

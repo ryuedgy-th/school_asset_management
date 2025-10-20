@@ -18,7 +18,7 @@
                 <field name="total_damage_cost"/>
                 <templates>
                     <t t-name="card">
-                        <div class="container o_kanban_card_content">
+                        <div class="container o_kanban_card_content o_asset_dashboard">
                             <div class="row">
                                 <div class="col-12">
                                     <div class="o_kanban_primary_left">
@@ -33,39 +33,35 @@
                             <!-- Statistics Cards Row 1 -->
                             <div class="row mt-3">
                                 <div class="col-md-3 col-sm-6 mb-3">
-                                    <div class="card bg-primary text-white">
-                                        <div class="card-body">
-                                            <h4 class="card-title">📦 Total Assets</h4>
-                                            <h2><t t-esc="record.total_assets.raw_value"/></h2>
-                                            <p class="mb-0">All assets in system</p>
-                                        </div>
+                                    <div class="stat-card card-blue">
+                                        <div class="icon-wrapper">📦</div>
+                                        <div class="card-label">Total Assets</div>
+                                        <div class="card-value"><t t-esc="record.total_assets.raw_value"/></div>
+                                        <p class="card-desc">All assets in system</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6 mb-3">
-                                    <div class="card bg-success text-white">
-                                        <div class="card-body">
-                                            <h4 class="card-title">✅ Available</h4>
-                                            <h2><t t-esc="record.available_assets.raw_value"/></h2>
-                                            <p class="mb-0">Ready for assignment</p>
-                                        </div>
+                                    <div class="stat-card card-green">
+                                        <div class="icon-wrapper">✅</div>
+                                        <div class="card-label">Available</div>
+                                        <div class="card-value"><t t-esc="record.available_assets.raw_value"/></div>
+                                        <p class="card-desc">Ready for assignment</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6 mb-3">
-                                    <div class="card bg-info text-white">
-                                        <div class="card-body">
-                                            <h4 class="card-title">👨‍🏫 Teachers</h4>
-                                            <h2><t t-esc="record.assigned_teacher.raw_value"/></h2>
-                                            <p class="mb-0">Assigned to teachers</p>
-                                        </div>
+                                    <div class="stat-card card-purple">
+                                        <div class="icon-wrapper">👨‍🏫</div>
+                                        <div class="card-label">Teachers</div>
+                                        <div class="card-value"><t t-esc="record.assigned_teacher.raw_value"/></div>
+                                        <p class="card-desc">Assigned to teachers</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6 mb-3">
-                                    <div class="card bg-info text-white">
-                                        <div class="card-body">
-                                            <h4 class="card-title">👨‍🎓 Students</h4>
-                                            <h2><t t-esc="record.assigned_student.raw_value"/></h2>
-                                            <p class="mb-0">Assigned to students</p>
-                                        </div>
+                                    <div class="stat-card card-orange">
+                                        <div class="icon-wrapper">👨‍🎓</div>
+                                        <div class="card-label">Students</div>
+                                        <div class="card-value"><t t-esc="record.assigned_student.raw_value"/></div>
+                                        <p class="card-desc">Assigned to students</p>
                                     </div>
                                 </div>
                             </div>
@@ -73,39 +69,35 @@
                             <!-- Statistics Cards Row 2 -->
                             <div class="row">
                                 <div class="col-md-3 col-sm-6 mb-3">
-                                    <div class="card bg-warning text-white">
-                                        <div class="card-body">
-                                            <h4 class="card-title">🔧 Maintenance</h4>
-                                            <h2><t t-esc="record.maintenance_assets.raw_value"/></h2>
-                                            <p class="mb-0">Under maintenance/repair</p>
-                                        </div>
+                                    <div class="stat-card card-teal">
+                                        <div class="icon-wrapper">🔧</div>
+                                        <div class="card-label">Maintenance</div>
+                                        <div class="card-value"><t t-esc="record.maintenance_assets.raw_value"/></div>
+                                        <p class="card-desc">Under maintenance/repair</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6 mb-3">
-                                    <div class="card bg-danger text-white">
-                                        <div class="card-body">
-                                            <h4 class="card-title">⚠️ Warranty Expiring</h4>
-                                            <h2><t t-esc="record.warranty_expiring.raw_value"/></h2>
-                                            <p class="mb-0">Expires within 30 days</p>
-                                        </div>
+                                    <div class="stat-card card-red">
+                                        <div class="icon-wrapper">⚠️</div>
+                                        <div class="card-label">Warranty Expiring</div>
+                                        <div class="card-value"><t t-esc="record.warranty_expiring.raw_value"/></div>
+                                        <p class="card-desc">Expires within 30 days</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6 mb-3">
-                                    <div class="card bg-secondary text-white">
-                                        <div class="card-body">
-                                            <h4 class="card-title">💰 Total Value</h4>
-                                            <h2><t t-esc="'%.0f' % record.total_asset_value.raw_value"/> ฿</h2>
-                                            <p class="mb-0">Total asset value</p>
-                                        </div>
+                                    <div class="stat-card card-pink">
+                                        <div class="icon-wrapper">💰</div>
+                                        <div class="card-label">Total Value</div>
+                                        <div class="card-value"><t t-esc="'%.0f' % record.total_asset_value.raw_value"/> ฿</div>
+                                        <p class="card-desc">Total asset value</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-sm-6 mb-3">
-                                    <div class="card bg-dark text-white">
-                                        <div class="card-body">
-                                            <h4 class="card-title">💸 Damage Cost</h4>
-                                            <h2><t t-esc="'%.0f' % record.total_damage_cost.raw_value"/> ฿</h2>
-                                            <p class="mb-0">Total damages (<t t-esc="record.total_damages.raw_value"/> items)</p>
-                                        </div>
+                                    <div class="stat-card card-yellow">
+                                        <div class="icon-wrapper">💸</div>
+                                        <div class="card-label">Damage Cost</div>
+                                        <div class="card-value"><t t-esc="'%.0f' % record.total_damage_cost.raw_value"/> ฿</div>
+                                        <p class="card-desc">Total damages (<t t-esc="record.total_damages.raw_value"/> items)</p>
                                     </div>
                                 </div>
                             </div>
@@ -115,16 +107,16 @@
                                 <div class="col-12">
                                     <h3>Quick Actions</h3>
                                     <div class="btn-group" role="group">
-                                        <a type="action" name="%(action_asset_asset)d" class="btn btn-primary">
+                                        <a type="action" name="%(action_asset_asset)d" class="action-btn">
                                             <i class="fa fa-cubes"/> View All Assets
                                         </a>
-                                        <a type="action" name="%(action_asset_teacher_assignment)d" class="btn btn-info">
+                                        <a type="action" name="%(action_asset_teacher_assignment)d" class="action-btn">
                                             <i class="fa fa-user"/> Teacher Assignments
                                         </a>
-                                        <a type="action" name="%(action_asset_student_assignment)d" class="btn btn-success">
+                                        <a type="action" name="%(action_asset_student_assignment)d" class="action-btn">
                                             <i class="fa fa-graduation-cap"/> Student Assignments
                                         </a>
-                                        <a type="action" name="%(action_asset_inspection)d" class="btn btn-warning">
+                                        <a type="action" name="%(action_asset_inspection)d" class="action-btn">
                                             <i class="fa fa-search"/> Inspections
                                         </a>
                                     </div>
@@ -134,7 +126,7 @@
                             <!-- Note about charts -->
                             <div class="row mt-4">
                                 <div class="col-12">
-                                    <div class="alert alert-info">
+                                    <div class="alert-minimal">
                                         <strong>📊 View Detailed Charts:</strong>
                                         <ul class="mb-0 mt-2">
                                             <li>Go to <strong>Assets → Graph View</strong> for status distribution</li>
@@ -192,7 +184,7 @@
         <field name="arch" type="xml">
             <form string="Asset Dashboard" create="false" edit="false" delete="false">
                 <sheet>
-                    <div class="container o_kanban_card_content">
+                    <div class="container o_kanban_card_content o_asset_dashboard">
                         <div class="row">
                             <div class="col-12">
                                 <h1>Asset Management Dashboard</h1>
@@ -203,39 +195,35 @@
                         <!-- Statistics Cards Row 1 -->
                         <div class="row mt-3">
                             <div class="col-md-3 col-sm-6 mb-3">
-                                <div class="card bg-primary text-white">
-                                    <div class="card-body">
-                                        <h4 class="card-title">📦 Total Assets</h4>
-                                        <h2><field name="total_assets" readonly="1" nolabel="1"/></h2>
-                                        <p class="mb-0">All assets in system</p>
-                                    </div>
+                                <div class="stat-card card-blue">
+                                    <div class="icon-wrapper">📦</div>
+                                    <div class="card-label">Total Assets</div>
+                                    <div class="card-value"><field name="total_assets" readonly="1" nolabel="1"/></div>
+                                    <p class="card-desc">All assets in system</p>
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-6 mb-3">
-                                <div class="card bg-success text-white">
-                                    <div class="card-body">
-                                        <h4 class="card-title">✅ Available</h4>
-                                        <h2><field name="available_assets" readonly="1" nolabel="1"/></h2>
-                                        <p class="mb-0">Ready for assignment</p>
-                                    </div>
+                                <div class="stat-card card-green">
+                                    <div class="icon-wrapper">✅</div>
+                                    <div class="card-label">Available</div>
+                                    <div class="card-value"><field name="available_assets" readonly="1" nolabel="1"/></div>
+                                    <p class="card-desc">Ready for assignment</p>
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-6 mb-3">
-                                <div class="card bg-info text-white">
-                                    <div class="card-body">
-                                        <h4 class="card-title">👨‍🏫 Teachers</h4>
-                                        <h2><field name="assigned_teacher" readonly="1" nolabel="1"/></h2>
-                                        <p class="mb-0">Assigned to teachers</p>
-                                    </div>
+                                <div class="stat-card card-purple">
+                                    <div class="icon-wrapper">👨‍🏫</div>
+                                    <div class="card-label">Teachers</div>
+                                    <div class="card-value"><field name="assigned_teacher" readonly="1" nolabel="1"/></div>
+                                    <p class="card-desc">Assigned to teachers</p>
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-6 mb-3">
-                                <div class="card bg-info text-white">
-                                    <div class="card-body">
-                                        <h4 class="card-title">👨‍🎓 Students</h4>
-                                        <h2><field name="assigned_student" readonly="1" nolabel="1"/></h2>
-                                        <p class="mb-0">Assigned to students</p>
-                                    </div>
+                                <div class="stat-card card-orange">
+                                    <div class="icon-wrapper">👨‍🎓</div>
+                                    <div class="card-label">Students</div>
+                                    <div class="card-value"><field name="assigned_student" readonly="1" nolabel="1"/></div>
+                                    <p class="card-desc">Assigned to students</p>
                                 </div>
                             </div>
                         </div>
@@ -243,39 +231,35 @@
                         <!-- Statistics Cards Row 2 -->
                         <div class="row">
                             <div class="col-md-3 col-sm-6 mb-3">
-                                <div class="card bg-warning text-white">
-                                    <div class="card-body">
-                                        <h4 class="card-title">🔧 Maintenance</h4>
-                                        <h2><field name="maintenance_assets" readonly="1" nolabel="1"/></h2>
-                                        <p class="mb-0">Under maintenance/repair</p>
-                                    </div>
+                                <div class="stat-card card-teal">
+                                    <div class="icon-wrapper">🔧</div>
+                                    <div class="card-label">Maintenance</div>
+                                    <div class="card-value"><field name="maintenance_assets" readonly="1" nolabel="1"/></div>
+                                    <p class="card-desc">Under maintenance/repair</p>
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-6 mb-3">
-                                <div class="card bg-danger text-white">
-                                    <div class="card-body">
-                                        <h4 class="card-title">⚠️ Warranty Expiring</h4>
-                                        <h2><field name="warranty_expiring" readonly="1" nolabel="1"/></h2>
-                                        <p class="mb-0">Expires within 30 days</p>
-                                    </div>
+                                <div class="stat-card card-red">
+                                    <div class="icon-wrapper">⚠️</div>
+                                    <div class="card-label">Warranty Expiring</div>
+                                    <div class="card-value"><field name="warranty_expiring" readonly="1" nolabel="1"/></div>
+                                    <p class="card-desc">Expires within 30 days</p>
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-6 mb-3">
-                                <div class="card bg-secondary text-white">
-                                    <div class="card-body">
-                                        <h4 class="card-title">💰 Total Value</h4>
-                                        <h2><field name="total_asset_value" widget="monetary" readonly="1" nolabel="1"/> ฿</h2>
-                                        <p class="mb-0">Total asset value</p>
-                                    </div>
+                                <div class="stat-card card-pink">
+                                    <div class="icon-wrapper">💰</div>
+                                    <div class="card-label">Total Value</div>
+                                    <div class="card-value"><field name="total_asset_value" widget="monetary" readonly="1" nolabel="1"/> ฿</div>
+                                    <p class="card-desc">Total asset value</p>
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-6 mb-3">
-                                <div class="card bg-dark text-white">
-                                    <div class="card-body">
-                                        <h4 class="card-title">💸 Damage Cost</h4>
-                                        <h2><field name="total_damage_cost" widget="monetary" readonly="1" nolabel="1"/> ฿</h2>
-                                        <p class="mb-0">Total damages (<field name="total_damages" readonly="1" nolabel="1"/> items)</p>
-                                    </div>
+                                <div class="stat-card card-yellow">
+                                    <div class="icon-wrapper">💸</div>
+                                    <div class="card-label">Damage Cost</div>
+                                    <div class="card-value"><field name="total_damage_cost" widget="monetary" readonly="1" nolabel="1"/> ฿</div>
+                                    <p class="card-desc">Total damages (<field name="total_damages" readonly="1" nolabel="1"/> items)</p>
                                 </div>
                             </div>
                         </div>
@@ -285,16 +269,16 @@
                             <div class="col-12">
                                 <h3>Quick Actions</h3>
                                 <div class="btn-group" role="group">
-                                    <button type="action" name="%(action_asset_asset)d" class="btn btn-primary">
+                                    <button type="action" name="%(action_asset_asset)d" class="action-btn">
                                         <i class="fa fa-cubes"/> View All Assets
                                     </button>
-                                    <button type="action" name="%(action_asset_teacher_assignment)d" class="btn btn-info">
+                                    <button type="action" name="%(action_asset_teacher_assignment)d" class="action-btn">
                                         <i class="fa fa-user"/> Teacher Assignments
                                     </button>
-                                    <button type="action" name="%(action_asset_student_assignment)d" class="btn btn-success">
+                                    <button type="action" name="%(action_asset_student_assignment)d" class="action-btn">
                                         <i class="fa fa-graduation-cap"/> Student Assignments
                                     </button>
-                                    <button type="action" name="%(action_asset_inspection)d" class="btn btn-warning">
+                                    <button type="action" name="%(action_asset_inspection)d" class="action-btn">
                                         <i class="fa fa-search"/> Inspections
                                     </button>
                                 </div>
