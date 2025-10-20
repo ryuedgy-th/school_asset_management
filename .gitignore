@@ -1,0 +1,23 @@
+.clinerules
+.gitignore
+.claude
+analysis_summary.md
+ARCHIVE_IMPROVEMENT_WORKFLOW.md
+IMPROVEMENT_PLAN.md
+ODOO19_BEST_PRACTICES.md
+PROJECT_STATUS.md
+
+# Windows Zone.Identifier files
+*:Zone.Identifier
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Odoo
+*.log
+filestore/
+sessions/
